@@ -44,7 +44,7 @@ def address(request, pk):
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
-        print("request log: " + str(request.body))
+        # print("request log: " + str(request.body))
         id = request.POST.get('userid', '')
         pw = request.POST.get('userpw', '')
         print("id : " + id + " , pw : " + pw)
