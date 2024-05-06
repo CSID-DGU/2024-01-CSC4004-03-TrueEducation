@@ -1,22 +1,44 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib import auth
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 
-# Create your views here.
 @csrf_exempt
 def login(request):
-    if request.method == 'POST':
-        # print("request log: " + str(request.body))
-        id = request.POST.get('userid', '')
-        pw = request.POST.get('userpw', '')
-        print("id : " + id + " , pw : " + pw)
+    if request.method == 'POST' :
+        username = request.POST['username']
+        password = request.POST['password']
 
-        result = authenticate(username=id , password=pw)
-        if result:
-            print("success!")
-            return HttpResponse(status=200)
+        user = auth.authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            auth.login(request,user)
+            print("success")
+            #return HttpResponse(status=200)
         else:
-            print("fail.")
-            return HttpResponse(status=401)
-    return render(request, 'users/login.html')
+            print("fail")
+            #return HttpResponse(status=401)
+        return render(request, "users/success.html")
+        
+    elif request.method == 'GET' :
+        return render(request, 'users/login.html')
+
+def logout(request):
+    auth.logout(request)
+    print("logout")
+    return redirect("users:login")
+
+def signup(request):
+    if request.method == 'POST' :
+        
+        if request.POST['password'] == request.POST['confirm']:
+            user = User.objects.create_user(
+                username=request.POST['username'],
+                password=request.POST['password']
+            )
+
+            auth.login(request, user)
+            print("create")
+            return render(request, "users/success.html")
+    return render(request, 'users/signup.html')
