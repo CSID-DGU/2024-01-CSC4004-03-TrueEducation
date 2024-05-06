@@ -4,8 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from .models import Addresses
 from .serializers import AddressesSerializer
-from django.contrib.auth import authenticate
-
 
 # Create your views here.
 @csrf_exempt
@@ -41,19 +39,3 @@ def address(request, pk):
     elif request.method == 'DELETE':
         address_data.delete()
         return HttpResponse(status=204)
-@csrf_exempt
-def login(request):
-    if request.method == 'POST':
-        # print("request log: " + str(request.body))
-        id = request.POST.get('userid', '')
-        pw = request.POST.get('userpw', '')
-        print("id : " + id + " , pw : " + pw)
-
-        result = authenticate(username=id , password=pw)
-        if result:
-            print("success!")
-            return HttpResponse(status=200)
-        else:
-            print("fail.")
-            return HttpResponse(status=401)
-    return render(request, 'addresses/login.html')
