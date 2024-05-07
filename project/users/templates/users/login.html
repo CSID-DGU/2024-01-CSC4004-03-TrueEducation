@@ -1,7 +1,0 @@
-
-<form action="{% url "users:login" %}" method="POST">
-    {% csrf_token %}
-    ID : <input type= "text" name="username"><br>
-    Password : <input type="password" name="password"><br>
-    <input type="submit" value="로그인">
-</form>

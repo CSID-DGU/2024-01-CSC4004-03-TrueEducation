@@ -1,10 +1,7 @@
-from django.urls import path
-from .views import *
+from django.urls import path, include
 
 app_name = "users"
 urlpatterns = [
-    path('login/', login, name="login"),
-    path('logout/', logout, name="logout"),
-    path('signup/', signup, name="signup"),
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls'))
 ]
-

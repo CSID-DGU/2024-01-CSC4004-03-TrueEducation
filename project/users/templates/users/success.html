@@ -1,6 +1,0 @@
-{% if user.is_authenticated %}
-    <a href="{% url "users:logout" %}">로그아웃</a> 
-{% else %}
-    fail.
-    <a href="{% url "users:login" %}">로그인 페이지로</a> 
-{% endif %}
