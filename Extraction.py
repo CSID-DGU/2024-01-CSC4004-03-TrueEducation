@@ -13,9 +13,9 @@ class Week(IntEnum):
 
 class Extraction:
     img = None
+    times = None
     width = None
     height = None
-    times = None
     
     def __init__(self, path):
         pre = Preprocessing.Preprocessing(path)
@@ -30,24 +30,51 @@ class Extraction:
         contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         self.times = [x for x in contours if cv2.contourArea(x) > 1000]
-
+        
         cv2.drawContours(self.img, self.times, -1, (0, 255, 0), 3)
         
-    def get_day(self, time):
-        pass
-    
-    def get_time(self, time):
-        pass
-        
-    # 각 일정을 이진화하여 시간대별로 분류
-    def binarization(self):
-        time_table = []
+    # 일정의 왼쪽 지점과 너비를 이용해 요일을 추출
+    def get_day(self, start):
+        temp = []
         
         for day in Week:
-            time_table[day] = 0b00000000000000000000
+            temp.append(abs(start - self.width * day))
+                
+        return temp.index(min(temp))
+                
+    # 일정의 시작 시간과 종료 시간을 이용해 시간대를 추출
+    time_list = [9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23]
+    def get_time(self, start, end):
+        start = start / self.height + 8.5
+        end = end / self.height + 8.5
+        
+        start_list = [abs(start - time) for time in self.time_list]
+        end_list = [abs(end - time) for time in self.time_list]
+    
+        start_time = self.time_list[start_list.index(min(start_list))]
+        end_time = self.time_list[end_list.index(min(end_list))]
+        
+        start_time = int((start_time - 9) * 2)
+        end_time = int((end_time - 9) * 2)
+        
+        temp = 0
+        for i in range(len(self.time_list) - end_time, len(self.time_list) - start_time):
+            temp |= 1 << i
+        
+        return temp
+    
+    # 각 일정을 이진화하여 시간대별로 분류
+    def binarization(self):
+        time_table = [[0b0, []] for day in Week]
             
         for time in self.times:
-            time_table[self.get_day(time)] |= self.get_time(time)
+            start = time[0][0]
+            end = time[1][0]
+            
+            binary_time = self.get_time(start[1], end[1])
+            
+            time_table[self.get_day(start[0])][0] |= binary_time
+            time_table[self.get_day(start[0])][1].append(binary_time)
         
         return time_table
         
@@ -64,6 +91,15 @@ if __name__ == '__main__':
     schedule = Extraction('./img/' + imgs[0])
 
     schedule.create_contours()
+    
+    result = schedule.binarization()
+    print(result)
+    
+    for i in result:
+        print(format(i[0], '029b'))
+        for j in i[1]:
+            print(format(j, '029b'))
+        print()
     
     schedule.show()
     

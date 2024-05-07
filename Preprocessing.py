@@ -23,8 +23,6 @@ class Preprocessing:
 
         cnts = sorted(contours, key = cv2.contourArea, reverse=True)
 
-        print(cnts)
-
         x, y, w, h = cv2.boundingRect(cnts[0])
         _, _, width, height = cv2.boundingRect(cnts[1])
         
