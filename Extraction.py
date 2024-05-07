@@ -21,12 +21,15 @@ class Extraction:
         pre = Preprocessing.Preprocessing(path)
         
         self.img, self.width, self.height = pre.get_standard_image()
+        
+        if pre.mode == Preprocessing.LIGHT:
+            self.img = cv2.bitwise_not(self.img)
     
     # 각 일정의 테두리를 찾음
     def create_contours(self):
         gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         
-        _, thresh = cv2.threshold(gray, -1, 255,  cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        _, thresh = cv2.threshold(gray, 0, 255,  cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         self.times = [x for x in contours if cv2.contourArea(x) > 1000]
@@ -65,7 +68,7 @@ class Extraction:
     
     # 각 일정을 이진화하여 시간대별로 분류
     def binarization(self):
-        time_table = [[0b0, []] for day in Week]
+        time_table = [[] for day in Week]
             
         for time in self.times:
             start = time[0][0]
@@ -73,8 +76,7 @@ class Extraction:
             
             binary_time = self.get_time(start[1], end[1])
             
-            time_table[self.get_day(start[0])][0] |= binary_time
-            time_table[self.get_day(start[0])][1].append(binary_time)
+            time_table[self.get_day(start[0])].append(binary_time)
         
         return time_table
         
@@ -93,12 +95,14 @@ if __name__ == '__main__':
     schedule.create_contours()
     
     result = schedule.binarization()
-    print(result)
     
+    print(result)
     for i in result:
-        print(format(i[0], '029b'))
-        for j in i[1]:
+        temp = 0
+        for j in i:
             print(format(j, '029b'))
+            temp |= j
+        print(format(temp, '029b'))
         print()
     
     schedule.show()
