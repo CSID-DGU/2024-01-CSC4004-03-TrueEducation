@@ -8,7 +8,7 @@ class Preprocessing:
     thresh = None
     
     def __init__(self, path):
-        self.img = np.array(Image.open('./img/' + path))
+        self.img = np.array(Image.open(path))
         
         self.convert_image()
     
@@ -22,6 +22,8 @@ class Preprocessing:
         contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
         cnts = sorted(contours, key = cv2.contourArea, reverse=True)
+
+        print(cnts)
 
         x, y, w, h = cv2.boundingRect(cnts[0])
         _, _, width, height = cv2.boundingRect(cnts[1])
