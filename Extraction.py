@@ -81,6 +81,7 @@ class Extraction:
         return time_table
         
     def show(self):
+        self.img = cv2.resize(self.img, dsize=(800, 1000), interpolation=cv2.INTER_AREA)
         cv2.imshow('Original', self.img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
