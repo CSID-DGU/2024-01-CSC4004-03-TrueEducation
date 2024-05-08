@@ -24,13 +24,15 @@ class Extraction:
         
         if pre.mode == Preprocessing.LIGHT:
             self.img = cv2.bitwise_not(self.img)
+            
+        self.create_contours()
     
     # 각 일정의 테두리를 찾음
     def create_contours(self):
         gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         
         _, thresh = cv2.threshold(gray, 0, 255,  cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-        contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
         self.times = [x for x in contours if cv2.contourArea(x) > 1000]
         
@@ -91,9 +93,7 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.abspath(__file__)))    
     imgs = os.listdir('img')
     
-    schedule = Extraction('./img/' + imgs[0])
-
-    schedule.create_contours()
+    schedule = Extraction('./img/' + imgs[4])
     
     result = schedule.binarization()
     
