@@ -31,6 +31,9 @@ class Daychart extends StatelessWidget {
             ),
             const SizedBox(
               height: 50,
+              // child: Container(
+              // 색깔 채워넣기
+              // ),
             ),
             const Divider(
               color: Colors.black,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:myapp/widgets/button.dart';
+import 'package:myapp/widgets/buttonOnSettings.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -578,36 +577,17 @@ class _MyAppState extends State<Settings> {
                               SizedBox(
                                 height: 30,
                               ),
-                              Button(
-                                text: '로그아웃',
-                                bgColor: Color.fromARGB(255, 52, 52, 52),
-                                textColor: Colors.black,
+                              CustomButton(
+                                text: '로그 아웃',
+                                bgColor: Color.fromARGB(255, 217, 217, 217),
+                                fgColor: Colors.black,
                               ),
                               SizedBox(height: 30),
-                              Button(
+                              CustomButton(
                                 text: '회원 탈퇴',
-                                bgColor: Color.fromARGB(255, 255, 0, 0),
-                                textColor: Colors.white,
+                                bgColor: Color.fromARGB(255, 255, 38, 23),
+                                fgColor: Colors.white,
                               ),
-                              SizedBox(height: 30),
-                              // ElevatedButton(
-                              //   onPressed: () {},
-                              //   style: ElevatedButton.styleFrom(
-                              //       backgroundColor:
-                              //           const Color.fromARGB(255, 255, 0, 0),
-                              //       foregroundColor: Colors.white,
-                              //       minimumSize: const Size(170, 60),
-                              //       shape: RoundedRectangleBorder(
-                              //         borderRadius: BorderRadius.circular(20),
-                              //       )),
-                              //   child: const Text(
-                              //     '임시',
-                              //     style: TextStyle(
-                              //       fontSize: 20,
-                              //       fontWeight: FontWeight.w400,
-                              //     ),
-                              //   ),
-                              // )
                             ],
                           ),
                         ],
