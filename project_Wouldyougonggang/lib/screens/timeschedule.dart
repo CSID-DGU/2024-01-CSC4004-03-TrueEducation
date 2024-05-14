@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:myapp/widgets/schechanges.dart';
-import 'package:myapp/widgets/timetable.dart';
+import 'package:project_Wouldyougonggang/widgets/schechanges.dart';
+import 'package:project_Wouldyougonggang/widgets/timetable.dart';
 
 class TimeSchedule extends StatefulWidget {
   const TimeSchedule({super.key});
 
   @override
-  State<TimeSchedule> createState() => _MyAppState();
+  State<TimeSchedule> createState() => _project_WouldyougonggangState();
 }
 
-class _MyAppState extends State<TimeSchedule> {
+class _project_WouldyougonggangState extends State<TimeSchedule> {
   List<ScheChanges> ScheChangesList = [];
 
   void LoadTimeTable() {

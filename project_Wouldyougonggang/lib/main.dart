@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/screens/TimeSchedule.dart';
-import 'package:myapp/screens/home.dart';
-import 'package:myapp/screens/mypage.dart';
-import 'package:myapp/screens/search.dart';
-import 'package:myapp/screens/settings.dart';
+import 'package:project_Wouldyougonggang/screens/TimeSchedule.dart';
+import 'package:project_Wouldyougonggang/screens/home.dart';
+import 'package:project_Wouldyougonggang/screens/mypage.dart';
+import 'package:project_Wouldyougonggang/screens/search.dart';
+import 'package:project_Wouldyougonggang/screens/settings.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const project_Wouldyougonggang());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class project_Wouldyougonggang extends StatefulWidget {
+  const project_Wouldyougonggang({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<project_Wouldyougonggang> createState() =>
+      _project_WouldyougonggangState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _project_WouldyougonggangState extends State<project_Wouldyougonggang> {
   int _pageIndex = 2;
 
   final List _pages = [

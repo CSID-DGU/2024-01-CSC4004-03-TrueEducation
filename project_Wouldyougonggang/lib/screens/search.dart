@@ -4,10 +4,10 @@ class Search extends StatefulWidget {
   const Search({super.key});
 
   @override
-  State<Search> createState() => _MyAppState();
+  State<Search> createState() => _project_WouldyougonggangState();
 }
 
-class _MyAppState extends State<Search> {
+class _project_WouldyougonggangState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
