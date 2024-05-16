@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/mypage.dart';
 import 'package:flutter_app/pages/post.dart';
+import 'package:flutter_app/pages/settings.dart';
+import 'package:flutter_app/pages/timeschedule.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -10,7 +13,7 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  int selectedIndex = 0;
+  int selectedIndex = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -20,46 +23,26 @@ class _NavigationState extends State<Navigation> {
         onDestinationSelected: (value) => setState(() {
           selectedIndex = value;
         }),
-        destinations: [
+        destinations: const [
           NavigationDestination(
-            icon: const Icon(Icons.people_alt),
+            icon: Icon(Icons.people_alt),
             label: "Post",
-            selectedIcon: Icon(
-              Icons.home,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
           ),
           NavigationDestination(
-            icon: const Icon(Icons.calendar_month_outlined),
+            icon: Icon(Icons.calendar_month_outlined),
             label: "Timetable",
-            selectedIcon: Icon(
-              Icons.search_rounded,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
           ),
           NavigationDestination(
-            icon: const Icon(Icons.home_filled),
+            icon: Icon(Icons.home_filled),
             label: "Home",
-            selectedIcon: Icon(
-              Icons.settings,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
           ),
           NavigationDestination(
-            icon: const Icon(Icons.home_filled),
+            icon: Icon(Icons.person),
             label: "Mypage",
-            selectedIcon: Icon(
-              Icons.person,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
           ),
           NavigationDestination(
-            icon: const Icon(Icons.settings),
+            icon: Icon(Icons.settings),
             label: "Settings",
-            selectedIcon: Icon(
-              Icons.settings,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
           ),
         ],
         animationDuration: const Duration(milliseconds: 500),
@@ -68,11 +51,11 @@ class _NavigationState extends State<Navigation> {
         child: IndexedStack(
           index: selectedIndex,
           children: [
-            Post(),
-            Post(), // Timetable
-            Post(), // Home
+            const Post(),
+            const TimeSchedule(), // Timetable
+            const Home(), // Home
             Mypage(), // Mypage
-            Post(), // Settings
+            const Settings(), // Settings
           ],
         ),
       ),
