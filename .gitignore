@@ -4,5 +4,6 @@ build/
 .vscode/
 ios/
 linux/
+macos/
 web/
 windows/
