@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:project_Wouldyougonggang/widgets/buttonOnSettings.dart';
+import 'package:flutter_app/widgets/buttonOnSettings.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
 
   @override
-  State<Settings> createState() => _project_WouldyougonggangState();
+  State<Settings> createState() => _MyAppState();
 }
 
-class _project_WouldyougonggangState extends State<Settings> {
+class _MyAppState extends State<Settings> {
   bool _isChecked0 = false;
   bool _isChecked1 = false;
   bool _isChecked2 = false;

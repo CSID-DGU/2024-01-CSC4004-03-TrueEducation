@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_Wouldyougonggang/widgets/daychart.dart';
-import 'package:project_Wouldyougonggang/widgets/meeting.dart';
+import 'package:flutter_app/widgets/daychart.dart';
+import 'package:flutter_app/widgets/meeting.dart';
 
 class TimeTable extends StatefulWidget {
   final double height;

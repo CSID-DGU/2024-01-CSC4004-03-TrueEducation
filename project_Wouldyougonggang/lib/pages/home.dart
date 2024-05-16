@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:project_Wouldyougonggang/widgets/meeting.dart';
-import 'package:project_Wouldyougonggang/widgets/timetable.dart';
+import 'package:flutter_app/widgets/meeting.dart';
+import 'package:flutter_app/widgets/timetable.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
