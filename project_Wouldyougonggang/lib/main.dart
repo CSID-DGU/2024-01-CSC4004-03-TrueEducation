@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Login(),
       ),
+      theme: ThemeData(fontFamily: 'Pretendard-Regular'),
+      themeMode: ThemeMode.system,
     );
   }
 }
