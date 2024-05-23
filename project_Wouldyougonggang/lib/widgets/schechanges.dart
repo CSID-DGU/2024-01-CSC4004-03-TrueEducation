@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/timeschedule.dart';
+import 'package:flutter_app/pages/timeschedule.dart';
 
 class ScheChanges extends StatefulWidget {
   final Color bgColor;
@@ -20,7 +22,11 @@ class _ScheChangesState extends State<ScheChanges> {
   @override
   Widget build(BuildContext context) {
     void DeleteSche() {
-      setState(() {});
+      setState(() {
+        final parent = context.findAncestorStateOfType<TimeScheduleState>();
+        // parent != null 일 때 removeWidget 메서드 호출
+        parent?.removeWidget(widget);
+      });
     }
 
     return Column(

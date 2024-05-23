@@ -52,9 +52,9 @@ class _NavigationState extends State<Navigation> {
           index: selectedIndex,
           children: [
             const Post(),
-            const TimeSchedule(), // Timetable
+            TimeSchedule(), // Timetable
             const Home(), // Home
-            Mypage(), // Mypage
+            const Mypage(), // Mypage
             const Settings(), // Settings
           ],
         ),

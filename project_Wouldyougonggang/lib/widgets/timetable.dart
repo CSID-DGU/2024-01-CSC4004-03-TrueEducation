@@ -4,8 +4,29 @@ import 'package:flutter_app/widgets/meeting.dart';
 
 class TimeTable extends StatefulWidget {
   final double height;
+  Daychart monChart = Daychart(
+    day: '월',
+  );
+  Daychart tuesChart = Daychart(
+    day: '화',
+  );
+  Daychart wednesChart = Daychart(
+    day: '수',
+  );
+  Daychart thursChart = Daychart(
+    day: '목',
+  );
+  Daychart friChart = Daychart(
+    day: '금',
+  );
+  Daychart saturChart = Daychart(
+    day: '토',
+  );
+  Daychart sunChart = Daychart(
+    day: '일',
+  );
 
-  const TimeTable({
+  TimeTable({
     super.key,
     required this.height,
   });
@@ -15,24 +36,10 @@ class TimeTable extends StatefulWidget {
 }
 
 class _TimeTableState extends State<TimeTable> {
-  List<Meeting> monday = [];
-
-  List<Meeting> tuesday = [];
-
-  List<Meeting> wednesday = [];
-
-  List<Meeting> thursday = [];
-
-  List<Meeting> friday = [];
-
-  List<Meeting> saturday = [];
-
-  List<Meeting> sunday = [];
-
   void onClicked() {
     setState(
       () {
-        print('tapped');
+        print('timetable tapped');
       },
     );
   }
@@ -247,51 +254,37 @@ class _TimeTableState extends State<TimeTable> {
                     color: Colors.black,
                     width: 1,
                   ),
-                  const Daychart(
-                    day: '월',
-                  ),
+                  widget.monChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 1,
                   ),
-                  const Daychart(
-                    day: '화',
-                  ),
+                  widget.tuesChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  const Daychart(
-                    day: '수',
-                  ),
+                  widget.wednesChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  const Daychart(
-                    day: '목',
-                  ),
+                  widget.thursChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  const Daychart(
-                    day: '금',
-                  ),
+                  widget.friChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  const Daychart(
-                    day: '토',
-                  ),
+                  widget.saturChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  const Daychart(
-                    day: '일',
-                  ),
+                  widget.sunChart,
                 ],
               ),
             ),

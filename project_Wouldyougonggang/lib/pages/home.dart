@@ -26,10 +26,10 @@ class _MyWidgetState extends State<Home> {
                 const SizedBox(
                   height: 7,
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(
                         left: 15,
                       ),
@@ -47,13 +47,13 @@ class _MyWidgetState extends State<Home> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TimeTable(
-                      height: 330,
+                      height: 380,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                   ],
@@ -103,53 +103,53 @@ class _MyWidgetState extends State<Home> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 7,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "추천 모임",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Align(
-                        child: Container(
-                          padding: const EdgeInsets.all(
-                            13,
-                          ),
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 217, 217, 217),
-                          ).copyWith(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Column(
-                            children: [
-                              Meeting(
-                                name: '모임 1',
-                                explanation: '모임 상세 설명',
-                                people: ' 1 / n',
-                              ),
-                              Meeting(
-                                name: '모임 1',
-                                explanation: '모임 상세 설명',
-                                people: ' 1 / n',
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // const SizedBox(
+                //   height: 7,
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       const Text(
+                //         "추천 모임",
+                //         style: TextStyle(
+                //           fontSize: 25,
+                //           fontWeight: FontWeight.w600,
+                //         ),
+                //       ),
+                //       const SizedBox(
+                //         height: 5,
+                //       ),
+                //       Align(
+                //         child: Container(
+                //           padding: const EdgeInsets.all(
+                //             13,
+                //           ),
+                //           decoration: const BoxDecoration(
+                //             color: Color.fromARGB(255, 217, 217, 217),
+                //           ).copyWith(
+                //             borderRadius: BorderRadius.circular(10),
+                //           ),
+                //           child: const Column(
+                //             children: [
+                //               Meeting(
+                //                 name: '모임 1',
+                //                 explanation: '모임 상세 설명',
+                //                 people: ' 1 / n',
+                //               ),
+                //               Meeting(
+                //                 name: '모임 1',
+                //                 explanation: '모임 상세 설명',
+                //                 people: ' 1 / n',
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),

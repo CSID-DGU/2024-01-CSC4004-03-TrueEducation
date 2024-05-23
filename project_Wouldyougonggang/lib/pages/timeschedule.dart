@@ -2,20 +2,30 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_app/widgets/schechanges.dart';
 import 'package:flutter_app/widgets/timetable.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_app/providers/bitmaskings.dart';
 
 class TimeSchedule extends StatefulWidget {
-  const TimeSchedule({super.key});
+  TimeTable timetable = TimeTable(
+    height: 380,
+  );
+
+  TimeSchedule({super.key});
 
   @override
-  State<TimeSchedule> createState() => _MyAppState();
+  State<TimeSchedule> createState() => TimeScheduleState();
 }
 
-class _MyAppState extends State<TimeSchedule> {
+class TimeScheduleState extends State<TimeSchedule> {
   List<ScheChanges> ScheChangesList = [];
 
   void LoadTimeTable() {
+    print('tapped');
+  }
+
+  void removeWidget(Widget widget) {
     setState(() {
-      print('tapped');
+      ScheChangesList.remove(widget);
     });
   }
 
@@ -48,6 +58,205 @@ class _MyAppState extends State<TimeSchedule> {
 
   @override
   Widget build(BuildContext context) {
+    List<List<int>> tmpBitmaskings = [
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1
+      ]
+    ];
+
     return MaterialApp(
       home: Scaffold(
         body: Container(
@@ -82,7 +291,11 @@ class _MyAppState extends State<TimeSchedule> {
                             Row(
                               children: [
                                 IconButton(
-                                  onPressed: LoadTimeTable,
+                                  onPressed: () {
+                                    context
+                                        .read<Bitmaskings>()
+                                        .initBitmaskings(tmpBitmaskings);
+                                  },
                                   icon: const Icon(
                                       Icons.add_photo_alternate_outlined),
                                   iconSize: 40,
@@ -104,9 +317,7 @@ class _MyAppState extends State<TimeSchedule> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const TimeTable(
-                        height: 380,
-                      ),
+                      widget.timetable,
                       const SizedBox(
                         height: 10,
                       ),
