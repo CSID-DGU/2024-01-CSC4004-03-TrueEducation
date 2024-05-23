@@ -1,6 +1,7 @@
 import cv2, os
 import Preprocessing
 from enum import IntEnum
+import pickle
 
 class Week(IntEnum):
     MONDAY = 0
@@ -22,8 +23,7 @@ class Extraction:
         
         self.img, self.width, self.height = pre.get_standard_image()
         
-        if pre.mode == Preprocessing.LIGHT:
-            self.img = cv2.bitwise_not(self.img)
+        cv2.imwrite('./result/ROI.jpg', self.img)
             
         self.create_contours()
     
@@ -36,7 +36,11 @@ class Extraction:
 
         self.times = [x for x in contours if cv2.contourArea(x) > 1000]
         
+        cv2.imwrite('./result/ROI-Thresh.jpg', thresh)
+        
         cv2.drawContours(self.img, self.times, -1, (0, 255, 0), 3)
+        
+        cv2.imwrite('./result/Contour.jpg', self.img)
         
     # 일정의 왼쪽 지점과 너비를 이용해 요일을 추출
     def get_day(self, start):
@@ -82,22 +86,20 @@ class Extraction:
         
         return time_table
         
-    def show(self):
-        self.img = cv2.resize(self.img, dsize=(800, 1000), interpolation=cv2.INTER_AREA)
-        cv2.imshow('Original', self.img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
 if __name__ == '__main__':
     # 현재 파일의 디렉토리로 작업 디렉토리 변경
     os.chdir(os.path.dirname(os.path.abspath(__file__)))    
     imgs = os.listdir('img')
     
-    schedule = Extraction('./img/' + imgs[4])
+    schedule = Extraction('./img/' + imgs[0])
     
     result = schedule.binarization()
     
-    print(result)
+    print('----------------------\n')
+    for i in result:
+        print(i)
+    print()
+        
     for i in result:
         temp = 0
         for j in i:
@@ -105,8 +107,10 @@ if __name__ == '__main__':
             temp |= j
         print(format(temp, '029b'))
         print()
-    
-    schedule.show()
+        
+    serialized = pickle.dumps(result)
+    print(serialized)
+    print(pickle.loads(serialized))
     
     # for img in imgs:
     #     schedule = Extraction(img)
