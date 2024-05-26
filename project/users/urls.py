@@ -1,8 +1,9 @@
-from django.urls import path, include
+from django.urls import path
 from .views import*
 app_name = "users"
 urlpatterns = [
-    path('', include('dj_rest_auth.urls')),
-    path('registration/', include('dj_rest_auth.registration.urls')),
-    path('calendar/', calendar),
+    path('register/', create_user, name='create_user'),
+    path('calendar/', calendar, name='calendar'),
+    path('login/', login, name='login'),
+    path('delete/', delete_user, name='delete'),
 ]
