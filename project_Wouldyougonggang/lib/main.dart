@@ -25,15 +25,11 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Login(),
       ),
-      theme: ThemeData(fontFamily: 'Pretendard-Regular'),
+      theme: ThemeData(fontFamily: 'Pretendard'),
       themeMode: ThemeMode.system,
     );
   }
 }
-
-
-
-
 
 // void main() {
 //   runApp(const MyApp());

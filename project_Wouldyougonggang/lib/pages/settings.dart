@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/widgets/buttonOnSettings.dart';
 
 class Settings extends StatefulWidget {
@@ -586,7 +587,7 @@ class _MyAppState extends State<Settings> {
                               CustomButton(
                                 text: '회원 탈퇴',
                                 bgColor: Color.fromARGB(255, 255, 38, 23),
-                                fgColor: Colors.white,
+                                fgColor: BACKGROUND_COLOR,
                               ),
                             ],
                           ),

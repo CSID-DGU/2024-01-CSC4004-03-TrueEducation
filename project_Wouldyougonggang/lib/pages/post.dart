@@ -4,8 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_app/pages/detailedPost.dart';
 import 'package:flutter_app/pages/evaluateMain.dart';
 import 'package:flutter_app/pages/newPost.dart';
+import 'package:flutter_app/widgets/completed_poster.dart';
+import 'package:flutter_app/theme/colors.dart';
+import 'package:flutter_app/widgets/entered_post.dart';
+import 'package:flutter_app/widgets/matching_post.dart';
+import 'package:flutter_app/widgets/poster.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_app/theme/colors.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -18,362 +24,112 @@ class _PostState extends State<Post> {
   bool isRecommand = true;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFFFFFFFF),
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: Container(
+        color: BACKGROUND_COLOR,
+        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).padding.top, 0,
+            MediaQuery.of(context).padding.bottom),
+        width: screenWidth,
+        height: screenHeight,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // 검색, 추가, 토글버튼 컨테이너
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: SUB_COLOR))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SearchBar(
+                    onSubmitted: (value) {
+                      // 검색 결과 입력시 동작(게시글 서버에서 받아오기)
+                    },
+                    leading: const Icon(Icons.search),
+                    hintText: 'search',
+                    shape: MaterialStatePropertyAll(ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20))),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isRecommand = true;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 80,
+                            height: 40,
+                            child: Text(
+                              '추천 모임',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: isRecommand ? Colors.black : Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isRecommand = false;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 80,
+                            height: 40,
+                            child: Text(
+                              '내 모임',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: isRecommand ? Colors.grey : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            CompletedPoster(),
+            MatchingPoster(),
+            EnteredPoster(),
+            Poster(),
+          ],
+        ),
       ),
-      child: Stack(
-        children: [
-          SizedBox(
-            width: 420,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0x8A000000)),
-                    color: Color(0xFFFFFFFF),
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(17, 20, 25, 7),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 50,
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.search),
-                                  iconSize: 40,
-                                  padding: EdgeInsets.fromLTRB(0, 0, 260, 0),
-                                ),
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.black, width: 1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              Container(
-                                height: 50,
-                                child: IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => NewPost()));
-                                  },
-                                  icon: Icon(Icons.add),
-                                  iconSize: 35,
-                                ),
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.black, width: 1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isRecommand = true;
-                                  });
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 100,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(),
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10)),
-                                      color: isRecommand
-                                          ? Colors.deepPurple
-                                          : Colors.white),
-                                  child: Text(
-                                    '추천 모임',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: isRecommand
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isRecommand = false;
-                                  });
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 100,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10)),
-                                      color: isRecommand
-                                          ? Colors.white
-                                          : Colors.deepPurple),
-                                  child: Text(
-                                    '내 모임',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: isRecommand
-                                          ? Colors.black
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EvaluateMain()));
-                  },
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(17, 0, 17, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 7, 0, 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFF000000)),
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFFFFFFF),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                      child: Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFFD9D9D9),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Container(
-                                          padding: EdgeInsets.fromLTRB(
-                                              15, 14.8, 7.4, 13.2),
-                                          child: Text(
-                                            'img',
-                                            style: GoogleFonts.getFont(
-                                              'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 18,
-                                              color: Color(0xFF000000),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.fromLTRB(4.3, 0, 4.3, 3.4),
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          '모임1\n모임 상세 설명    1/n',
-                                          style: GoogleFonts.getFont(
-                                            'Inter',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 18,
-                                            color: Color(0xFF000000),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0.6, 0, 0),
-                                  child: Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.fromLTRB(
-                                          13, 14.8, 7.4, 13.2),
-                                      child: Text(
-                                        '완료',
-                                        style: GoogleFonts.getFont(
-                                          'Inter',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 18,
-                                          color: Color(0xFF000000),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: DetailedPost(),
-                            // insetPadding: const EdgeInsets.fromLTRB(0, 80, 0, 80),
-                          );
-                        });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(17, 0, 17, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 7, 0, 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFF000000)),
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFFFFFFF),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                      child: Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFFD9D9D9),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Container(
-                                          padding: EdgeInsets.fromLTRB(
-                                              15, 14.8, 7.4, 13.2),
-                                          child: Text(
-                                            'img',
-                                            style: GoogleFonts.getFont(
-                                              'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 18,
-                                              color: Color(0xFF000000),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.fromLTRB(4.3, 0, 4.3, 3.4),
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          '모임1\n모임 상세 설명    1/n',
-                                          style: GoogleFonts.getFont(
-                                            'Inter',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 18,
-                                            color: Color(0xFF000000),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0.6, 0, 0),
-                                  child: Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.fromLTRB(
-                                          13, 14.8, 7.4, 13.2),
-                                      child: Text(
-                                        '참가',
-                                        style: GoogleFonts.getFont(
-                                          'Inter',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 18,
-                                          color: Color(0xFF000000),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Container(
+          width: 70,
+          height: 70,
+          child: FloatingActionButton(
+            onPressed: () {},
+            backgroundColor: PRIMARY_COLOR,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(70)),
+            child: const Icon(
+              Icons.add,
+              color: BACKGROUND_COLOR,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

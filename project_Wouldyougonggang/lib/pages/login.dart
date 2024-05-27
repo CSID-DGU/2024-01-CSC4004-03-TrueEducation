@@ -9,9 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-
+    var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Column(
         children: [
@@ -22,8 +21,8 @@ class Login extends StatelessWidget {
                   MediaQuery.of(context).padding.top,
                   0,
                   MediaQuery.of(context).padding.bottom),
-              height: screenHeight,
               width: screenWidth,
+              height: screenHeight,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
