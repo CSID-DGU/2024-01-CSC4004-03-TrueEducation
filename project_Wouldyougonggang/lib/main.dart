@@ -14,6 +14,7 @@ import 'package:flutter_app/pages/evaluateMain.dart';
 import 'package:flutter_app/pages/evaluateMain.dart';
 import 'package:flutter_app/pages/evaluateGood.dart';
 import 'package:flutter_app/pages/detailedPost.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(
@@ -33,6 +34,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter App',
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: Scaffold(
         body: ChangeNotifierProvider(
           create: (BuildContext context) => Bitmaskings(),

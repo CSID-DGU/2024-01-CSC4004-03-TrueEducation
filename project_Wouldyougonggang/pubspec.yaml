@@ -1,107 +1,109 @@
 name: flutter_app
 description: "A new Flutter project."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.3 <4.0.0'
+  sdk: ">=3.3.3 <4.0.0"
 
 dependencies:
+  cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.6
+  flutter_localizations:
+    sdk: flutter
+  fluttertoast: ^8.2.5
   google_fonts: ^6.2.1
+  http: ^1.2.1
   provider: ^6.1.2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   flutter_lints: ^3.0.0
   flutter_svg: ^2.0.10+1
-  http:
-  fluttertoast:
+  flutter_test:
+    sdk: flutter
+  fluttertoast: null
 
 flutter:
   uses-material-design: true
   assets:
-  - assets/vectors/image_17_x2.svg
-  - assets/vectors/vector_3_x2.svg
-  - assets/vectors/image_20_x2.svg
-  - assets/vectors/image_21_x2.svg
-  - assets/images/planets_70593516402.jpeg
-  - assets/vectors/vector_x2.svg
-  - assets/vectors/vector_4_x2.svg
-  - assets/vectors/image_14_x2.svg
-  - assets/vectors/image_9_x2.svg
-  - assets/vectors/image_22_x2.svg
-  - assets/vectors/vector_6_x2.svg
-  - assets/vectors/image_15_x2.svg
-  - assets/vectors/vector_5_x2.svg
-  - assets/vectors/image_13_x2.svg
-  - assets/vectors/image_25_x2.svg
-  - assets/vectors/image_10_x2.svg
-  - assets/vectors/vector_2_x2.svg
-  - assets/vectors/image_16_x2.svg
-  - assets/vectors/vector_1_x2.svg
-  - assets/vectors/vector_7_x2.svg
-  - assets/vectors/vector_8_x2.svg
-  - assets/vectors/vector_35_x2.svg
-  - assets/vectors/vector_44_x2.svg
-  - assets/vectors/vector_31_x2.svg
-  - assets/vectors/vector_38_x2.svg
-  - assets/vectors/vector_4_x2.svg
-  - assets/vectors/vector_36_x2.svg
-  - assets/vectors/vector_37_x2.svg
-  - assets/vectors/vector_3_x2.svg
-  - assets/vectors/vector_34_x2.svg
-  - assets/vectors/vector_42_x2.svg
-  - assets/vectors/vector_45_x2.svg
-  - assets/vectors/vector_41_x2.svg
-  - assets/vectors/vector_32_x2.svg
-  - assets/vectors/vector_46_x2.svg
-  - assets/vectors/vector_43_x2.svg
-  - assets/vectors/vector_48_x2.svg
-  - assets/vectors/vector_33_x2.svg
-  - assets/vectors/vector_47_x2.svg
-  - assets/vectors/image_26_x2.svg
-  - assets/images/image_2.jpeg
-  - assets/images/image_7.png
-  - assets/images/image_6.png
-  - assets/images/image_4.png
-  - assets/images/image_3.png
-  - assets/vectors/ellipse_4_x2.svg
-  - assets/vectors/ellipse_3_x2.svg
-  - assets/vectors/off_2_x2.svg
-  - assets/vectors/off_x2.svg
-  - assets/vectors/image_12_x2.svg
-  - assets/vectors/image_18_x2.svg
-  - assets/vectors/off_1_x2.svg
-  - assets/vectors/on_x2.svg
-  - assets/vectors/vector_2_x2.svg
-  - assets/images/image_1.jpeg
-  - assets/vectors/ellipse_12_x2.svg
-  - assets/vectors/ellipse_16_x2.svg
-  - assets/vectors/ellipse_7_x2.svg
-  - assets/vectors/ellipse_8_x2.svg
-  - assets/vectors/ellipse_10_x2.svg
-  - assets/vectors/ellipse_11_x2.svg
-  - assets/vectors/ellipse_15_x2.svg
-  - assets/vectors/ellipse_9_x2.svg
-  - assets/vectors/ellipse_6_x2.svg
-  - assets/vectors/image_23_x2.svg
-  - assets/vectors/ellipse_14_x2.svg
-  - assets/vectors/ellipse_13_x2.svg
-  - assets/images/image.png
-  - assets/images/magnifier_23115261.png
-  - assets/images/plus_18289251.png
-  - assets/vectors/image_8_x2.svg
-  - assets/images/magnifier_23115261.png
-  - assets/images/plus_18289251.png
-  - assets/images/image.png
-  - assets/vectors/image_19_x2.svg
-  - assets/vectors/image_24_x2.svg
-  - assets/images/planets_70593516402.jpeg
-  - assets/images/image_5.png
-  - assets/vectors/image_11_x2.svg
-
+    - assets/vectors/image_17_x2.svg
+    - assets/vectors/vector_3_x2.svg
+    - assets/vectors/image_20_x2.svg
+    - assets/vectors/image_21_x2.svg
+    - assets/images/planets_70593516402.jpeg
+    - assets/vectors/vector_x2.svg
+    - assets/vectors/vector_4_x2.svg
+    - assets/vectors/image_14_x2.svg
+    - assets/vectors/image_9_x2.svg
+    - assets/vectors/image_22_x2.svg
+    - assets/vectors/vector_6_x2.svg
+    - assets/vectors/image_15_x2.svg
+    - assets/vectors/vector_5_x2.svg
+    - assets/vectors/image_13_x2.svg
+    - assets/vectors/image_25_x2.svg
+    - assets/vectors/image_10_x2.svg
+    - assets/vectors/vector_2_x2.svg
+    - assets/vectors/image_16_x2.svg
+    - assets/vectors/vector_1_x2.svg
+    - assets/vectors/vector_7_x2.svg
+    - assets/vectors/vector_8_x2.svg
+    - assets/vectors/vector_35_x2.svg
+    - assets/vectors/vector_44_x2.svg
+    - assets/vectors/vector_31_x2.svg
+    - assets/vectors/vector_38_x2.svg
+    - assets/vectors/vector_4_x2.svg
+    - assets/vectors/vector_36_x2.svg
+    - assets/vectors/vector_37_x2.svg
+    - assets/vectors/vector_3_x2.svg
+    - assets/vectors/vector_34_x2.svg
+    - assets/vectors/vector_42_x2.svg
+    - assets/vectors/vector_45_x2.svg
+    - assets/vectors/vector_41_x2.svg
+    - assets/vectors/vector_32_x2.svg
+    - assets/vectors/vector_46_x2.svg
+    - assets/vectors/vector_43_x2.svg
+    - assets/vectors/vector_48_x2.svg
+    - assets/vectors/vector_33_x2.svg
+    - assets/vectors/vector_47_x2.svg
+    - assets/vectors/image_26_x2.svg
+    - assets/images/image_2.jpeg
+    - assets/images/image_7.png
+    - assets/images/image_6.png
+    - assets/images/image_4.png
+    - assets/images/image_3.png
+    - assets/vectors/ellipse_4_x2.svg
+    - assets/vectors/ellipse_3_x2.svg
+    - assets/vectors/off_2_x2.svg
+    - assets/vectors/off_x2.svg
+    - assets/vectors/image_12_x2.svg
+    - assets/vectors/image_18_x2.svg
+    - assets/vectors/off_1_x2.svg
+    - assets/vectors/on_x2.svg
+    - assets/vectors/vector_2_x2.svg
+    - assets/images/image_1.jpeg
+    - assets/vectors/ellipse_12_x2.svg
+    - assets/vectors/ellipse_16_x2.svg
+    - assets/vectors/ellipse_7_x2.svg
+    - assets/vectors/ellipse_8_x2.svg
+    - assets/vectors/ellipse_10_x2.svg
+    - assets/vectors/ellipse_11_x2.svg
+    - assets/vectors/ellipse_15_x2.svg
+    - assets/vectors/ellipse_9_x2.svg
+    - assets/vectors/ellipse_6_x2.svg
+    - assets/vectors/image_23_x2.svg
+    - assets/vectors/ellipse_14_x2.svg
+    - assets/vectors/ellipse_13_x2.svg
+    - assets/images/image.png
+    - assets/images/magnifier_23115261.png
+    - assets/images/plus_18289251.png
+    - assets/vectors/image_8_x2.svg
+    - assets/images/magnifier_23115261.png
+    - assets/images/plus_18289251.png
+    - assets/images/image.png
+    - assets/vectors/image_19_x2.svg
+    - assets/vectors/image_24_x2.svg
+    - assets/images/planets_70593516402.jpeg
+    - assets/images/image_5.png
+    - assets/vectors/image_11_x2.svg
