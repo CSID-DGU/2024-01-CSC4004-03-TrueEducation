@@ -31,6 +31,7 @@ def calendar(request):
         imgs = os.listdir('img')
         schedule = Extraction('./img/' + imgs[0]) # 인덱스 변경해야함
 
+        #result = schedule.binarization()
         result = schedule.binarization()
         serialized = json.dumps(result)
         
@@ -38,6 +39,7 @@ def calendar(request):
         user_schedule.timetable = serialized
         user_schedule.save()  # 저장 후에 데이터베이스에 반영
         # 특정 필드만 선택하여 JSON 응답 생성
+
         response_data = {
             "timetable": user_schedule.timetable
         }
@@ -78,7 +80,7 @@ def login(request):
             user = authenticate(email=email, password=password)
             tokens = get_tokens_for_user(user)  # 토큰을 생성
             response_data = {  # JSON 형식으로 응답 데이터 구성
-                'user': UserSerializer(user).data, # 유저 정보를 모두 담기
+                'user_info': UserSerializer(user).data, # 유저 정보를 모두 담기
                 'tokens': tokens
             }
             return Response(response_data, status=status.HTTP_201_CREATED)  # JSON 응답 반환
