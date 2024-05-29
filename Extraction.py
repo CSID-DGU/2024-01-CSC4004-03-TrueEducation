@@ -64,7 +64,11 @@ class Extraction:
                 dst.append(abs(y1 - y3))
         cnt = Counter(dst)
         
-        self.height = cnt.most_common(1)[0][0]
+        print(sorted(cnt.items(), key=lambda x: x[1], reverse=True))
+        print(cnt.most_common(1)[0][0])
+        print(min(cnt.most_common(10), key=lambda x: x[0]))
+        
+        self.height = min(cnt.most_common(10), key=lambda x: x[0])[0]
     
     # 각 일정의 테두리를 찾음
     def create_contours(self):
