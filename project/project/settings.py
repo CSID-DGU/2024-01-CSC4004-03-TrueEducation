@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from datetime import timedelta
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -46,6 +47,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # users 앱에서 내가 설정한 User를 사용하겠다고 설정한다.
 AUTH_USER_MODEL = 'users.User'

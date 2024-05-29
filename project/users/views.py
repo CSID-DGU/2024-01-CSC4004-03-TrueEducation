@@ -14,7 +14,7 @@ import json
 import os
 
 # 시간표 정보를 리턴하는 메소드
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def calendar(request):
     # user_schedule을 QuerySet이 아닌 객체로 가져오기
@@ -26,24 +26,25 @@ def calendar(request):
     user_schedule = Schedule.objects.filter(user=user).first()
 
     if user_schedule:
-    
-        os.chdir(os.path.dirname(os.path.abspath(__file__)))
-        imgs = os.listdir('img')
-        schedule = Extraction('./img/' + imgs[0]) # 인덱스 변경해야함
-
-        #result = schedule.binarization()
-        result = schedule.binarization()
-        serialized = json.dumps(result)
+        if request.method == 'POST' and request.FILES.get('image'):
+            #os.chdir(os.path.dirname(os.path.abspath(__file__)))
+            user_schedule.image = request.FILES.get('image')
+            user_schedule.save()
         
-        # timetable 필드에 직렬화된 데이터 저장
-        user_schedule.timetable = serialized
-        user_schedule.save()  # 저장 후에 데이터베이스에 반영
-        # 특정 필드만 선택하여 JSON 응답 생성
-
-        response_data = {
-            "timetable": user_schedule.timetable
-        }
-        return JsonResponse(response_data)
+            schedule = Extraction(user_schedule.image.path)
+            result = schedule.binarization()
+            serialized = json.dumps(result)
+            # timetable 필드에 직렬화된 데이터 저장
+            user_schedule.timetable = serialized
+            user_schedule.save()  # 저장 후에 데이터베이스에 반영
+                
+            # 특정 필드만 선택하여 JSON 응답 생성
+            response_data = {
+                "timetable": user_schedule.timetable
+            }
+            return JsonResponse(response_data)
+        else:
+            return JsonResponse({'error': 'No schedule found'})
     else:
         return JsonResponse({'error': 'No schedule found'})
 
