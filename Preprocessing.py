@@ -5,7 +5,6 @@ from PIL import Image
 class Preprocessing:
     img = None
     gray = None
-    thresh = None
     
     def __init__(self, path):
         self.img = np.array(Image.open(path))
@@ -16,7 +15,6 @@ class Preprocessing:
     def __del__(self):
         del self.img
         del self.gray
-        del self.thresh
     
     # 이미지를 흑백으로 변환
     def convert_image(self):
