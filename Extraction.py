@@ -100,21 +100,27 @@ class Extraction:
         return temp.index(min(temp))
                 
     # 일정의 시작 시간과 종료 시간을 이용해 시간대를 추출
+    time_list = [9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23]
     def get_time(self, y, h):
         img_height = self.img.shape[0] / self.height
         timetable_length = int(img_height)
         error = (img_height - timetable_length) * self.height
         
         y = y - error
-        time_length = int((h / self.height) * 2)
-        start_time = int(y / self.height * 2)
+        start = y / self.height + 9
+        end = h / self.height + start
+        
+        start_list = [abs(start - time) for time in self.time_list]
+        end_list = [abs(end - time) for time in self.time_list]
+        
+        start_time = self.time_list[start_list.index(min(start_list))]
+        end_time = self.time_list[end_list.index(min(end_list))]
         
         temp = 0
-        for i in range(time_length + 1):
-            temp |= 1 << (TIME - start_time - i)
+        for i in range(TIME - int((end_time - 9) * 2), TIME - int((start_time - 9) * 2)):
+            temp |= 1 << i
             
         return temp
-        
     
     # 각 일정을 이진화하여 시간대별로 분류
     def binarization(self):
