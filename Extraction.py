@@ -4,6 +4,7 @@ from enum import IntEnum
 import numpy as np
 import pickle
 from collections import Counter
+TIME = 29
 
 class Week(IntEnum):
     MONDAY = 0
@@ -106,9 +107,13 @@ class Extraction:
         
         y = y - error
         time_length = int((h / self.height) * 2)
-        start_time = y / self.height
+        start_time = int(y / self.height * 2)
         
-        for i in range():
+        temp = 0
+        for i in range(time_length + 1):
+            temp |= 1 << (TIME - start_time - i)
+            
+        return temp
         
     
     # 각 일정을 이진화하여 시간대별로 분류
@@ -129,7 +134,7 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.abspath(__file__)))    
     imgs = os.listdir('img')
     
-    schedule = Extraction('./img/' + imgs[6])
+    schedule = Extraction('./img/' + imgs[0])
     
     result = schedule.binarization()
     
