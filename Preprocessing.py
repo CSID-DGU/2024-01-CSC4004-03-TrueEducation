@@ -10,7 +10,6 @@ class Preprocessing:
     def __init__(self, path):
         self.img = np.array(Image.open(path))
         
-        cv2.imwrite('./result/Original.jpg', self.img)
         
         self.convert_image()
     
@@ -36,16 +35,12 @@ class Preprocessing:
             upper_white = np.array([255, 255, 255])
             
             mask = cv2.inRange(res, lower_gary, upper_white)
-            cv2.imwrite('./result/test/mask.jpg', mask)
             
             res[mask>=135] = (39, 39, 39)
-            cv2.imwrite('./result/test/res.jpg', res)
             
             self.img = res
         
         self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        
-        cv2.imwrite('./result/Original-Gray.jpg', self.gray)
     
     # 흑백 이미지에서 테두리를 찾고 가장 큰 테두리를 추출하여 기준 이미지로 설정
     def get_standard_image(self):
@@ -55,7 +50,5 @@ class Preprocessing:
         sorted_contours = sorted(contours, key = cv2.contourArea, reverse=True)
 
         x, y, w, h = cv2.boundingRect(sorted_contours[0])
-        
-        cv2.imwrite('./result/Original-Thresh.jpg', thresh)
         
         return self.img[y:y+h, x:x+w]

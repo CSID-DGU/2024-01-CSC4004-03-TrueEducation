@@ -25,7 +25,6 @@ class Extraction:
         
         self.img = pre.get_standard_image()
         
-        cv2.imwrite('./result/ROI.jpg', self.img)
             
         self.set_unit_height()
             
@@ -40,7 +39,6 @@ class Extraction:
         gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         
         edge = cv2.Canny(gray, 15, 40)
-        cv2.imwrite('./result/Frame-Edge.jpg', edge)
         
         lines = cv2.HoughLinesP(edge, 1, np.pi / 180, 280)
         
@@ -64,25 +62,18 @@ class Extraction:
                 dst.append(abs(y1 - y3))
         cnt = Counter(dst)
         
-        print(sorted(cnt.items(), key=lambda x: x[1], reverse=True))
-        print(cnt.most_common(1)[0][0])
-        print(min(cnt.most_common(10), key=lambda x: x[0]))
-        
         self.height = min(cnt.most_common(10), key=lambda x: x[0])[0]
     
     # 각 일정의 테두리를 찾음
     def create_contours(self):
         gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        cv2.imwrite('./result/ROI-Gray.jpg', gray)
         
         _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-        cv2.imwrite('./result/ROI-Thresh.jpg', thresh)
 
         self.times = [x for x in contours if cv2.contourArea(x) > 10000]
         
         cv2.drawContours(self.img, self.times, -1, (0, 255, 0), 3)
-        cv2.imwrite('./result/Contour.jpg', self.img)
         
         self.convexhull()
         
@@ -91,8 +82,6 @@ class Extraction:
             hull = cv2.convexHull(self.times[i], clockwise=False)
             cv2.drawContours(self.img, [hull], 0, (0, 0, 255), 2)
             self.times[i] = hull
-                
-        cv2.imwrite('./result/ConvexHull.jpg', self.img)
         
     # 일정의 왼쪽 지점과 너비를 이용해 요일을 추출
     def get_day(self, x, w):
