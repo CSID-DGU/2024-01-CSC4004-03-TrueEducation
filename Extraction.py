@@ -1,10 +1,9 @@
-import cv2, os
-import Preprocessing
+import cv2, Preprocessing
 from enum import IntEnum
-import numpy as np
-import pickle
 from collections import Counter
+
 TIME = 29
+PI = 3.141592653589793
 
 class Week(IntEnum):
     MONDAY = 0
@@ -21,11 +20,10 @@ class Extraction:
     height = None
     
     def __init__(self, path):
-        pre = Preprocessing.Preprocessing(path)
-        
+        pre = Preprocessing.Preprocessing(path).get_standard_image()
         self.img = pre.get_standard_image()
+        del pre    
         
-            
         self.set_unit_height()
             
         self.create_contours()
@@ -40,7 +38,7 @@ class Extraction:
         
         edge = cv2.Canny(gray, 15, 40)
         
-        lines = cv2.HoughLinesP(edge, 1, np.pi / 180, 280)
+        lines = cv2.HoughLinesP(edge, 1, PI / 180, 280)
         
         for line in lines:
             x1, y1, x2, y2 = line[0]
@@ -122,34 +120,6 @@ class Extraction:
         for time in self.times:
             x, y, w, h = cv2.boundingRect(time)
             
-            binary_time = self.get_time(y, h)
-            
-            time_table[self.get_day(x, w)].append(binary_time)
+            time_table[self.get_day(x, w)].append(self.get_time(y, h))
         
         return time_table
-        
-if __name__ == '__main__':
-    # 현재 파일의 디렉토리로 작업 디렉토리 변경
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))    
-    imgs = os.listdir('img')
-    
-    schedule = Extraction('./img/' + imgs[0])
-    
-    result = schedule.binarization()
-    
-    print('----------------------\n')
-    for i in result:
-        print(i)
-    print()
-        
-    for i in result:
-        temp = 0
-        for j in i:
-            print(format(j, '029b'))
-            temp |= j
-        print(format(temp, '029b'))
-        print()
-        
-    serialized = pickle.dumps(result)
-    print(serialized)
-    print(pickle.loads(serialized))
