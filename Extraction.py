@@ -20,7 +20,7 @@ class Extraction:
     height = None
     
     def __init__(self, path):
-        pre = Preprocessing.Preprocessing(path).get_standard_image()
+        pre = Preprocessing.Preprocessing(path)
         self.img = pre.get_standard_image()
         del pre    
         
