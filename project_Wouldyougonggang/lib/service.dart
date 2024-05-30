@@ -1,39 +1,42 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Services {
-  static const String url =
-      'https://721e-211-205-14-67.ngrok-free.app/users/dj-rest-auth/user/';
+  static const String url = 'https://107f-210-94-220-228.ngrok-free.app/login/';
 
-  static Future<User> fetchUserData(String accessToken) async {
+  static Future<User?> attemptLogin(String email, String password) async {
     try {
-      final response = await http.get(
+      // 서버로 보낼 데이터를 맵 형태로 구성
+      Map<String, dynamic> data = {"email": email, "password": password};
+
+      // HTTP POST 요청을 사용하여 로그인 시도
+      final response = await http.post(
         Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode(data),
       );
 
-      if (response.statusCode == 200) {
-        // JSON 데이터를 파싱하여 사용자 정보로 변환
-        User users = userFromJson(response.body);
-        Fluttertoast.showToast(msg: "email: $users");
-        return users;
-        // 여기서 사용자 정보를 활용하여 필요한 작업을 수행할 수 있습니다.
-        // 예: 데이터베이스에 사용자 정보 저장, 화면에 표시 등
+      // HTTP 응답 코드 확인
+      if (response.statusCode == 201) {
+        // 로그인 성공
+        print('Login successful!');
+        // 여기서 필요한 추가 작업을 수행하세요 (예: 로그인 정보 저장, 화면 이동 등)
+        //User user = userFromJson(response.body);
+        //jsonDecode(utf8.decode(response.bodyBytes));
+        User user = User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+        return user;
       } else {
-        // 서버로부터 데이터를 성공적으로 가져오지 못한 경우
-        throw Exception('Failed to load user data');
+        // 로그인 실패
+        print('Login failed. Status code: ${response.statusCode}');
+        // 여기서 실패 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
       }
     } catch (e) {
       // 오류 처리
-      Fluttertoast.showToast(
-        msg: 'Error: $e',
-        toastLength: Toast.LENGTH_SHORT,
-      );
+      print('Error during login: $e');
+      // 여기서 오류 발생 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
     }
-
-    return User(pk: 0, email: "no");
+    return null;
   }
 }

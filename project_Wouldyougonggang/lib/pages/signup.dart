@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
-import 'package:google_fonts/google_fonts.dart';
 
-class Signup extends StatelessWidget {
+class Signup extends StatefulWidget {
+  const Signup({super.key});
+
+  @override
+  State<Signup> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<Signup> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordCheckController =
+      TextEditingController();
+  final TextEditingController _nameControll = TextEditingController();
+  final TextEditingController _nicknameControll = TextEditingController();
+  final TextEditingController _birthControll = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFFFFFFFF),
-        ),
+    return Scaffold(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.fromLTRB(25, 25, 20, 0),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(color: BACKGROUND_COLOR),
+          padding: const EdgeInsets.fromLTRB(25, 25, 20, 0),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -20,94 +35,104 @@ class Signup extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 41),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.navigate_before),
-                          iconSize: 40,
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0, 5.5, 0, 2.5),
-                          child: Text(
-                            'Would You 공강',
-                            style: GoogleFonts.getFont(
-                              'Inter',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                              color: Color(0xFF000000),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 70),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
+                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: InputDecoration(labelText: '아이디'),
-                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(labelText: '이메일'),
+                            keyboardType: TextInputType.emailAddress,
+                            controller: _emailController,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
+                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: InputDecoration(
-                              labelText: '비밀번호',
-                            ),
+                            decoration:
+                                const InputDecoration(labelText: '비밀번호'),
                             keyboardType: TextInputType.text,
                             obscureText: true,
+                            controller: _passwordController,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
+                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: InputDecoration(labelText: '비밀번호 확인'),
+                            decoration:
+                                const InputDecoration(labelText: '비밀번호 확인'),
                             keyboardType: TextInputType.text,
                             obscureText: true,
+                            controller: _passwordCheckController,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
+                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: InputDecoration(labelText: '이름'),
+                            decoration: const InputDecoration(labelText: '이름'),
                             keyboardType: TextInputType.text,
+                            controller: _nameControll,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 20),
+                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: InputDecoration(labelText: '닉네임'),
+                            decoration: const InputDecoration(labelText: '닉네임'),
                             keyboardType: TextInputType.text,
+                            controller: _nicknameControll,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.fromLTRB(40, 0, 40, 100),
+                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 100),
                           child: TextField(
-                            decoration: InputDecoration(labelText: '생년월일'),
-                            keyboardType: TextInputType.text,
+                            decoration:
+                                const InputDecoration(labelText: '탄생년도'),
+                            keyboardType: TextInputType.number,
+                            controller: _birthControll,
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
+                          onTap: () async {
+                            String email = _emailController.toString();
+                            String password = _passwordController.toString();
+                            String passwordCheck =
+                                _passwordCheckController.toString();
+                            String name = _nameControll.toString();
+                            String nickname = _nicknameControll.toString();
+                            String birth = _birthControll.toString();
+
+                            // 로그인 버튼이 눌렸을 때의 처리
+                            // 아이디와 비밀번호를 사용하여 로그인을 시도하고 결과에 따라 처리
+                            // String email = _emailController.text.toString();
+                            // String password =
+                            //     _passwordController.text.toString();
+
+                            // Services.attemptLogin(email, password).then(
+                            //   (value) {
+                            //     setState(() {
+                            //       _user = value;
+                            //     });
+                            //     if (_user != null) {
+                            //       Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //             builder: (context) => Navigation()),
+                            //       );
+                            //     } else {
+                            //       Fluttertoast.showToast(
+                            //           msg: "아이디와 비밀번호가 틀렸습니다.");
+                            //     }
+                            //   },
+                            // );
                           },
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Color(0xFF6C69E8),
-                              boxShadow: [
+                              color: PRIMARY_COLOR,
+                              boxShadow: const [
                                 BoxShadow(
-                                  color: Color(0x40000000),
+                                  color: SUB_COLOR,
                                   offset: Offset(0, 4),
                                   blurRadius: 2,
                                 ),
@@ -115,16 +140,15 @@ class Signup extends StatelessWidget {
                             ),
                             child: Container(
                               alignment: Alignment.center,
-                              width: 290,
-                              padding: EdgeInsets.fromLTRB(0, 18.5, 0, 17.5),
-                              child: Text(
-                                '로그인',
-                                style: GoogleFonts.getFont(
-                                  'Inter',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16,
-                                  color: Color(0xFFFFFFFF),
-                                ),
+                              width: 300,
+                              height: 60,
+                              child: const Text(
+                                '가입하기',
+                                style: TextStyle(
+                                    fontFamily: 'Pretendard',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
                               ),
                             ),
                           ),
@@ -132,254 +156,6 @@ class Signup extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Container(
-                  //   margin: EdgeInsets.fromLTRB(18, 0, 24, 35),
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     children: [
-                  //       Container(
-                  //         margin: EdgeInsets.fromLTRB(0, 0, 0, 35),
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.start,
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Container(
-                  //               margin: EdgeInsets.fromLTRB(9, 0, 9, 6),
-                  //               child: Align(
-                  //                 alignment: Alignment.topLeft,
-                  //                 child: Text(
-                  //                   '아이디',
-                  //                   style: GoogleFonts.getFont(
-                  //                     'Inter',
-                  //                     fontWeight: FontWeight.w400,
-                  //                     fontSize: 16,
-                  //                     color: Color(0xFF000000),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             Container(
-                  //               decoration: BoxDecoration(
-                  //                 color: Color(0xFFFFFFFF),
-                  //                 borderRadius: BorderRadius.circular(10),
-                  //               ),
-                  //               child: Container(
-                  //                 width: 273,
-                  //                 height: 55,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         margin: EdgeInsets.fromLTRB(0, 0, 0, 35),
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.start,
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Container(
-                  //               margin: EdgeInsets.fromLTRB(9, 0, 9, 6),
-                  //               child: Align(
-                  //                 alignment: Alignment.topLeft,
-                  //                 child: Text(
-                  //                   '닉네임',
-                  //                   style: GoogleFonts.getFont(
-                  //                     'Inter',
-                  //                     fontWeight: FontWeight.w400,
-                  //                     fontSize: 16,
-                  //                     color: Color(0xFF000000),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             Container(
-                  //               decoration: BoxDecoration(
-                  //                 color: Color(0xFFFFFFFF),
-                  //                 borderRadius: BorderRadius.circular(10),
-                  //               ),
-                  //               child: Container(
-                  //                 width: 273,
-                  //                 height: 55,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         margin: EdgeInsets.fromLTRB(0, 0, 0, 35),
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.start,
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Container(
-                  //               margin: EdgeInsets.fromLTRB(9, 0, 9, 6),
-                  //               child: Align(
-                  //                 alignment: Alignment.topLeft,
-                  //                 child: Text(
-                  //                   '비밀번호',
-                  //                   style: GoogleFonts.getFont(
-                  //                     'Inter',
-                  //                     fontWeight: FontWeight.w400,
-                  //                     fontSize: 16,
-                  //                     color: Color(0xFF000000),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             Container(
-                  //               decoration: BoxDecoration(
-                  //                 color: Color(0xFFFFFFFF),
-                  //                 borderRadius: BorderRadius.circular(10),
-                  //               ),
-                  //               child: Container(
-                  //                 width: 273,
-                  //                 height: 55,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         margin: EdgeInsets.fromLTRB(0, 0, 0, 35),
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.start,
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Container(
-                  //               margin: EdgeInsets.fromLTRB(9, 0, 9, 6),
-                  //               child: Align(
-                  //                 alignment: Alignment.topLeft,
-                  //                 child: Text(
-                  //                   '비밀번호 확인',
-                  //                   style: GoogleFonts.getFont(
-                  //                     'Inter',
-                  //                     fontWeight: FontWeight.w400,
-                  //                     fontSize: 16,
-                  //                     color: Color(0xFF000000),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             Container(
-                  //               decoration: BoxDecoration(
-                  //                 color: Color(0xFFFFFFFF),
-                  //                 borderRadius: BorderRadius.circular(10),
-                  //               ),
-                  //               child: Container(
-                  //                 width: 273,
-                  //                 height: 55,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         margin: EdgeInsets.fromLTRB(0, 0, 0, 35),
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.start,
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Container(
-                  //               margin: EdgeInsets.fromLTRB(9, 0, 9, 6),
-                  //               child: Align(
-                  //                 alignment: Alignment.topLeft,
-                  //                 child: Text(
-                  //                   '이름',
-                  //                   style: GoogleFonts.getFont(
-                  //                     'Inter',
-                  //                     fontWeight: FontWeight.w400,
-                  //                     fontSize: 16,
-                  //                     color: Color(0xFF000000),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             Container(
-                  //               decoration: BoxDecoration(
-                  //                 color: Color(0xFFFFFFFF),
-                  //                 borderRadius: BorderRadius.circular(10),
-                  //               ),
-                  //               child: Container(
-                  //                 width: 273,
-                  //                 height: 55,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Column(
-                  //         mainAxisAlignment: MainAxisAlignment.start,
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           Container(
-                  //             margin: EdgeInsets.fromLTRB(9, 0, 9, 6),
-                  //             child: Align(
-                  //               alignment: Alignment.topLeft,
-                  //               child: Text(
-                  //                 '이메일',
-                  //                 style: GoogleFonts.getFont(
-                  //                   'Inter',
-                  //                   fontWeight: FontWeight.w400,
-                  //                   fontSize: 16,
-                  //                   color: Color(0xFF000000),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           Container(
-                  //             decoration: BoxDecoration(
-                  //               color: Color(0xFFFFFFFF),
-                  //               borderRadius: BorderRadius.circular(10),
-                  //             ),
-                  //             child: Container(
-                  //               width: 273,
-                  //               height: 55,
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Container(
-                  //   margin: EdgeInsets.fromLTRB(27, 0, 27, 14),
-                  //   child: Align(
-                  //     alignment: Alignment.topLeft,
-                  //     child: Container(
-                  //       child: Text(
-                  //         '생년월일',
-                  //         style: GoogleFonts.getFont(
-                  //           'Inter',
-                  //           fontWeight: FontWeight.w400,
-                  //           fontSize: 16,
-                  //           color: Color(0xFF000000),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   margin: EdgeInsets.fromLTRB(18, 0, 24, 0),
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //       color: Color(0xFF6C69E8),
-                  //       borderRadius: BorderRadius.circular(10),
-                  //     ),
-                  //     child: Container(
-                  //       padding: EdgeInsets.fromLTRB(0, 18.5, 0, 17.5),
-                  //       child: Text(
-                  //         '회원가입',
-                  //         style: GoogleFonts.getFont(
-                  //           'Inter',
-                  //           fontWeight: FontWeight.w400,
-                  //           fontSize: 16,
-                  //           color: Color(0xFFFFFFFF),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
               Positioned(

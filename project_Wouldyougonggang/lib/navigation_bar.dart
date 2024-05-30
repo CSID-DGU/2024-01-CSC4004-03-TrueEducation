@@ -51,7 +51,7 @@ class _NavigationState extends State<Navigation> {
         child: IndexedStack(
           index: selectedIndex,
           children: [
-            const Post(),
+            Post(),
             const TimeSchedule(), // Timetable
             const Home(), // Home
             Mypage(), // Mypage

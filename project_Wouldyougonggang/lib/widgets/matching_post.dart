@@ -14,6 +14,8 @@ class MatchingPoster extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+        width: MediaQuery.of(context).size.width - 40,
+        height: 80,
         decoration: const BoxDecoration(
           border: Border(
               bottom: BorderSide(color: SUB_COLOR),
