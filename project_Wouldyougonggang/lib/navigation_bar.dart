@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/json_parse.dart';
 import 'package:flutter_app/pages/mypage.dart';
 import 'package:flutter_app/pages/post.dart';
 import 'package:flutter_app/pages/settings.dart';
@@ -51,10 +52,10 @@ class _NavigationState extends State<Navigation> {
         child: IndexedStack(
           index: selectedIndex,
           children: [
-            Post(),
-            const TimeSchedule(), // Timetable
+            const Post(),
+            TimeSchedule(), // Timetable
             const Home(), // Home
-            Mypage(), // Mypage
+            const Mypage(), // Mypage
             const Settings(), // Settings
           ],
         ),

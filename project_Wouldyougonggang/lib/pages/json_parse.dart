@@ -5,12 +5,15 @@
 // class JsonParse extends StatefulWidget {
 //   const JsonParse({Key? key}) : super(key: key);
 
+
 //   @override
 //   State<JsonParse> createState() => _JsonParseState();
 // }
 
 // class _JsonParseState extends State<JsonParse> {
+
 //   late User? _user;
+
 //   bool loading = false;
 
 //   @override

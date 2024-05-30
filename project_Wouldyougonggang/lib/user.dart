@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final user = userFromJson(jsonString);
-
 import 'dart:convert';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
@@ -58,6 +54,7 @@ class UserInfo {
   String username;
   DateTime birthdate;
   int gender;
+  List<List<int>> timetable;
 
   UserInfo({
     required this.userId,
@@ -66,16 +63,25 @@ class UserInfo {
     required this.username,
     required this.birthdate,
     required this.gender,
+    required this.timetable,
   });
 
-  factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
-        userId: json["user_id"],
-        email: json["email"],
-        nickname: json["nickname"],
-        username: json["username"],
-        birthdate: DateTime.parse(json["birthdate"]),
-        gender: json["gender"],
-      );
+  factory UserInfo.fromJson(Map<String, dynamic> json) {
+    List<dynamic> timetableDynamic = jsonDecode(json['timetable']);
+    List<List<int>> timetableList = timetableDynamic.map((dynamic sublist) {
+      return List<int>.from(sublist);
+    }).toList();
+
+    return UserInfo(
+      userId: json["user_id"],
+      email: json["email"],
+      nickname: json["nickname"],
+      username: json["username"],
+      birthdate: DateTime.parse(json["birthdate"]),
+      gender: json["gender"],
+      timetable: timetableList,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "user_id": userId,
@@ -85,5 +91,6 @@ class UserInfo {
         "birthdate":
             "${birthdate.year.toString().padLeft(4, '0')}-${birthdate.month.toString().padLeft(2, '0')}-${birthdate.day.toString().padLeft(2, '0')}",
         "gender": gender,
+        'timetable': jsonEncode(timetable),
       };
 }
