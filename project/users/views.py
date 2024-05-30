@@ -11,7 +11,6 @@ from django.http import JsonResponse
 from .Extraction import *
 from .models import Schedule
 import json
-import os
 
 # 시간표 정보를 리턴하는 메소드
 @api_view(['POST'])
