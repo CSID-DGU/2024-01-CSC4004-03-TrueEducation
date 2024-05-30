@@ -53,7 +53,6 @@ class UserState(models.Model):
 # Schedule class
 class Schedule(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='img/', blank=True, null=True)  # 이미지를 저장할 필드
     timetable = models.TextField()
 
 # Variance class

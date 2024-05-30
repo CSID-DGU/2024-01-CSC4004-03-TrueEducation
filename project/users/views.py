@@ -25,25 +25,22 @@ def calendar(request):
     user_schedule = Schedule.objects.filter(user=user).first()
 
     if user_schedule:
-        if request.method == 'POST' and request.FILES.get('image'):
-            #os.chdir(os.path.dirname(os.path.abspath(__file__)))
-            user_schedule.image = request.FILES.get('image')
-            user_schedule.save()
         
-            schedule = Extraction(user_schedule.image.path)
-            result = schedule.binarization()
-            serialized = json.dumps(result)
-            # timetable 필드에 직렬화된 데이터 저장
-            user_schedule.timetable = serialized
-            user_schedule.save()  # 저장 후에 데이터베이스에 반영
-                
-            # 특정 필드만 선택하여 JSON 응답 생성
-            response_data = {
-                "timetable": user_schedule.timetable
-            }
-            return JsonResponse(response_data)
-        else:
-            return JsonResponse({'error': 'No schedule found'})
+        image = request.FILES.get('image')
+    
+        schedule = Extraction(image)
+        result = schedule.binarization()
+        serialized = json.dumps(result)
+        # timetable 필드에 직렬화된 데이터 저장
+        user_schedule.timetable = serialized
+        user_schedule.save()  # 저장 후에 데이터베이스에 반영
+            
+        # 특정 필드만 선택하여 JSON 응답 생성
+        response_data = {
+            "timetable": user_schedule.timetable
+        }
+        return JsonResponse(response_data)
+        
     else:
         return JsonResponse({'error': 'No schedule found'})
 
@@ -98,3 +95,6 @@ def delete_user(request):
         return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+# 모임 id, 모임 이름, 
