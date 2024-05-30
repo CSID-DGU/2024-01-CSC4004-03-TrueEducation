@@ -4,7 +4,7 @@ import 'package:flutter_app/providers/bitmaskings.dart';
 
 class Daychart extends StatelessWidget {
   final String day;
-  late List<int> bitmasking;
+  late String bitmasking;
 
   Daychart({
     super.key,
@@ -37,7 +37,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[0] == 0
+                color: bitmasking[0] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -45,27 +45,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[1] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-              height: 1,
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[2] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[3] == 0
+                color: bitmasking[1] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -77,7 +57,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[4] == 0
+                color: bitmasking[2] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -85,27 +65,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[5] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-              height: 1,
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[6] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[7] == 0
+                color: bitmasking[3] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -117,7 +77,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[8] == 0
+                color: bitmasking[4] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -125,27 +85,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[9] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-              height: 1,
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[10] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[11] == 0
+                color: bitmasking[5] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -157,7 +97,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[12] == 0
+                color: bitmasking[6] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -165,27 +105,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[13] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-              height: 1,
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[14] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[15] == 0
+                color: bitmasking[7] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -197,7 +117,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[16] == 0
+                color: bitmasking[8] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -205,27 +125,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[17] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-              height: 1,
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[18] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[19] == 0
+                color: bitmasking[9] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -237,7 +137,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[20] == 0
+                color: bitmasking[10] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -245,27 +145,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[21] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-              height: 1,
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[22] == 0
-                    ? Colors.transparent
-                    : const Color.fromARGB(255, 45, 45, 45),
-              ),
-            ),
-            SizedBox(
-              height: 25,
-              child: Container(
-                color: bitmasking[23] == 0
+                color: bitmasking[11] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -277,7 +157,7 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[24] == 0
+                color: bitmasking[12] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),
@@ -285,7 +165,127 @@ class Daychart extends StatelessWidget {
             SizedBox(
               height: 25,
               child: Container(
-                color: bitmasking[25] == 0
+                color: bitmasking[13] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 1,
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[14] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[15] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 1,
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[16] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[17] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 1,
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[18] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[19] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 1,
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[20] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[21] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 1,
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[22] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[23] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 1,
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[24] == '0'
+                    ? Colors.transparent
+                    : const Color.fromARGB(255, 45, 45, 45),
+              ),
+            ),
+            SizedBox(
+              height: 25,
+              child: Container(
+                color: bitmasking[25] == '0'
                     ? Colors.transparent
                     : const Color.fromARGB(255, 45, 45, 45),
               ),

@@ -1,23 +1,27 @@
+import 'dart:io';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Services {
   static const String url =
-      'https://721e-211-205-14-67.ngrok-free.app/users/dj-rest-auth/user/';
+      'https://107f-210-94-220-228.ngrok-free.app/calendar/';
 
-  static Future<User> fetchUserData(String accessToken) async {
+  static Future<User> fetchUserData(String accessToken, XFile image) async {
     try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      );
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers['Authorization'] = 'Bearer $accessToken'; // JWT 토큰 추가
+      request.files.add(await http.MultipartFile.fromPath('image', image.path));
 
+      var response = await request.send();
       if (response.statusCode == 200) {
         // JSON 데이터를 파싱하여 사용자 정보로 변환
-        User users = userFromJson(response.body);
+        String responseBody = await response.stream.bytesToString();
+        User users = userFromJson(responseBody);
         Fluttertoast.showToast(msg: "email: $users");
         return users;
         // 여기서 사용자 정보를 활용하여 필요한 작업을 수행할 수 있습니다.
@@ -34,6 +38,6 @@ class Services {
       );
     }
 
-    return User(pk: 0, email: "no");
+    return User(/*pk: 0, email: "no"*/ timetable: [[], [], [], [], [], [], []]);
   }
 }

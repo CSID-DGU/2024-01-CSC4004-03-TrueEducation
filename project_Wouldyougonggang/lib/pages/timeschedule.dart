@@ -1,9 +1,13 @@
+import 'dart:ffi';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/user.dart';
 
 import 'package:flutter_app/widgets/schechanges.dart';
 import 'package:flutter_app/widgets/timetable.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/bitmaskings.dart';
 import '../service.dart';
@@ -23,21 +27,22 @@ class TimeSchedule extends StatefulWidget {
 class TimeScheduleState extends State<TimeSchedule> {
   List<ScheChanges> ScheChangesList = [];
 
-  User _user = User(pk: 0, email: "");
+  User _user =
+      User(/*pk: 0, email: ""*/ timetable: [[], [], [], [], [], [], []]);
   bool loading = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Services.fetchUserData(
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1MTgwNzI1LCJpYXQiOjE3MTUxNzg5MjUsImp0aSI6IjhhMDgzYWU2ZDU3ZjQwOTE5ZWE2ODcyMzYyYmE0M2QxIiwidXNlcl9pZCI6NX0.NaukW9EnxExbQeHaRtHollRNdMXxRBEL-cQfbfzVtX0")
-        .then((value) {
-      setState(() {
-        _user = value;
-        loading = true;
-      });
-    });
+    // Services.fetchUserData(
+    //         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2ODg0NjczLCJpYXQiOjE3MTY4ODI4NzMsImp0aSI6IjNhY2VjYjExY2JkOTRlNmE4ZGU2YTIzYWQwY2I1YjQ2IiwidXNlcl9pZCI6MX0.VIS6RRQKHzgXHhG3nvYKDciE_F9QaTYdTqU_llP7uhQ")
+    //     .then((value) {
+    //   setState(() {
+    //     _user = value;
+    //     loading = true;
+    //   });
+    // });
   }
 
   void LoadTimeTable() {
@@ -52,6 +57,7 @@ class TimeScheduleState extends State<TimeSchedule> {
 
   void InputScheChanges() {
     DateTime selectedDay = DateTime.now();
+    DateTime selectedTime = DateTime(2024, 1, 1, 9, 0);
     String reason = '';
 
     showDialog(
@@ -90,13 +96,63 @@ class TimeScheduleState extends State<TimeSchedule> {
                           if (dateTime != null) {
                             setState2(() {
                               selectedDay = dateTime;
-                              print(selectedDay);
                             });
                           }
                         },
                       ),
                       Text(
                           '${selectedDay.year} - ${selectedDay.month} - ${selectedDay.day}'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.access_time),
+                        onPressed: () async {
+                          // final TimeOfDay? timeOfDay = await showTimePicker(
+                          //   context: context,
+                          //   initialTime: const TimeOfDay(hour: 9, minute: 0),
+                          //   initialEntryMode: TimePickerEntryMode.inputOnly,
+                          // );
+
+                          // if (timeOfDay != null) {
+                          //   setState2(() {
+                          //     selectedTime = timeOfDay;
+                          //   });
+                          // }
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (BuildContext context) => Container(
+                              height: 216,
+                              padding: const EdgeInsets.only(top: 6.0),
+                              // The bottom margin is provided to align the popup above the system
+                              // navigation bar.
+                              margin: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              // Provide a background color for the popup.
+                              color: CupertinoColors.systemBackground
+                                  .resolveFrom(context),
+                              // Use a SafeArea widget to avoid system overlaps.
+                              child: SafeArea(
+                                top: false,
+                                child: CupertinoDatePicker(
+                                  initialDateTime: selectedTime,
+                                  mode: CupertinoDatePickerMode.time,
+                                  use24hFormat: true,
+                                  // This is called when the user changes the time.
+                                  onDateTimeChanged: (DateTime newTime) {
+                                    setState2(() => selectedTime = newTime);
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Text(
+                          "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}"),
                     ],
                   ),
                   TextField(
@@ -132,9 +188,10 @@ class TimeScheduleState extends State<TimeSchedule> {
                     ),
                   ),
                   onPressed: () {
-                    setState(() {
-                      if (reason.isNotEmpty) {
-                        String yoil = '';
+                    if (reason.isNotEmpty) {
+                      String yoil = '';
+
+                      setState2(() {
                         switch (selectedDay.weekday) {
                           case 1:
                             yoil = '월';
@@ -158,7 +215,8 @@ class TimeScheduleState extends State<TimeSchedule> {
                             yoil = '일';
                             break;
                         }
-
+                      });
+                      setState(() {
                         ScheChangesList.add(
                           ScheChanges(
                             bgColor: const Color.fromARGB(255, 0, 234, 255),
@@ -168,14 +226,13 @@ class TimeScheduleState extends State<TimeSchedule> {
                           ),
                         );
                         Navigator.of(context).pop();
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('사유를 입력해주세요!'),
-                          duration: Duration(seconds: 2),
-                        ));
-                      }
-                    });
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('사유를 입력해주세요!'),
+                        duration: Duration(seconds: 2),
+                      ));
+                    }
                   },
                 ),
               ],
@@ -188,205 +245,6 @@ class TimeScheduleState extends State<TimeSchedule> {
 
   @override
   Widget build(BuildContext context) {
-    // List<List<int>> tmpBitmaskings = [
-    //   [
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     0,
-    //     0
-    //   ],
-    //   [
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     0,
-    //     0
-    //   ],
-    //   [
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     0,
-    //     0
-    //   ],
-    //   [
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     0,
-    //     0
-    //   ],
-    //   [
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     0,
-    //     0
-    //   ],
-    //   [
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     0,
-    //     0
-    //   ],
-    //   [
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     1,
-    //     0,
-    //     0,
-    //     0,
-    //     0,
-    //     1,
-    //     1,
-    //     0,
-    //     1
-    //   ]
-    // ];
-
     return MaterialApp(
       home: Scaffold(
         body: Container(
@@ -422,9 +280,58 @@ class TimeScheduleState extends State<TimeSchedule> {
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    context
-                                        .read<Bitmaskings>()
-                                        .initBitmaskings(_user.calendar!);
+                                    // 이미지 불러오기
+                                    ImagePicker()
+                                        .pickImage(source: ImageSource.gallery)
+                                        .then((image) {
+                                      if (image != null) {
+                                        setState(() {
+                                          Services.fetchUserData(
+                                                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3MDUyNjQwLCJpYXQiOjE3MTcwNTA4NDAsImp0aSI6Ijg4ZjA5OGRlZTUwZjRjMmJiZWJhNWYwNDdhMGE2YzZiIiwidXNlcl9pZCI6MX0.wdbT2BUDnWvSfA-6FkjY5sc9g49ypby_jAwql-RX8BU",
+                                                  image)
+                                              .then((value) {
+                                            setState(() {
+                                              _user = value;
+                                              loading = true;
+
+                                              List<String> tmpBitmaskings = [
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                              ];
+                                              int idx = 0;
+
+                                              print(_user.timetable);
+
+                                              for (List<int> i
+                                                  in _user.timetable) {
+                                                int temp = 0;
+                                                for (int j in i) {
+                                                  temp |= j;
+                                                }
+
+                                                tmpBitmaskings[idx] = temp
+                                                    .toRadixString(2)
+                                                    .padLeft(29, '0');
+                                                print(
+                                                    'tempToString$tmpBitmaskings[idx]');
+
+                                                context
+                                                    .read<Bitmaskings>()
+                                                    .initBitmaskings(
+                                                        tmpBitmaskings);
+
+                                                idx++;
+                                              }
+                                            });
+                                          });
+                                        });
+                                      }
+                                    });
                                   },
                                   icon: const Icon(
                                       Icons.add_photo_alternate_outlined),

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class Bitmaskings with ChangeNotifier {
-  List<List<int>> _bitmaskings = [
-    List.filled(26, 0),
-    List.filled(26, 0),
-    List.filled(26, 0),
-    List.filled(26, 0),
-    List.filled(26, 0),
-    List.filled(26, 0),
-    List.filled(26, 0),
+  List<String> _bitmaskings = [
+    List.filled(26, '0').join(),
+    List.filled(26, '0').join(),
+    List.filled(26, '0').join(),
+    List.filled(26, '0').join(),
+    List.filled(26, '0').join(),
+    List.filled(26, '0').join(),
+    List.filled(26, '0').join(),
   ];
 
-  List<int> getBitmasking(String day) {
-    List<int> bitmasking = List.filled(26, 0);
+  String getBitmasking(String day) {
+    String bitmasking = List.filled(26, '0').join();
 
     switch (day) {
       case '월':
@@ -41,8 +41,8 @@ class Bitmaskings with ChangeNotifier {
     return bitmasking;
   }
 
-  void initBitmaskings(List<List<int>> newBitmasking) {
-    _bitmaskings = newBitmasking;
+  void initBitmaskings(List<String> newBitmaskings) {
+    _bitmaskings = newBitmaskings;
     notifyListeners();
   }
 }
