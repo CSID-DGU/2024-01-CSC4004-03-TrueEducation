@@ -9,17 +9,17 @@ String userToJson(User data) => json.encode(data.toJson());
 
 class User {
   UserInfo userInfo;
-  Tokens tokens;
+  static late final Tokens tokens;
 
   User({
     required this.userInfo,
-    required this.tokens,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        userInfo: UserInfo.fromJson(json["user_info"]),
-        tokens: Tokens.fromJson(json["tokens"]),
-      );
+  factory User.fromJson(Map<String, dynamic> json) {
+    User.tokens = Tokens.fromJson(json["tokens"]);
+
+    return User(userInfo: UserInfo.fromJson(json["user_info"]));
+  }
 
   Map<String, dynamic> toJson() => {
         "user_info": userInfo.toJson(),
@@ -28,6 +28,7 @@ class User {
 }
 
 class Tokens {
+  late String test;
   String refresh;
   String access;
 

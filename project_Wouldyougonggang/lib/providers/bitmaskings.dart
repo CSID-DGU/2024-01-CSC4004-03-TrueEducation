@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Bitmaskings with ChangeNotifier {
-  List<String> _bitmaskings = [
+  static List<String> _bitmaskings = [
     List.filled(26, '0').join(),
     List.filled(26, '0').join(),
     List.filled(26, '0').join(),

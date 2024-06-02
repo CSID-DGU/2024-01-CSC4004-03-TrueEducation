@@ -27,7 +27,7 @@ class TimeSchedule extends StatefulWidget {
 class TimeScheduleState extends State<TimeSchedule> {
   List<ScheChanges> ScheChangesList = [];
 
-  User? _user;
+  late User _user;
   bool loading = false;
 
   @override

@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: ChangeNotifierProvider(
           create: (BuildContext context) => Bitmaskings(),
-          child: Login(),
+          child: const Login(),
         ),
       ),
       theme: ThemeData(fontFamily: 'Pretendard'),
