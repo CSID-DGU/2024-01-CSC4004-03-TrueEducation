@@ -27,8 +27,7 @@ class TimeSchedule extends StatefulWidget {
 class TimeScheduleState extends State<TimeSchedule> {
   List<ScheChanges> ScheChangesList = [];
 
-  User _user =
-      User(/*pk: 0, email: ""*/ timetable: [[], [], [], [], [], [], []]);
+  User? _user;
   bool loading = false;
 
   @override
@@ -286,46 +285,60 @@ class TimeScheduleState extends State<TimeSchedule> {
                                         .then((image) {
                                       if (image != null) {
                                         setState(() {
-                                          Services.fetchUserData(
-                                                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3MDUyNjQwLCJpYXQiOjE3MTcwNTA4NDAsImp0aSI6Ijg4ZjA5OGRlZTUwZjRjMmJiZWJhNWYwNDdhMGE2YzZiIiwidXNlcl9pZCI6MX0.wdbT2BUDnWvSfA-6FkjY5sc9g49ypby_jAwql-RX8BU",
-                                                  image)
+                                          Services.fetchUserTimetable(
+                                                  User.tokens.toString(), image)
                                               .then((value) {
                                             setState(() {
-                                              _user = value;
-                                              loading = true;
+                                              if (value != null) {
+                                                _user = value;
+                                                // Do something with _user
+                                                loading =
+                                                    true; // Assume loading is false when data is successfully loaded
+                                                List<String> tmpBitmaskings = [
+                                                  List.filled(26, '0').join(),
+                                                  List.filled(26, '0').join(),
+                                                  List.filled(26, '0').join(),
+                                                  List.filled(26, '0').join(),
+                                                  List.filled(26, '0').join(),
+                                                  List.filled(26, '0').join(),
+                                                  List.filled(26, '0').join(),
+                                                ];
+                                                int idx = 0;
 
-                                              List<String> tmpBitmaskings = [
-                                                List.filled(26, '0').join(),
-                                                List.filled(26, '0').join(),
-                                                List.filled(26, '0').join(),
-                                                List.filled(26, '0').join(),
-                                                List.filled(26, '0').join(),
-                                                List.filled(26, '0').join(),
-                                                List.filled(26, '0').join(),
-                                              ];
-                                              int idx = 0;
+                                                print(_user.userInfo.timetable);
 
-                                              print(_user.timetable);
+                                                for (List<int> i in _user
+                                                    .userInfo.timetable) {
+                                                  int temp = 0;
+                                                  for (int j in i) {
+                                                    temp |= j;
+                                                  }
 
-                                              for (List<int> i
-                                                  in _user.timetable) {
-                                                int temp = 0;
-                                                for (int j in i) {
-                                                  temp |= j;
+                                                  tmpBitmaskings[idx] = temp
+                                                      .toRadixString(2)
+                                                      .padLeft(29, '0');
+                                                  print(
+                                                      'tempToString$tmpBitmaskings[idx]');
+
+                                                  context
+                                                      .read<Bitmaskings>()
+                                                      .initBitmaskings(
+                                                          tmpBitmaskings);
+
+                                                  idx++;
                                                 }
-
-                                                tmpBitmaskings[idx] = temp
-                                                    .toRadixString(2)
-                                                    .padLeft(29, '0');
-                                                print(
-                                                    'tempToString$tmpBitmaskings[idx]');
-
-                                                context
-                                                    .read<Bitmaskings>()
-                                                    .initBitmaskings(
-                                                        tmpBitmaskings);
-
-                                                idx++;
+                                              } else {
+                                                // Handle the null case, perhaps by setting an error state or similar
+                                                loading = false;
+                                                // Optionally set an error message or take other actions
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                        const SnackBar(
+                                                  content: Text(
+                                                      'Failed to load timetable'),
+                                                  duration:
+                                                      Duration(seconds: 2),
+                                                ));
                                               }
                                             });
                                           });
