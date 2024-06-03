@@ -4,9 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/model/postmodel.dart';
+import 'package:flutter_app/pages/detailedPost.dart';
 import 'package:flutter_app/pages/newPost.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_app/api/postapi.dart';
+
+import 'evaluateMain.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -192,18 +195,34 @@ class _PostState extends State<Post> {
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: const Color(0xFF000000),
-            width: 1
+      child: GestureDetector(
+        onTap: () {
+          if(isRecomend){
+            showModalBottomSheet(
+                context: context,
+                builder: (context) => DetailedPost()
+            );
+          }
+          else{
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EvaluateMain())
+            );
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color(0xFF000000),
+              width: 1
+            ),
+            borderRadius: BorderRadius.circular(10)
           ),
-          borderRadius: BorderRadius.circular(10)
+          height: unitSize + 20,
+          child: isRecomend ? recommendItem(name, start, end, current, max)
+              : myItem(name, start, end, current, max)
         ),
-        height: unitSize + 20,
-        child: isRecomend ? recommendItem(name, start, end, current, max)
-            : myItem(name, start, end, current, max)
-      ),
+      )
     );
   }
 
