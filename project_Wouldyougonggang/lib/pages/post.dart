@@ -1,11 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/model/postmodel.dart';
-import 'package:flutter_app/pages/detailedPost.dart';
-import 'package:flutter_app/pages/evaluateMain.dart';
 import 'package:flutter_app/pages/newPost.dart';
-import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_app/api/postapi.dart';
 
@@ -23,6 +22,9 @@ class _PostState extends State<Post> {
 
   late PostList? postList;
 
+  late var unitSize;
+  late var unitFontSize;
+
   @override
   void initState(){
     isSelected = [isRecomend, isMy];
@@ -32,6 +34,9 @@ class _PostState extends State<Post> {
 
   @override
   Widget build(BuildContext context) {
+    unitSize = min(MediaQuery.of(context).size.height / 8, MediaQuery.of(context).size.width / 6);
+    unitFontSize = unitSize / 100;
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -154,7 +159,7 @@ class _PostState extends State<Post> {
               }
 
               if (postList != null) {
-                return listview_builder();
+                return Expanded(child: listviewBuilder());
               }
 
               return const Text('no data found');
@@ -165,32 +170,220 @@ class _PostState extends State<Post> {
     );
   }
 
-  Widget listview_builder() {
+  Widget listviewBuilder() {
     return ListView.builder(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       itemCount: postList!.length,
       itemBuilder: (context, index) {
-        final post = (postList as List<PostItem>)[index];
+        final post = (postList!.posts)[index];
 
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(post.id.toString()),
-                Text(post.name.toString()),
-                Text(post.gender.toString()),
-                Text(post.age.toString()),
-                Text(post.max.toString()),
-                Text(post.current.toString()),
-                Text(post.start.toString()),
-                Text(post.end.toString()),
-              ],
+        return listviewItem(post);
+      },
+    );
+  }
+
+  Widget listviewItem(post) {
+    final String name = post.name.toString();
+    final List<String> start = post.start.toString().split(RegExp(r'[ \-\:]'));
+    final List<String> end = post.end.toString().split(RegExp(r'[ \-\:]'));
+    final int current = post.current.toInt();
+    final int max = post.max.toInt();
+    //final int state = post.state.toInt();
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFF000000),
+            width: 1
+          ),
+          borderRadius: BorderRadius.circular(10)
+        ),
+        height: unitSize + 20,
+        child: isRecomend ? recommendItem(name, start, end, current, max)
+            : myItem(name, start, end, current, max)
+      ),
+    );
+  }
+
+  Widget recommendItem(name, start, end, current, max) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: unitSize,
+          height: unitSize,
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/images/planets_70593516402.jpeg',
+                fit: BoxFit.cover,
+              )
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width - (unitSize * 2) - 120,
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w800,
+                  fontSize: unitFontSize * 24,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                '${start[1]}/${start[2]}',
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: unitFontSize * 18,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                '${start[3]}:${start[4]} ~ ${end[3]}:${end[4]}',
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: unitFontSize * 12,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                '$current / $max',
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: unitFontSize * 12,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: const Color(0xFFd9d9d9),
+            ),
+            width: unitSize,
+            height: unitSize,
+            child: Text(
+              '참가',
+              style: GoogleFonts.getFont(
+                'Inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: Colors.black,
+              ),
             ),
           ),
-        );
-      },
+        )
+      ],
+    );
+  }
+
+  Widget myItem(name, start, end, current, max) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: unitSize,
+          height: unitSize,
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/images/planets_70593516402.jpeg',
+                fit: BoxFit.cover,
+              )
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width - (unitSize * 2) - 120,
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w800,
+                  fontSize: unitFontSize * 24,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                '${start[1]}/${start[2]}',
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: unitFontSize * 18,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                '${start[3]}:${start[4]} ~ ${end[3]}:${end[4]}',
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: unitFontSize * 12,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                '$current / $max',
+                style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: unitFontSize * 12,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: const Color(0xFFd9d9d9),
+            ),
+            width: unitSize,
+            height: unitSize,
+            child: Text(
+              '참가',
+              style: GoogleFonts.getFont(
+                'Inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -206,5 +399,9 @@ class _PostState extends State<Post> {
     setState(() {
       isSelected = [isRecomend, isMy];
     });
+  }
+
+  void test() {
+
   }
 }

@@ -9,8 +9,6 @@ String data = '''
       "id": 0,
       "img":"",
       "name":"test1",
-      "gender":3,
-      "age":30,
       "max":10,
       "current":3,
       "start":"2024-05-30 09:00:00",
@@ -39,6 +37,33 @@ String data = '''
   }
   ''';
 
+String my = '''
+  {
+    "post":[{
+      "id": 3,
+      "img":"",
+      "name":"test11",
+      "start":"2024-05-30 09:00:00",
+      "end":"2024-05-30 10:00:00",
+      "state":0
+    },{
+      "id": 4,
+      "img":"",
+      "name":"test22",
+      "start":"2024-05-30 09:00:00",
+      "end":"2024-05-30 10:00:00",
+      "state":1
+    },{
+      "id": 5,
+      "img":"",
+      "name":"test33",
+      "start":"2024-05-31 13:00:00",
+      "end":"2024-05-31 13:30:00",
+      "state":2
+    }]
+  }
+  ''';
+
 Future<PostList> fetchPost() async {
   // const url = 'https://localhost/posts';
   // final response = await http.get(Uri.parse(url));
@@ -48,8 +73,8 @@ Future<PostList> fetchPost() async {
   //   return PostList.fromJson(jsondata);
   // }
 
-    Map<String, dynamic> jsondata = jsonDecode(data);
-    return PostList.fromJson(jsondata);
+    Map jsondata = jsonDecode(data);
+    return PostList.parse(jsondata);
 
   // throw Exception(response.statusCode);
 }

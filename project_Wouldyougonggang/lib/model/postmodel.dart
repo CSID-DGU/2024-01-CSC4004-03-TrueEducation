@@ -2,17 +2,22 @@ import 'dart:collection';
 import 'dart:convert';
 
 class PostList {
-  List<PostItem> posts;
+  final List<PostItem> posts;
 
   PostList({
     required this.posts
   });
 
-  factory PostList.fromJson(Map<String, dynamic> json) {
-    List list = jsonDecode(json['post']);
+  factory PostList.parse(Map json) {
+    List list = json['post'];
+
+    List<PostItem> result = [];
+    list.forEach((element) {
+      result.add(PostItem.parse(element));
+    });
 
     return PostList(
-        posts: list.map((element) => PostItem.fromJson(element)).toList()
+        posts: result
     );
   }
 
@@ -20,35 +25,26 @@ class PostList {
 }
 
 class PostItem {
-  int id;
-  String img;
-  String name;
-  int gender;
-  int age;
-  int max;
-  int current;
-  String start;
-  String end;
+  final int id;
+  final String name;
+  final int max;
+  final int current;
+  final String start;
+  final String end;
 
   PostItem({
     required this.id,
-    required this.img,
     required this.name,
-    required this.gender,
-    required this.age,
     required this.max,
     required this.current,
     required this.start,
     required this.end,
   });
 
-  factory PostItem.fromJson(Map<String, dynamic> json) {
+  factory PostItem.parse(Map json) {
     return PostItem(
       id: json['id'],
-      img: json['img'],
       name: json['name'],
-      gender: json['gender'],
-      age: json['age'],
       max: json['max'],
       current: json['current'],
       start: json['start'],
