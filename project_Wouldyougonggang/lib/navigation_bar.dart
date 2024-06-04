@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/home.dart';
-import 'package:flutter_app/pages/json_parse.dart';
 import 'package:flutter_app/pages/mypage.dart';
 import 'package:flutter_app/pages/post.dart';
 import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/timeschedule.dart';
+import 'package:flutter_app/widgets/poster.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -53,7 +53,7 @@ class _NavigationState extends State<Navigation> {
           index: selectedIndex,
           children: [
             const Post(),
-            TimeSchedule(), // Timetable
+            Post(), // Timetable
             const Home(), // Home
             const Mypage(), // Mypage
             const Settings(), // Settings

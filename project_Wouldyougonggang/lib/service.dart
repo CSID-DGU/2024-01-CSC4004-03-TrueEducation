@@ -8,12 +8,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Services {
-  static const String url = 'https://67bf-106-101-128-73.ngrok-free.app/';
+  static const String url = 'https://3b63-210-94-220-228.ngrok-free.app/';
 
   static Future<User?> attemptLogin(String email, String password) async {
     try {
       // 서버로 보낼 데이터를 맵 형태로 구성
       Map<String, dynamic> data = {"email": email, "password": password};
+
+      print(Uri.parse('${url}login/'));
 
       // HTTP POST 요청을 사용하여 로그인 시도
       final response = await http.post(
@@ -31,7 +33,11 @@ class Services {
         // 여기서 필요한 추가 작업을 수행하세요 (예: 로그인 정보 저장, 화면 이동 등)
         //User user = userFromJson(response.body);
         //jsonDecode(utf8.decode(response.bodyBytes));
+        print(response.bodyBytes.toString());
+        print(utf8.decode(response.bodyBytes).toString());
+        print(jsonDecode(utf8.decode(response.bodyBytes)).toString());
         User user = User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+        print(user);
         return user;
       } else {
         // 로그인 실패
@@ -74,5 +80,40 @@ class Services {
     }
 
     return null;
+  }
+
+  static Future<bool> attemptSignup(String userID, String password,
+      String nickname, String username, String birthYear, String gender) async {
+    try {
+      Map<String, dynamic> data = {
+        "email": userID,
+        "password": password,
+        "nickname": nickname,
+        "username": username,
+        "birthdate": birthYear,
+        "gender": gender,
+      };
+      print(jsonEncode(data));
+
+      final response = await http.post(
+        Uri.parse('${url}register/'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 201) {
+        // 회원가입 성공
+        print('Signup successful!');
+        // 여기서 필요한 추가 작업을 수행하세요 (예: 로그인 정보 저장, 화면 이동 등)
+        return true;
+      } else {
+        // 로그인 실패
+        // 여기서 실패 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
+        print('Signup failed. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during Signup: $e');
+    }
+    return false;
   }
 }

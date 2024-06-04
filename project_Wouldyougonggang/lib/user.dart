@@ -28,22 +28,17 @@ class User {
 }
 
 class Tokens {
-  late String test;
-  String refresh;
   String access;
 
   Tokens({
-    required this.refresh,
     required this.access,
   });
 
   factory Tokens.fromJson(Map<String, dynamic> json) => Tokens(
-        refresh: json["refresh"],
         access: json["access"],
       );
 
   Map<String, dynamic> toJson() => {
-        "refresh": refresh,
         "access": access,
       };
 }
@@ -55,7 +50,6 @@ class UserInfo {
   String username;
   DateTime birthdate;
   int gender;
-  List<List<int>> timetable;
 
   UserInfo({
     required this.userId,
@@ -64,15 +58,9 @@ class UserInfo {
     required this.username,
     required this.birthdate,
     required this.gender,
-    required this.timetable,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
-    List<dynamic> timetableDynamic = jsonDecode(json['timetable']);
-    List<List<int>> timetableList = timetableDynamic.map((dynamic sublist) {
-      return List<int>.from(sublist);
-    }).toList();
-
     return UserInfo(
       userId: json["user_id"],
       email: json["email"],
@@ -80,7 +68,6 @@ class UserInfo {
       username: json["username"],
       birthdate: DateTime.parse(json["birthdate"]),
       gender: json["gender"],
-      timetable: timetableList,
     );
   }
 
@@ -92,6 +79,5 @@ class UserInfo {
         "birthdate":
             "${birthdate.year.toString().padLeft(4, '0')}-${birthdate.month.toString().padLeft(2, '0')}-${birthdate.day.toString().padLeft(2, '0')}",
         "gender": gender,
-        'timetable': jsonEncode(timetable),
       };
 }

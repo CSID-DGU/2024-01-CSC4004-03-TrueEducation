@@ -10,3 +10,4 @@ const Color GREEN_BUTTON_COLOR = Colors.green;
 const Color SUB_COLOR = Color.fromARGB(255, 209, 209, 209);
 const Color MAIN_FONT_COLOR = Colors.black;
 const Color SUB_FONT_COLOR = Color.fromARGB(255, 143, 143, 143);
+const Color BUTTON_FONT_COLOR = Colors.white;

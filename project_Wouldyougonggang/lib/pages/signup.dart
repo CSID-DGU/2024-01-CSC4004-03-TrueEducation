@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
+import 'package:flutter_app/service.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -10,13 +13,15 @@ class Signup extends StatefulWidget {
 }
 
 class _SignUpState extends State<Signup> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordCheckController =
       TextEditingController();
-  final TextEditingController _nameControll = TextEditingController();
-  final TextEditingController _nicknameControll = TextEditingController();
-  final TextEditingController _birthControll = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _birthYearController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +47,9 @@ class _SignUpState extends State<Signup> {
                         Container(
                           margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: const InputDecoration(labelText: '이메일'),
+                            decoration: const InputDecoration(labelText: '아이디'),
                             keyboardType: TextInputType.emailAddress,
-                            controller: _emailController,
+                            controller: _userIDController,
                           ),
                         ),
                         Container(
@@ -70,38 +75,67 @@ class _SignUpState extends State<Signup> {
                         Container(
                           margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: const InputDecoration(labelText: '이름'),
+                            decoration: const InputDecoration(labelText: '닉네임'),
                             keyboardType: TextInputType.text,
-                            controller: _nameControll,
+                            controller: _nicknameController,
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                           child: TextField(
-                            decoration: const InputDecoration(labelText: '닉네임'),
+                            decoration: const InputDecoration(labelText: '이름'),
                             keyboardType: TextInputType.text,
-                            controller: _nicknameControll,
+                            controller: _usernameController,
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                          child: TextField(
+                            decoration:
+                                const InputDecoration(labelText: '탄생년도'),
+                            keyboardType: TextInputType.datetime,
+                            controller: _birthYearController,
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.fromLTRB(40, 0, 40, 100),
                           child: TextField(
-                            decoration:
-                                const InputDecoration(labelText: '탄생년도'),
+                            decoration: const InputDecoration(labelText: '성별'),
                             keyboardType: TextInputType.number,
-                            controller: _birthControll,
+                            controller: _genderController,
                           ),
                         ),
                         GestureDetector(
                           onTap: () async {
-                            String email = _emailController.toString();
-                            String password = _passwordController.toString();
+                            String userID = _userIDController.text.toString();
+                            String password =
+                                _passwordController.text.toString();
                             String passwordCheck =
-                                _passwordCheckController.toString();
-                            String name = _nameControll.toString();
-                            String nickname = _nicknameControll.toString();
-                            String birth = _birthControll.toString();
+                                _passwordCheckController.text.toString();
+                            String nickname =
+                                _nicknameController.text.toString();
+                            String username =
+                                _usernameController.text.toString();
+                            String birthYear =
+                                _birthYearController.text.toString();
+                            String gender = _genderController.text.toString();
 
+                            if (password == passwordCheck) {
+                              Future<bool> IsSignup = Services.attemptSignup(
+                                userID,
+                                password,
+                                nickname,
+                                username,
+                                birthYear,
+                                gender,
+                              );
+
+                              if (await IsSignup) {
+                                Navigator.pop(context);
+                              }
+                            } else {
+                              print("${password} ${passwordCheck}");
+                            }
                             // 로그인 버튼이 눌렸을 때의 처리
                             // 아이디와 비밀번호를 사용하여 로그인을 시도하고 결과에 따라 처리
                             // String email = _emailController.text.toString();
@@ -148,7 +182,7 @@ class _SignUpState extends State<Signup> {
                                     fontFamily: 'Pretendard',
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.white),
+                                    color: BUTTON_FONT_COLOR),
                               ),
                             ),
                           ),
