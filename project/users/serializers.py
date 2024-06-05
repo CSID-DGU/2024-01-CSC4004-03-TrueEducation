@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Group, GroupMember
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,3 +55,34 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    #leader = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Group
+        fields = '__all__'    
+
+class GroupMemberSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = GroupMember
+        fields = '__all__'
+
+
+class GroupDetailSerializer(serializers.ModelSerializer):
+    member = serializers.SerializerMethodField()
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+    def get_member(self, obj):
+        members = GroupMember.objects.filter(group=obj)
+        serializer = GroupMemberSerializer(instance=members, many=True)
+        return serializer.data
+    
+class AcceptMemberSerializer(serializers.Serializer):
+    group = serializers.IntegerField()
+    user = serializers.IntegerField()

@@ -73,17 +73,23 @@ class Report(models.Model):
 # Group class
 class Group(models.Model):
     group_id = models.AutoField(primary_key=True)
-    group_img = models.CharField(max_length=20, null=True, blank=True)
+    group_img = models.ImageField(upload_to="group/", blank=True, null=True)
     group_name = models.CharField(max_length=30, null=False, blank=False)  # NOT NULL
-    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leader_id')
-    current_num = models.PositiveSmallIntegerField(null=False, blank=False, default=0)  # NOT NULL
+    min_age = models.PositiveSmallIntegerField(null=False, blank=False, default=0)  # NOT NULL
+    max_age = models.PositiveSmallIntegerField(null=False, blank=False, default=127)  # NOT NULL
+    group_gender = models.PositiveSmallIntegerField(null=False, blank=False, default=3)  # 3이면 성별 상관없음
+    leader = models.ForeignKey(User, on_delete=models.CASCADE)
+    min_num = models.PositiveSmallIntegerField(null=False, blank=False, default=0)  # NOT NULL
+    max_num = models.PositiveSmallIntegerField(null=False, blank=False, default=127)  # NOT NULL
+    current_num = models.PositiveSmallIntegerField(null=False, blank=False, default=1)  # NOT NULL
     start_time = models.DateTimeField(null=False, blank=False)  # NOT NULL
     end_time = models.DateTimeField(null=False, blank=False)  # NOT NULL
     description = models.TextField(null=True, blank=True) 
-    flag = models.BooleanField(null=False, blank=False)  # NOT NULL
+    current_state = models.PositiveSmallIntegerField(null=False, blank=False, default=1)  # NOT NULL
+    flag = models.BooleanField(null=True, blank=True, default=0) #0 은 노출가능
 
-# GroupState class
-class GroupState(models.Model):
+# GroupMember class
+class GroupMember(models.Model):
     group= models.ForeignKey(Group, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    current_state = models.PositiveSmallIntegerField(null=False, blank=False, default=0)  # NOT NULL
+    state = models.PositiveSmallIntegerField(null=True, blank=True, default=1)  # NOT NULL
