@@ -38,7 +38,6 @@ flutter:
   - assets/vectors/vector_3_x2.svg
   - assets/vectors/image_20_x2.svg
   - assets/vectors/image_21_x2.svg
-  - assets/images/planets_70593516402.jpeg
   - assets/vectors/vector_x2.svg
   - assets/vectors/vector_4_x2.svg
   - assets/vectors/image_14_x2.svg
@@ -110,9 +109,18 @@ flutter:
   - assets/images/image.png
   - assets/vectors/image_19_x2.svg
   - assets/vectors/image_24_x2.svg
-  - assets/images/planets_70593516402.jpeg
   - assets/images/image_5.png
   - assets/vectors/image_11_x2.svg
+  - assets/images/planets_70593516402.jpeg
+  - assets/images/mercucy.jpg
+  - assets/images/sun.jpg
+  - assets/images/neptune.jpg
+  - assets/images/uranus.jpg
+  - assets/images/saturn.jpg
+  - assets/images/jupiter.jpg
+  - assets/images/marse.jpg
+  - assets/images/earth.jpg
+  - assets/images/venus.jpg
 
   fonts:
     - family: Pretendard

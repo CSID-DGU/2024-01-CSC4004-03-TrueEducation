@@ -20,6 +20,7 @@ class _NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
+        height: 80,
         selectedIndex: selectedIndex,
         onDestinationSelected: (value) => setState(() {
           selectedIndex = value;

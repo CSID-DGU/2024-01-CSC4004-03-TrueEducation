@@ -10,7 +10,6 @@ import 'package:flutter_app/widgets/entered_post.dart';
 import 'package:flutter_app/widgets/matching_post.dart';
 import 'package:flutter_app/widgets/poster.dart';
 import 'dart:ui';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_app/theme/colors.dart';
 
 class Post extends StatefulWidget {
@@ -75,7 +74,9 @@ class _PostState extends State<Post> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: isRecommand ? Colors.black : Colors.grey,
+                                color: isRecommand
+                                    ? MAIN_FONT_COLOR
+                                    : SUB_FONT_COLOR,
                               ),
                             ),
                           ),
@@ -95,7 +96,9 @@ class _PostState extends State<Post> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: isRecommand ? Colors.grey : Colors.black,
+                                color: isRecommand
+                                    ? SUB_FONT_COLOR
+                                    : MAIN_FONT_COLOR,
                               ),
                             ),
                           ),
@@ -120,7 +123,10 @@ class _PostState extends State<Post> {
           width: 70,
           height: 70,
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => NewPost()));
+            },
             backgroundColor: PRIMARY_COLOR,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(70)),
