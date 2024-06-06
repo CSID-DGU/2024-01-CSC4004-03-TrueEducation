@@ -58,7 +58,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    #leader = serializers.PrimaryKeyRelatedField(read_only=True)
+    leader = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Group

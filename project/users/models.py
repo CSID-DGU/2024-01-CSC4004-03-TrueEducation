@@ -85,7 +85,7 @@ class Group(models.Model):
     start_time = models.DateTimeField(null=False, blank=False)  # NOT NULL
     end_time = models.DateTimeField(null=False, blank=False)  # NOT NULL
     description = models.TextField(null=True, blank=True) 
-    current_state = models.PositiveSmallIntegerField(null=False, blank=False, default=1)  # NOT NULL
+    current_state = models.PositiveSmallIntegerField(null=True, blank=True, default=1)  # NOT NULL
     flag = models.BooleanField(null=True, blank=True, default=0) #0 은 노출가능
 
 # GroupMember class
