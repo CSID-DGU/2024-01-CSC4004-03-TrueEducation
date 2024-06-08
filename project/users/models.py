@@ -48,7 +48,7 @@ class UserState(models.Model):
     pos_honor_num = models.IntegerField(null=True, blank=True, default=0) 
     pos_ready_num = models.IntegerField(null=True, blank=True, default=0)  
     pos_conven_num = models.IntegerField(null=True, blank=True, default=0) 
-    pos_leadership = models.IntegerField(null=True, blank=True, default=0) 
+    pos_leadership_num = models.IntegerField(null=True, blank=True, default=0) 
     report_num = models.IntegerField(null=True, blank=True)
 
 # Schedule class
