@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/service.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui';
@@ -13,7 +14,7 @@ class EvaluateGood extends StatefulWidget {
 }
 
 class _EvaluateGoodState extends State<EvaluateGood> {
-  List<bool> isSelected = [false, false, false, false, false, false];
+  List<int> isSelected = [0, 0, 0, 0, 0, 0];
   int trueNum = 0;
   @override
   Widget build(BuildContext context) {
@@ -63,8 +64,13 @@ class _EvaluateGoodState extends State<EvaluateGood> {
                 ],
               ),
               GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
+                onTap: () async {
+                  if (trueNum > 0) {
+                    Future<bool> isSubmit = Services.submitEvaluate(isSelected);
+                    if (await isSubmit) Navigator.pop(context);
+                  } else {
+                    Fluttertoast.showToast(msg: "하나 이상 선택해주세요!");
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -104,28 +110,28 @@ class _EvaluateGoodState extends State<EvaluateGood> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (trueNum < 3 && isSelected[index] == false) {
-            isSelected[index] = true;
+          if (trueNum < 3 && isSelected[index] == 0) {
+            isSelected[index] = 1;
             trueNum++;
-          } else if (trueNum >= 3 && isSelected[index] == false) {
+          } else if (trueNum >= 3 && isSelected[index] == 0) {
             Fluttertoast.showToast(msg: "이미 3개를 고르셨어요!");
-          } else if (isSelected[index] == true) {
-            isSelected[index] = false;
+          } else if (isSelected[index] == 1) {
+            isSelected[index] = 0;
             trueNum--;
           }
         });
       },
       child: Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 30),
         child: Container(
           width: 400,
           decoration: BoxDecoration(
-            color: isSelected[index] ? PRIMARY_COLOR : SUB_COLOR,
+            color: isSelected[index] == 1 ? PRIMARY_COLOR : SUB_COLOR,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.fromLTRB(0, 16, 1.8, 16),
+            padding: const EdgeInsets.fromLTRB(0, 16, 1.8, 16),
             child: Text(
               text,
               style: const TextStyle(

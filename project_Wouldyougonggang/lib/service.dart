@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 
@@ -30,24 +31,15 @@ class Services {
       if (response.statusCode == 201) {
         // 로그인 성공
         print('Login successful!');
-        // 여기서 필요한 추가 작업을 수행하세요 (예: 로그인 정보 저장, 화면 이동 등)
-        //User user = userFromJson(response.body);
-        //jsonDecode(utf8.decode(response.bodyBytes));
-        print(response.bodyBytes.toString());
-        print(utf8.decode(response.bodyBytes).toString());
-        print(jsonDecode(utf8.decode(response.bodyBytes)).toString());
         User user = User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-        print(user);
         return user;
       } else {
         // 로그인 실패
         print('Login failed. Status code: ${response.statusCode}');
-        // 여기서 실패 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
       }
     } catch (e) {
       // 오류 처리
       print('Error during login: $e');
-      // 여기서 오류 발생 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
     }
     return null;
   }
@@ -93,7 +85,6 @@ class Services {
         "birthdate": birthYear,
         "gender": gender,
       };
-      print(jsonEncode(data));
 
       final response = await http.post(
         Uri.parse('${url}register/'),
@@ -104,12 +95,35 @@ class Services {
       if (response.statusCode == 201) {
         // 회원가입 성공
         print('Signup successful!');
-        // 여기서 필요한 추가 작업을 수행하세요 (예: 로그인 정보 저장, 화면 이동 등)
         return true;
       } else {
-        // 로그인 실패
-        // 여기서 실패 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
+        // 회원가입 실패
         print('Signup failed. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during Signup: $e');
+    }
+    return false;
+  }
+
+  static Future<bool> submitEvaluate(List<int> isSelected) async {
+    try {
+      Map<String, dynamic> data = {"evaluateAdd": isSelected};
+      print(jsonEncode(data));
+
+      final response = await http.post(
+        Uri.parse('${url}register/'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 201) {
+        // 제출 성공
+        print('Submit successful!');
+        return true;
+      } else {
+        // 제출 실패
+        print('Submit failed. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error during Signup: $e');
