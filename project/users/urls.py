@@ -2,6 +2,7 @@ from django.urls import path
 from .views import*
 from django.conf import settings
 from django.conf.urls.static import static
+
 app_name = "users"
 urlpatterns = [
     path('register/', create_user, name='create_user'),
@@ -16,4 +17,6 @@ urlpatterns = [
     path('accept_member/', accept_member, name='accept_member'),
     path('make_variation/', make_variation, name='make_variation'),
     path('get_variation/', get_variation, name='get_variation'),
+    path('evaluate_user/', update_user_state, name='evaluate-userState'), 
+    path('get_userState/', get_user_state, name='get-userState'), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
