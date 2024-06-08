@@ -9,3 +9,12 @@
 /img
 /result
 >>>>>>> 44334ee70d0af27a510ea6aa35bde9f360047403
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
