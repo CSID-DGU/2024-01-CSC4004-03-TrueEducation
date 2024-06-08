@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:flutter_app/pages/detailedPost.dart';
@@ -185,13 +186,12 @@ class _PostState extends State<Post> {
     );
   }
 
-  Widget listviewItem(post) {
-    final String name = post.name.toString();
-    final List<String> start = post.start.toString().split(RegExp(r'[ \-\:]'));
-    final List<String> end = post.end.toString().split(RegExp(r'[ \-\:]'));
-    final int current = post.current.toInt();
-    final int max = post.max.toInt();
-    //final int state = post.state.toInt();
+  Widget listviewItem(PostItem post) {
+    final String name = post.groupName.toString();
+    final List<String> start = post.startTime.toString().split(RegExp(r'[ \-\:T]'));
+    final List<String> end = post.endTime.toString().split(RegExp(r'[ \-\:T]'));
+    final int current = post.currentNum.toInt();
+    final int max = post.maxNum.toInt();
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
@@ -199,8 +199,25 @@ class _PostState extends State<Post> {
         onTap: () {
           if(isRecomend){
             showModalBottomSheet(
-                context: context,
-                builder: (context) => DetailedPost()
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => DetailedPost(
+                name,
+                post.minAge,
+                post.maxAge,
+                post.groupGender,
+                post.minNum,
+                max,
+                start,
+                end,
+                post.description
+              ),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30)
+                )
+              )
             );
           }
           else{
