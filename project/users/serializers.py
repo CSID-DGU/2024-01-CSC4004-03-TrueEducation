@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Group, GroupMember
+from .models import User, Group, GroupMember, Variance
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -86,3 +86,10 @@ class GroupDetailSerializer(serializers.ModelSerializer):
 class AcceptMemberSerializer(serializers.Serializer):
     group = serializers.IntegerField()
     user = serializers.IntegerField()
+
+class VariationSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Variance
+        fields = '__all__'

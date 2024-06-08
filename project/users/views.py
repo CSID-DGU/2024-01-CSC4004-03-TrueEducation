@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer
+from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer, VariationSerializer
 
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from .Extraction import *
-from .models import Schedule, Group, GroupMember
+from .models import Schedule, Group, GroupMember, Variance
 import json
 
 # 시간표 정보를 리턴하는 메소드
@@ -184,13 +184,20 @@ def accept_member(request):
         return Response(response_data, status=status.HTTP_201_CREATED)  # JSON 응답 반환
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# 모임 생성 및 관리
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def create_group(request):
-    serializer = GroupSerializer(data=request.data)
+def make_variation(request):
+    serializer = VariationSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(leader=request.user)
+        serializer.save(user=request.user)
         
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_variation(request):
+    variance = Variance.objects.filter(user=request.user).first()
+   
+    serializer = VariationSerializer(variance)
+    return Response(serializer.data)

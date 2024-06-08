@@ -14,4 +14,6 @@ urlpatterns = [
     path('my_group_list/', my_group_list, name='my_group_list'),
     path('apply_group/', apply_group, name='apply_group'),
     path('accept_member/', accept_member, name='accept_member'),
+    path('make_variation/', make_variation, name='make_variation'),
+    path('get_variation/', get_variation, name='get_variation'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
