@@ -60,7 +60,7 @@ class Schedule(models.Model):
 class Variance(models.Model):
     variable_time_id = models.AutoField(primary_key=True)
     variable_time = models.CharField(max_length=26, null=False, blank=False)  # NOT NULL
-    flag = models.BooleanField(null=False, blank=False)  # NOT NULL
+    flag = models.BooleanField(null=True, blank=True, default=0)  # NOT NULL
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 # Report class

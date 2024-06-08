@@ -183,3 +183,14 @@ def accept_member(request):
         }
         return Response(response_data, status=status.HTTP_201_CREATED)  # JSON 응답 반환
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 모임 생성 및 관리
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_group(request):
+    serializer = GroupSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(leader=request.user)
+        
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
