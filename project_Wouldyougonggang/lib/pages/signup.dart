@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
@@ -20,7 +18,8 @@ class _SignUpState extends State<Signup> {
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _birthYearController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
+  String _selectedGender = '3';
+  String _passwordError = '';
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +61,28 @@ class _SignUpState extends State<Signup> {
                       ),
                       Container(
                         margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
-                        child: TextField(
-                          decoration:
-                              const InputDecoration(labelText: '비밀번호 확인'),
-                          keyboardType: TextInputType.text,
-                          obscureText: true,
-                          controller: _passwordCheckController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextField(
+                              decoration:
+                                  const InputDecoration(labelText: '비밀번호 확인'),
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                              controller: _passwordCheckController,
+                            ),
+                            if (_passwordError.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  _passwordError,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                       Container(
@@ -89,17 +104,64 @@ class _SignUpState extends State<Signup> {
                       Container(
                         margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
                         child: TextField(
-                          decoration: const InputDecoration(labelText: '탄생년도'),
+                          decoration: const InputDecoration(
+                            labelText: '탄생년도',
+                            hintText: '2024-12-25', // 추가된 힌트 텍스트
+                          ),
                           keyboardType: TextInputType.datetime,
                           controller: _birthYearController,
                         ),
                       ),
                       Container(
-                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 100),
-                        child: TextField(
-                          decoration: const InputDecoration(labelText: '성별'),
-                          keyboardType: TextInputType.number,
-                          controller: _genderController,
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '성별',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('남'),
+                                    value: '1',
+                                    groupValue: _selectedGender,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedGender = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('여'),
+                                    value: '2',
+                                    groupValue: _selectedGender,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedGender = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('X'),
+                                    value: '3',
+                                    groupValue: _selectedGender,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedGender = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                       GestureDetector(
@@ -112,10 +174,14 @@ class _SignUpState extends State<Signup> {
                           String username = _usernameController.text.toString();
                           String birthYear =
                               _birthYearController.text.toString();
-                          String gender = _genderController.text.toString();
+                          String gender = _selectedGender;
 
                           if (password == passwordCheck) {
-                            Future<bool> IsSignup = Services.attemptSignup(
+                            setState(() {
+                              _passwordError = '';
+                            });
+
+                            Future<bool> isSignup = Services.attemptSignup(
                               userID,
                               password,
                               nickname,
@@ -124,11 +190,13 @@ class _SignUpState extends State<Signup> {
                               gender,
                             );
 
-                            if (await IsSignup) {
+                            if (await isSignup) {
                               Navigator.pop(context);
                             }
                           } else {
-                            print("${password} ${passwordCheck}");
+                            setState(() {
+                              _passwordError = '비밀번호가 일치하지 않습니다';
+                            });
                           }
                         },
                         child: Container(

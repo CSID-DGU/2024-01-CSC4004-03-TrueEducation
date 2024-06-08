@@ -126,7 +126,7 @@ class _EvaluateGoodState extends State<EvaluateGood> {
         child: Container(
           width: 400,
           decoration: BoxDecoration(
-            color: isSelected[index] == 1 ? PRIMARY_COLOR : SUB_COLOR,
+            color: isSelected[index] == 1 ? SUB_FONT_COLOR : SUB_COLOR,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
@@ -134,11 +134,13 @@ class _EvaluateGoodState extends State<EvaluateGood> {
             padding: const EdgeInsets.fromLTRB(0, 16, 1.8, 16),
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                   fontFamily: 'Pretendard',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: MAIN_FONT_COLOR),
+                  color: isSelected[index] == 1
+                      ? BUTTON_FONT_COLOR
+                      : MAIN_FONT_COLOR),
             ),
           ),
         ),
