@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer, VariationSerializer
+from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer, VariationSerializer, UserStateSerializer
 
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from .Extraction import *
-from .models import Schedule, Group, GroupMember, Variance
+from .models import Schedule, Group, GroupMember, Variance, UserState
 import json
 
 # 시간표 정보를 리턴하는 메소드
@@ -220,3 +220,28 @@ def get_variation(request):
     serializer = VariationSerializer(variance, many=True)
     return Response(serializer.data)
 
+
+# 유저 평가
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_state(request):
+    user = request.user
+    user_state = UserState.objects.get(user=user)
+    
+    serializer = UserStateSerializer(user_state, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()            
+        response_data = serializer.data
+        response_data['message'] = '유저 평가 완료'
+        return Response(response_data,  status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 유저 평가 정보 가져오기
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_state(request):
+    user = request.user
+    user_state = UserState.objects.get(user=user)
+    
+    serializer = UserStateSerializer(user_state)
+    return Response(serializer.data)

@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # UserState class
 class UserState(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
     grade = models.PositiveSmallIntegerField(null=False, blank=False, default=8)  # NOT NULL
     pos_time_num = models.IntegerField(null=True, blank=True, default=0)  
     pos_manner_num = models.IntegerField(null=True, blank=True, default=0)  
@@ -49,7 +49,7 @@ class UserState(models.Model):
     pos_ready_num = models.IntegerField(null=True, blank=True, default=0)  
     pos_conven_num = models.IntegerField(null=True, blank=True, default=0) 
     pos_leadership_num = models.IntegerField(null=True, blank=True, default=0) 
-    report_num = models.IntegerField(null=True, blank=True)
+    # report_num = models.IntegerField(null=True, blank=True)
 
 # Schedule class
 class Schedule(models.Model):
