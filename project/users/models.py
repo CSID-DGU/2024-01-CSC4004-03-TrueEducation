@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # UserState class
 class UserState(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     grade = models.PositiveSmallIntegerField(null=False, blank=False, default=8)  # NOT NULL
     pos_time_num = models.IntegerField(null=True, blank=True, default=0)  
     pos_manner_num = models.IntegerField(null=True, blank=True, default=0)  
