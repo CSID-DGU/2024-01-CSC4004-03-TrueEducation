@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 # UserState class
 class UserState(models.Model):
-    user = models.ForeignKeyField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     grade = models.PositiveSmallIntegerField(null=False, blank=False, default=8)  # NOT NULL
     pos_time_num = models.IntegerField(null=True, blank=True, default=0)  
     pos_manner_num = models.IntegerField(null=True, blank=True, default=0)  
@@ -63,6 +63,7 @@ class Variance(models.Model):
     flag = models.BooleanField(null=True, blank=True, default=0)  # NOT NULL
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     day = models.PositiveSmallIntegerField(null=False, blank=False)  # NOT NULL
+    text = models.CharField(max_length=30, null=True, blank=True)
 # Report class
 class Report(models.Model):
     report_id = models.AutoField(primary_key=True)

@@ -19,20 +19,19 @@ def create_calendar(request):
     user = request.user
 
     if Schedule.objects.filter(user=user).first() is None:
-        Schedule.objects.create(user=user)
+       Schedule.objects.create(user=user)
 
     user_schedule = Schedule.objects.filter(user=user).first()
 
     if user_schedule:
-        if 'image' in request.POST:
-            image = request.FILES.get('image')
-            schedule = Extraction(image)
-            result = schedule.binarization()
-            serialized = json.dumps(result)
-            # timetable 필드에 직렬화된 데이터 저장
-            user_schedule.timetable = serialized
-            user_schedule.save()  # 저장 후에 데이터베이스에 반영
-            
+        image = request.FILES.get('image')
+        schedule = Extraction(image)
+        result = schedule.binarization()
+        serialized = json.dumps(result)
+        # timetable 필드에 직렬화된 데이터 저장
+        user_schedule.timetable = serialized
+        user_schedule.save()  # 저장 후에 데이터베이스에 반영
+    
         # 특정 필드만 선택하여 JSON 응답 생성
         response_data = {
             "timetable": user_schedule.timetable
@@ -188,16 +187,36 @@ def accept_member(request):
 @permission_classes([IsAuthenticated])
 def make_variation(request):
     serializer = VariationSerializer(data=request.data)
+    user_schedule = Schedule.objects.filter(user=request.user).first()
+    timetable = json.loads(user_schedule.timetable)
+   
     if serializer.is_valid():
         serializer.save(user=request.user)
+        variance = Variance.objects.filter(user=request.user)
+        count = 1
+        for i in range(len(timetable)):
+            for j in range(len(timetable[i])):
+                for k in variance:
+                    if k.day == count:
+                        timetable[i][j] &= int(k.variable_time, 2)
+                        # print(int(k.variable_time, 2))
+                        # print(timetable[i][j])
+            count = count + 1
         
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        user_schedule.timetable = json.dumps(timetable)
+        user_schedule.save()
+        response_data = {
+            "timetable" : user_schedule.timetable
+        }
+        return JsonResponse(response_data, status=status.HTTP_201_CREATED)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_variation(request):
-    variance = Variance.objects.filter(user=request.user).first()
+    variance = Variance.objects.filter(user=request.user)
    
-    serializer = VariationSerializer(variance)
+    serializer = VariationSerializer(variance, many=True)
     return Response(serializer.data)
+
