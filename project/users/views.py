@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from .Extraction import *
 from .models import Schedule, Group, GroupMember, Variance, UserState
-import json
+import json, datetime
 
 # 시간표 정보를 리턴하는 메소드
 @api_view(['POST'])
@@ -27,16 +27,24 @@ def create_calendar(request):
         image = request.FILES.get('image')
         schedule = Extraction(image)
         result = schedule.binarization()
-        serialized = json.dumps(result)
-        # timetable 필드에 직렬화된 데이터 저장
-        user_schedule.timetable = serialized
-        user_schedule.save()  # 저장 후에 데이터베이스에 반영
-    
-        # 특정 필드만 선택하여 JSON 응답 생성
+
+        variance = Variance.objects.filter(user=request.user)
+        count = 1
+        for i in range(len(result)):
+            for j in range(len(result[i])):
+                for k in variance:
+                    if k.day == count:
+                        result[i][j] &= int(k.variable_time, 2)
+                        # print(int(k.variable_time, 2))
+                        # print(timetable[i][j])
+            count = count + 1
+        
+        user_schedule.timetable = json.dumps(result)
+        user_schedule.save()
         response_data = {
-            "timetable": user_schedule.timetable
+            "timetable" : user_schedule.timetable
         }
-        return JsonResponse(response_data)
+        return JsonResponse(response_data, status=status.HTTP_201_CREATED)
         
     else:
         return JsonResponse({'error': 'No schedule found'})
@@ -130,12 +138,36 @@ def create_group(request):
 def recommand_group_list(request):
     groups = Group.objects.all().exclude(leader=request.user)
     group_members = GroupMember.objects.filter(user = request.user)
-
     member_group = {member.group for member in group_members} #현재 가입했거나 대기중인 그룹
     # 사용자가 속하지 않은 그룹을 필터링
     filtered_groups = [group for group in groups if group not in member_group and group.leader != request.user]
-    serializer = GroupSerializer(filtered_groups, many=True)
-    return Response(serializer.data)
+
+    timetable = json.loads(Schedule.objects.filter(user=request.user).first().timetable)
+    for i in range(len(timetable)):
+        temp = 0
+        for j in range(len(timetable[i])):
+            temp |= timetable[i][j]
+        
+        str_binary = str(format(temp, '029b'))
+
+        for k in filtered_groups:
+            # 요일 정보 출력
+            weekday = datetime.date(k.start_time.year, k.start_time.month, k.start_time.day).weekday()
+            start_time = k.start_time.hour * 3600 + k.start_time.minute * 60
+            end_time = k.end_time.hour * 3600 + k.end_time.minute * 60
+            start_index = int((start_time/3600 - 9.0) * 2) # 0 ~ 26 인덱스
+            end_index = int((end_time/3600 - 9.0) * 2) # 0 ~ 26 인덱스
+            # if i == weekday: # 시간표의 요일과 그룹 생성 요일이 같은 지 확인
+            #     for t in range(start_index, end_index):
+            #         if str_binary[t] == '1': # 해당 시간 시간표 값이 1 일때(공강이 아닐 때)
+            #             filtered_groups.remove(k)
+            #             break
+                    
+    response_data = {
+        "recommend_group" : GroupSerializer(filtered_groups, many=True).data
+    }
+    
+    return Response(response_data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
