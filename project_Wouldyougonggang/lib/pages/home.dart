@@ -4,7 +4,10 @@ import 'package:flutter_app/widgets/meeting.dart';
 import 'package:flutter_app/widgets/timetable.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  TimeTable timetable = TimeTable(
+    height: 380,
+  );
+  Home({super.key});
 
   @override
   State<Home> createState() => _MyWidgetState();
@@ -50,9 +53,7 @@ class _MyWidgetState extends State<Home> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TimeTable(
-                      height: 380,
-                    ),
+                    widget.timetable,
                     const SizedBox(
                       height: 10,
                     ),

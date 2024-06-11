@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/home.dart';
+import 'package:flutter_app/pages/timeschedule.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_app/navigation_bar.dart';
@@ -31,7 +33,8 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: ChangeNotifierProvider(
           create: (BuildContext context) => Bitmaskings(),
-          child: const Login(),
+          child:
+              const Login(), //테스트 시 이 화면 설정 변경!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ),
       ),
       theme: ThemeData(fontFamily: 'Pretendard'),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/mypage.dart';
 import 'package:flutter_app/pages/post.dart';
+import 'package:flutter_app/pages/timeschedule.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -49,9 +50,9 @@ class _NavigationState extends State<Navigation> {
       body: Center(
         child: IndexedStack(
           index: selectedIndex,
-          children: const [
+          children: [
             Post(),
-            Post(),
+            TimeSchedule(),
             Home(),
             Mypage(),
             // Settings(),

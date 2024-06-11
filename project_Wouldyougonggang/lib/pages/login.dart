@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:flutter_app/providers/bitmaskings.dart';
+import 'package:flutter_app/widgets/variWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +10,10 @@ import 'package:flutter_app/navigation_bar.dart';
 import 'package:flutter_app/pages/signup.dart';
 import 'package:flutter_app/service.dart';
 import 'package:flutter_app/theme/colors.dart';
+import 'package:provider/provider.dart';
 import 'dart:ui';
 
-import '../user.dart';
+import 'package:flutter_app/user.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,6 +23,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  Timetable? _timetable;
+  bool loading = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   static late User? _user;
@@ -115,6 +122,7 @@ class _LoginState extends State<Login> {
                           onTap: () async {
                             // 로그인 버튼이 눌렸을 때의 처리
                             // 아이디와 비밀번호를 사용하여 로그인을 시도하고 결과에 따라 처리
+
                             String email = _emailController.text.toString();
                             String password =
                                 _passwordController.text.toString();
@@ -131,13 +139,94 @@ class _LoginState extends State<Login> {
                                         builder: (context) =>
                                             const Navigation()),
                                   );
-                                  Fluttertoast.showToast(msg: "로그인 성공!");
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "아이디와 비밀번호가 틀렸습니다.");
                                 }
+
+                                Services.getUserTimetable(User.tokens.access)
+                                    .then((value) {
+                                  setState(() {
+                                    _timetable = value;
+                                    loading = true;
+
+                                    List<String> tmpBitmaskings = [
+                                      List.filled(26, '0').join(),
+                                      List.filled(26, '0').join(),
+                                      List.filled(26, '0').join(),
+                                      List.filled(26, '0').join(),
+                                      List.filled(26, '0').join(),
+                                      List.filled(26, '0').join(),
+                                      List.filled(26, '0').join(),
+                                    ];
+
+                                    int idx = 0;
+
+                                    for (List<int> i in _timetable!.timetable) {
+                                      int temp = 0;
+                                      for (int j in i) {
+                                        temp |= j;
+                                      }
+                                      tmpBitmaskings[idx] = temp
+                                          .toRadixString(2)
+                                          .padLeft(29, '0');
+
+                                      context
+                                          .read<Bitmaskings>()
+                                          .updateBitmaskings(tmpBitmaskings);
+
+                                      idx++;
+                                    }
+                                  });
+                                });
+
+                                Services.getUserVariation(User.tokens.access)
+                                    .then((value) {
+                                  setState(() {
+                                    for (var item in value!) {
+                                      VariWidget variation = VariWidget(
+                                        bgColor: Color.fromARGB(
+                                          255,
+                                          Random().nextInt(256),
+                                          Random().nextInt(256),
+                                          Random().nextInt(256),
+                                        ),
+                                        text: item.text,
+                                        day: item.day,
+                                        time: item.time,
+                                      );
+                                      context
+                                          .read<Bitmaskings>()
+                                          .addVariWidget(variation);
+                                    }
+                                  });
+                                });
                               },
                             );
+
+                            // String email = _emailController.text.toString();
+                            // String password =
+                            //     _passwordController.text.toString();
+
+                            // Services.attemptLogin(email, password).then(
+                            //   (value) {
+                            //     setState(() {
+                            //       _user = value;
+                            //     });
+                            //     if (_user != null) {
+                            //       Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //             builder: (context) =>
+                            //                 const Navigation()),
+                            //       );
+                            //       Fluttertoast.showToast(msg: "로그인 성공!");
+                            //     } else {
+                            //       Fluttertoast.showToast(
+                            //           msg: "아이디와 비밀번호가 틀렸습니다.");
+                            //     }
+                            //   },
+                            // );
                           },
                           child: Container(
                             decoration: BoxDecoration(

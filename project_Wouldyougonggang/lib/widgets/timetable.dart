@@ -5,25 +5,25 @@ import 'package:flutter_app/widgets/meeting.dart';
 class TimeTable extends StatefulWidget {
   final double height;
   Daychart monChart = Daychart(
-    day: '월',
+    col: 1,
   );
   Daychart tuesChart = Daychart(
-    day: '화',
+    col: 2,
   );
   Daychart wednesChart = Daychart(
-    day: '수',
+    col: 3,
   );
   Daychart thursChart = Daychart(
-    day: '목',
+    col: 4,
   );
   Daychart friChart = Daychart(
-    day: '금',
+    col: 5,
   );
   Daychart saturChart = Daychart(
-    day: '토',
+    col: 6,
   );
   Daychart sunChart = Daychart(
-    day: '일',
+    col: 7,
   );
 
   TimeTable({
@@ -46,6 +46,8 @@ class _TimeTableState extends State<TimeTable> {
 
   @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -54,6 +56,7 @@ class _TimeTableState extends State<TimeTable> {
           margin: const EdgeInsets.symmetric(
             horizontal: 11,
           ),
+          width: screenWidth,
           height: widget.height,
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 217, 217, 217),
