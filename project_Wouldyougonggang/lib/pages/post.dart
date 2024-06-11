@@ -9,8 +9,8 @@ import 'package:flutter_app/pages/detailedPost.dart';
 import 'package:flutter_app/pages/newPost.dart';
 import 'dart:ui';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_app/api/postapi.dart';
+import 'package:flutter_app/user.dart';
 
 import 'evaluateMain.dart';
 
@@ -31,6 +31,13 @@ class _PostState extends State<Post> {
   late var unitSize;
   late var unitFontSize;
 
+  List<Color> color = [
+    GREEN_BUTTON_COLOR,
+    ENTERED_BUTTON_COLOR,
+    MATCHING_BUTTON_COLOR,
+    COMPLETED_BUTTON_COLOR
+  ];
+
   @override
   void initState() {
     isSelected = [isRecomend, isMy];
@@ -46,122 +53,130 @@ class _PostState extends State<Post> {
 
     return Scaffold(
       backgroundColor: BACKGROUND_COLOR,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).padding.top, 0,
+            MediaQuery.of(context).padding.bottom),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: SUB_COLOR))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SearchBar(
+                    onSubmitted: (value) {
+                      // 검색 결과 입력시 동작(게시글 서버에서 받아오기)
+                    },
+                    leading: const Icon(Icons.search),
+                    hintText: 'search',
+                    shape: MaterialStatePropertyAll(ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20))),
+                  ),
                   Container(
-                    height: 60,
-                    width: MediaQuery.of(context).size.width - 120,
-                    margin: const EdgeInsets.fromLTRB(25, 20, 5, 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: MAIN_FONT_COLOR, width: 1),
-                        borderRadius: BorderRadius.circular(10)),
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Icon(
-                          Icons.search,
-                          size: 40,
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isRecomend = true;
+                              isMy = false;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 80,
+                            height: 40,
+                            child: Text(
+                              '추천 모임',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: isRecomend ? Colors.black : Colors.grey,
+                              ),
+                            ),
+                          ),
                         ),
-                        Container()
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isRecomend = false;
+                              isMy = true;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 80,
+                            height: 40,
+                            child: Text(
+                              '내 모임',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: isRecomend ? Colors.grey : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Container(
-                    height: 60,
-                    width: 60,
-                    margin: const EdgeInsets.fromLTRB(5, 20, 25, 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: MAIN_FONT_COLOR, width: 1),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => NewPost()));
-                      },
-                      icon: const Icon(Icons.add),
-                      iconSize: 45,
-                    ),
-                  )
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 40,
-                    margin: const EdgeInsets.fromLTRB(25, 0, 5, 10),
-                    child: ToggleButtons(
-                      borderRadius: BorderRadius.circular(10),
-                      borderColor: MAIN_FONT_COLOR,
-                      selectedBorderColor: MAIN_FONT_COLOR,
-                      fillColor: PRIMARY_COLOR,
-                      isSelected: isSelected,
-                      onPressed: toggleSelect,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 5,
-                          child: const Text('추천 모임',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Pretendard',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: MAIN_FONT_COLOR)),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 5,
-                          child: const Text('내 모임',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Pretendard',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: MAIN_FONT_COLOR)),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container()
-                ],
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: const Divider(color: MAIN_FONT_COLOR, thickness: 1),
-              )
-            ],
+            ),
+            FutureBuilder<PostList>(
+                future: fetchPost(isRecomend, User.tokens.access),
+                builder: (context, snapshot) {
+                  postList = snapshot.data;
+
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    debugPrint('connect error');
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    debugPrint('error${snapshot.error}');
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  }
+
+                  if (postList != null) {
+                    return Expanded(child: listviewBuilder());
+                  }
+
+                  return const Text('no data found');
+                })
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Container(
+          width: 70,
+          height: 70,
+          child: FloatingActionButton(
+            onPressed: () {},
+            backgroundColor: PRIMARY_COLOR,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(70)),
+            child: const Icon(
+              Icons.add,
+              color: BACKGROUND_COLOR,
+            ),
           ),
-          FutureBuilder<PostList>(
-              future: fetchPost(isRecomend),
-              builder: (context, snapshot) {
-                postList = snapshot.data;
-
-                if (snapshot.connectionState != ConnectionState.done) {
-                  debugPrint('connect error');
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (snapshot.hasError) {
-                  debugPrint('error${snapshot.error}');
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
-                }
-
-                if (postList != null) {
-                  return Expanded(child: listviewBuilder());
-                }
-
-                return const Text('no data found');
-              })
-        ],
+        ),
       ),
     );
   }
@@ -193,7 +208,7 @@ class _PostState extends State<Post> {
 
   Widget listviewItem(PostItem post) {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: GestureDetector(
           onTap: () {
             if (isRecomend) {
@@ -220,9 +235,10 @@ class _PostState extends State<Post> {
             }
           },
           child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF000000), width: 1),
-                  borderRadius: BorderRadius.circular(10)),
+              decoration: const BoxDecoration(
+                border: Border.symmetric(
+                    horizontal: BorderSide(color: SUB_FONT_COLOR)),
+              ),
               height: unitSize + 20,
               child: postItem(post)),
         ));
@@ -299,29 +315,28 @@ class _PostState extends State<Post> {
         ),
         GestureDetector(
           onTap: () {
-            if (post.state == null) applyPost(post.groupId);
+            if (post.state == null) applyPost(post.groupId, User.tokens.access);
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: const Color(0xFFd9d9d9),
+              // color: color[(post.state as int) - 1],
             ),
             width: unitSize,
             height: unitSize,
             child: Text(
               stateText,
               textAlign: TextAlign.center,
-              style: GoogleFonts.getFont(
-                'Inter',
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-                color: Colors.black,
-              ),
+              style: const TextStyle(
+                  fontFamily: 'Pretendard',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: MAIN_FONT_COLOR),
             ),
           ),
-        )
+        ),
       ],
     );
   }

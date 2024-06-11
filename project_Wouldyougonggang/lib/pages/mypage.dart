@@ -13,8 +13,8 @@ class Mypage extends StatefulWidget {
 }
 
 class _MypageState extends State<Mypage> {
-  int mygrade = 1; // API user evaluate 에서 받아와야 함.
-  List<int> num = [0, 0, 0, 0, 0, 0]; // API user evaluate 에서 받아와야 함.
+  int mygrade = 1;
+  List<int> num = [0, 0, 0, 0, 0, 0];
   final List<String> grade = [
     '수성(1단계)',
     '금성(2단계)',

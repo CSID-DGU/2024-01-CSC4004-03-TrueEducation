@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/mypage.dart';
 import 'package:flutter_app/pages/post.dart';
-import 'package:flutter_app/pages/settings.dart';
-import 'package:flutter_app/pages/timeschedule.dart';
-import 'package:flutter_app/widgets/poster.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});

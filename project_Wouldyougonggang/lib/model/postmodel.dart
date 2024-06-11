@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'dart:convert';
-
 import 'package:flutter_app/api/postapi.dart';
 
 abstract class PostList {
@@ -8,19 +7,13 @@ abstract class PostList {
   final List<PostItem>? join;
   final List<PostItem>? wait;
 
-  PostList({
-    required this.posts,
-    this.join,
-    this.wait
-  });
+  PostList({required this.posts, this.join, this.wait});
 
   get length => posts.length;
 }
 
-class RecommendPostList extends PostList{
-  RecommendPostList({
-    required super.posts
-  });
+class RecommendPostList extends PostList {
+  RecommendPostList({required super.posts});
 
   factory RecommendPostList.parse(List json) {
     List list = json;
@@ -30,20 +23,12 @@ class RecommendPostList extends PostList{
       result.add(RecommendPostItem.parse(element));
     }
 
-    return RecommendPostList(
-        posts: result
-    );
+    return RecommendPostList(posts: result);
   }
 }
 
-class MyPostList extends PostList{
-
-  MyPostList({
-    required super.posts,
-    required super.join,
-    required super.wait
-  });
-
+class MyPostList extends PostList {
+  MyPostList({required super.posts, required super.join, required super.wait});
 
   factory MyPostList.parse(Map json) {
     List<MyPostItem> myGroup = [];
@@ -65,11 +50,7 @@ class MyPostList extends PostList{
       wait.add(MyPostItem.parse(element));
     }
 
-    return MyPostList(
-      posts: myGroup,
-      join: join,
-      wait: wait
-    );
+    return MyPostList(posts: myGroup, join: join, wait: wait);
   }
 
   @override
@@ -117,26 +98,24 @@ class Member {
   final String nickname;
   final int grade;
 
-  Member({
-    required this.id,
-    required this.state,
-    required this.name,
-    required this.nickname,
-    required this.grade
-  });
+  Member(
+      {required this.id,
+      required this.state,
+      required this.name,
+      required this.nickname,
+      required this.grade});
 
   factory Member.parse(Map json) {
     return Member(
-      id: json['user'],
-      state: json['state'],
-      name: json['user_name'],
-      nickname: json['user_nickname'],
-      grade: json['user_grade']
-    );
+        id: json['user'],
+        state: json['state'],
+        name: json['user_name'],
+        nickname: json['user_nickname'],
+        grade: json['user_grade']);
   }
 }
 
-class RecommendPostItem extends PostItem{
+class RecommendPostItem extends PostItem {
   RecommendPostItem({
     required super.groupId,
     super.groupImg,
@@ -170,7 +149,7 @@ class RecommendPostItem extends PostItem{
   }
 }
 
-class MyPostItem extends PostItem{
+class MyPostItem extends PostItem {
   MyPostItem({
     required super.groupId,
     super.groupImg,
@@ -201,20 +180,19 @@ class MyPostItem extends PostItem{
     }
 
     return MyPostItem(
-      groupId: json['group_id'],
-      member: member,
-      groupImg: json['group_img'],
-      groupName: json['group_name'],
-      minAge: json['min_age'],
-      maxAge: json['max_age'],
-      groupGender: json['group_gender'],
-      minNum: json['min_num'],
-      maxNum: json['max_num'],
-      currentNum: json['current_num'],
-      startTime: json['start_time'].toString().split(RegExp(r'[ \-\:T]')),
-      endTime: json['end_time'].toString().split(RegExp(r'[ \-\:T]')),
-      description: json['description'],
-      state: json['current_state']
-    );
+        groupId: json['group_id'],
+        member: member,
+        groupImg: json['group_img'],
+        groupName: json['group_name'],
+        minAge: json['min_age'],
+        maxAge: json['max_age'],
+        groupGender: json['group_gender'],
+        minNum: json['min_num'],
+        maxNum: json['max_num'],
+        currentNum: json['current_num'],
+        startTime: json['start_time'].toString().split(RegExp(r'[ \-\:T]')),
+        endTime: json['end_time'].toString().split(RegExp(r'[ \-\:T]')),
+        description: json['description'],
+        state: json['current_state']);
   }
 }
