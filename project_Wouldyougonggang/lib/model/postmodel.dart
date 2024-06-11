@@ -112,7 +112,7 @@ abstract class PostItem {
 
 class Member {
   final int id;
-  final int state;
+  int state;
   final String name;
   final String nickname;
   final int grade;

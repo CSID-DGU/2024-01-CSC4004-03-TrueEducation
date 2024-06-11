@@ -1,25 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../api/postapi.dart';
 import '../model/postmodel.dart';
 
-class DetailedPost extends StatelessWidget {
+class DetailedPost extends StatefulWidget {
+  bool isRecruit;
+  PostItem post;
+
+  DetailedPost({
+    super.key,
+    required this.post,
+    required this.isRecruit
+  });
+
+  @override
+  State<DetailedPost> createState() => _DetailedState(isRecruit: isRecruit, post: post);
+}
+
+class _DetailedState extends State<DetailedPost> {
   late var width;
   late var height;
 
-  PostItem post;
   late String groupGender;
-  bool isRecruit;
 
-  DetailedPost(
-      this.post,
-      this.isRecruit,
-      {super.key}
-  );
+  bool isRecruit;
+  PostItem post;
+
+  _DetailedState({
+    required this.post,
+    required this.isRecruit
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +238,7 @@ class DetailedPost extends StatelessWidget {
   }
 
   Widget memberList() {
-    if(post.member != null && post.member!.isNotEmpty) {
+    if(post.member != null) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Column(
@@ -259,37 +274,85 @@ class DetailedPost extends StatelessWidget {
 
   Widget memberItem(Member member) {
     return Container(
-      height: 70,
+      height: height / 10,
       margin: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
-            child: Image.asset('assets/images/person.png'),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              member.nickname,
-              style: GoogleFonts.getFont(
-                  'Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                  color: Colors.black
-              ),
+            width: height / 13,
+            height: height / 13,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.black,
+                style: BorderStyle.solid,
+                width: 0.1
+              )
+            ),
+            child: SvgPicture.asset(
+              'assets/vectors/person.svg',
             ),
           ),
-          GestureDetector(
-            onTap: () {
+          Expanded(
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  member.nickname,
+                  style: GoogleFonts.getFont(
+                      'Inter',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colors.black
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  Future<bool> isAccept = acceptMember(post.groupId, member.id);
 
-            },
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFEEEEEE),
-              ),
-              child: Text('수락'),
-            ),
+                  if(await isAccept) {
+
+                  }
+                },
+                child: Container(
+                  width: width / 5,
+                  height: height / 13,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0xCCBFFF00),
+                    border: Border.all(
+                      color: Colors.black,
+                      style: BorderStyle.solid,
+                      width: 0.7
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(2, 2), // changes position of shadow
+                      ),
+                    ]
+                  ),
+                  child: Text(
+                    '수락',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.getFont(
+                      'Inter',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
           )
         ],
       ),

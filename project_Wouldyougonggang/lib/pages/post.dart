@@ -143,7 +143,7 @@ class _PostState extends State<Post> {
               )
             ],
           ),
-          FutureBuilder<PostList> (
+          FutureBuilder<PostList?> (
             future: fetchPost(isRecomend),
             builder: (context, snapshot) {
               postList = snapshot.data;
@@ -209,10 +209,7 @@ class _PostState extends State<Post> {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              builder: (context) => DetailedPost(
-                post,
-                true
-              ),
+              builder: (context) => DetailedPost(post: post, isRecruit: true),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
@@ -231,10 +228,7 @@ class _PostState extends State<Post> {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              builder: (context) => DetailedPost(
-                  post,
-                  false
-              ),
+              builder: (context) => DetailedPost(post: post, isRecruit: false),
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
