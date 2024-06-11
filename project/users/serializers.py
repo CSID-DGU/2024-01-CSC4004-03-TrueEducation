@@ -101,26 +101,29 @@ class UserStateSerializer(serializers.ModelSerializer): ##
         
 class UserStateSerializer(serializers.ModelSerializer):
     evaluateAdd = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    evaluated_user = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = UserState
         fields = '__all__'
-        
+
     def update(self, instance, validated_data):
         evaluateAdd = validated_data.pop('evaluateAdd', None)
+        evaluated_user = validated_data.pop('evaluated_user', None)
         
-        if evaluateAdd[0] == 1:
-            instance.pos_time_num += 1
-        if evaluateAdd[1] == 1:
-            instance.pos_manner_num += 1
-        if evaluateAdd[2] == 1:
-            instance.pos_honor_num += 1
-        if evaluateAdd[3] == 1:
-            instance.pos_ready_num += 1
-        if evaluateAdd[4] == 1:
-            instance.pos_conven_num += 1
-        if evaluateAdd[5] == 1:
-            instance.pos_leadership_num += 1     
+        if evaluateAdd:
+            if evaluateAdd[0] == 1:
+                instance.pos_time_num += 1
+            if evaluateAdd[1] == 1:
+                instance.pos_manner_num += 1
+            if evaluateAdd[2] == 1:
+                instance.pos_honor_num += 1
+            if evaluateAdd[3] == 1:
+                instance.pos_ready_num += 1
+            if evaluateAdd[4] == 1:
+                instance.pos_conven_num += 1
+            if evaluateAdd[5] == 1:
+                instance.pos_leadership_num += 1
 
         instance.save()
         return instance
