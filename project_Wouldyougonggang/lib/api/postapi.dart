@@ -210,12 +210,10 @@ Future<bool> applyPost(int groupId) async {
     debugPrint(data.toString());
 
     final response = await http.post(
-      Uri.parse('${url}login/'),
+      Uri.parse('${url}apply_group/'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode(data)
     );
-
-    debugPrint(response.toString());
 
     if(response.statusCode == 201) {
       debugPrint('성공');
@@ -251,8 +249,25 @@ Future<bool> createPost(String groupName, int minAge, int maxAge, int groupGende
       "description": description
     };
 
+    final response = await http.post(
+      Uri.parse('${url}create_group/'),
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: jsonEncode(data)
+    );
 
-    return true;
+    if(response.statusCode == 201) {
+      debugPrint('성공');
+      return true;
+    }
+
+    else if(response.statusCode == 500){
+    }
+
+    else {
+      debugPrint(response.statusCode.toString());
+    }
+
+    return false;
   } catch (e) {
     return false;
   }

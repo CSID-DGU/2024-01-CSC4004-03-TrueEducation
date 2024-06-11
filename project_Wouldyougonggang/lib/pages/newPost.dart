@@ -471,13 +471,17 @@ class _NewPostState extends State<NewPost> {
                 onPressed: () async {
                   String day = DateFormat("yyyy-MM-dd").format(_selectedDate!);
 
+                  if(_nameController.text.isEmpty || _minNumController.text.isEmpty || _maxNumController.text.isEmpty){
+                    return;
+                  }
+
                   Future<bool> isCreate = createPost(
                     _nameController.text,
                     _minAgeController.text == null ? 0 : int.parse(_minAgeController.text),
                     _maxAgeController.text == null ? 128 : int.parse(_maxAgeController.text),
                     _genders.indexOf(_selectedGender) + 1,
-                    0,// _minNumController.text as int,
-                    0,//_maxNumController.text as int,
+                    int.parse(_minNumController.text),
+                    int.parse(_maxNumController.text),
                     '${day}T${_selectedStartDay!.hour}:${_selectedStartDay!.minute}:00',
                     '${day}T${_selectedEndDay!.hour}:${_selectedEndDay!.minute}:00',
                     _descriptionController.text
