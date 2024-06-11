@@ -42,22 +42,22 @@ class _NavigationState extends State<Navigation> {
             icon: Icon(Icons.person),
             label: "Mypage",
           ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: "Settings",
-          ),
+          // NavigationDestination(
+          //   icon: Icon(Icons.settings),
+          //   label: "Settings",
+          // ),
         ],
         animationDuration: const Duration(milliseconds: 500),
       ),
       body: Center(
         child: IndexedStack(
           index: selectedIndex,
-          children: [
-            const Post(),
-            Post(), // Timetable
-            const Home(), // Home
-            const Mypage(), // Mypage
-            const Settings(), // Settings
+          children: const [
+            Post(),
+            Post(),
+            Home(),
+            Mypage(),
+            // Settings(),
           ],
         ),
       ),

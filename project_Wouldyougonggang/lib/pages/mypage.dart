@@ -1,17 +1,31 @@
+import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/service.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'dart:ui';
+import 'package:flutter_app/user.dart';
 
 class Mypage extends StatefulWidget {
   const Mypage({super.key});
-
   @override
   State<Mypage> createState() => _MypageState();
 }
 
 class _MypageState extends State<Mypage> {
-  List<int> num = [3, 3, 3, 3, 3, 3]; // API user evaluate 에서 받아와야 함.
+  int mygrade = 1; // API user evaluate 에서 받아와야 함.
+  List<int> num = [0, 0, 0, 0, 0, 0]; // API user evaluate 에서 받아와야 함.
+  final List<String> grade = [
+    '수성(1단계)',
+    '금성(2단계)',
+    '지구(3단계)',
+    '화성(4단계)',
+    '목성(5단계)',
+    '토성(6단계)',
+    '천왕성(7단계)',
+    '해왕성(8단계)',
+    '태양(9단계)'
+  ];
   final List<String> text = [
     '약속 시간을 잘 지켜요',
     '친절하고 매너가 좋아요',
@@ -33,6 +47,27 @@ class _MypageState extends State<Mypage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    var data = await Services.fetchMypage(User.tokens.access);
+    if (data != null) {
+      setState(() {
+        mygrade = data['grade'];
+        num[0] = data['pos_time_num'];
+        num[1] = data['pos_manner_num'];
+        num[2] = data['pos_honor_num'];
+        num[3] = data['pos_ready_num'];
+        num[4] = data['pos_conven_num'];
+        num[5] = data['pos_leadership_num'];
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -49,7 +84,7 @@ class _MypageState extends State<Mypage> {
               width: screenWidth,
               height: screenHeight * 0.3,
               child: Image.asset(
-                img_src[2],
+                img_src[mygrade],
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -71,10 +106,10 @@ class _MypageState extends State<Mypage> {
                     height: 100,
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                     alignment: Alignment.center,
-                    child: const Text(
-                      '현재 김민수님의 평가등급은\n\'지구(7단계)\'입니다!',
+                    child: Text(
+                      '현재 김민수님의 평가등급은\n${grade[mygrade - 1]}입니다!',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontFamily: 'Pretendard',
                           fontSize: 23,
                           fontWeight: FontWeight.w700,

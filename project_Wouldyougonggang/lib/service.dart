@@ -1,15 +1,11 @@
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Services {
-  static const String url = 'https://3b63-210-94-220-228.ngrok-free.app/';
+  static const String url = 'https://3a2b-210-94-220-228.ngrok-free.app/';
 
   static Future<User?> attemptLogin(String email, String password) async {
     try {
@@ -24,8 +20,6 @@ class Services {
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode(data),
       );
-
-      print('response!!!!!: ${response.statusCode}');
 
       // HTTP 응답 코드 확인
       if (response.statusCode == 201) {
@@ -106,14 +100,20 @@ class Services {
     return false;
   }
 
-  static Future<bool> submitEvaluate(List<int> isSelected) async {
+  static Future<bool> submitEvaluate(int userID, List<int> isSelected) async {
     try {
-      Map<String, dynamic> data = {"evaluateAdd": isSelected};
+      Map<String, dynamic> data = {
+        "evaluated_user": userID,
+        "evaluateAdd": isSelected,
+      };
       print(jsonEncode(data));
 
       final response = await http.post(
         Uri.parse('${url}register/'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${User.tokens.access}'
+        },
         body: jsonEncode(data),
       );
 
@@ -129,5 +129,28 @@ class Services {
       print('Error during Signup: $e');
     }
     return false;
+  }
+
+  static Future<Map<String, dynamic>?> fetchMypage(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${url}/get_userState'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        return data;
+      } else {
+        print('Error: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return null;
+    }
   }
 }
