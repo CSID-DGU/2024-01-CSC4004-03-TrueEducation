@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer, VariationSerializer, UserStateSerializer
+from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer, VariationSerializer, UserStateSerializer, StateUpdateSerializer, GetMemberSerializer
 
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
@@ -102,8 +102,9 @@ def login(request):
             user = authenticate(email=email, password=password)
             tokens = get_tokens_for_user(user)  # 토큰을 생성
 
-            user_state = UserState.objects.create(user=user)
-            user_state.save() #user_state 값 생성
+            if UserState.objects.filter(user=user).first() is None:
+                user_state = UserState.objects.create(user=user)
+                user_state.save() #user_state 값 생성
             response_data = {  # JSON 형식으로 응답 데이터 구성
                 'user_info': UserSerializer(user).data, # 유저 정보를 모두 담기
                 'tokens': tokens
@@ -142,6 +143,10 @@ def create_group(request):
 def recommand_group_list(request):
     groups = Group.objects.all().exclude(leader=request.user)
     
+    group_members = GroupMember.objects.filter(user = request.user)
+    member_group = {member.group for member in group_members} #현재 가입했거나 대기중인 그룹
+    # 사용자가 속하지 않은 그룹을 필터링
+    filtered_groups = [group for group in groups if group not in member_group and group.leader != request.user]
     user_schedule = Schedule.objects.filter(user=request.user).first()
     if user_schedule :
         timetable = json.loads(user_schedule).timetable
@@ -165,18 +170,8 @@ def recommand_group_list(request):
                             filtered_groups.remove(k)
                             break
         
-        group_members = GroupMember.objects.filter(user = request.user)
-        member_group = {member.group for member in group_members} #현재 가입했거나 대기중인 그룹
-        # 사용자가 속하지 않은 그룹을 필터링
-        filtered_groups = [group for group in groups if group not in member_group and group.leader != request.user]
-        response_data = {
-            "recommend_group" : GroupSerializer(filtered_groups, many=True).data
-        }
-    else:
-        response_data = {
-            "recommend_group" : GroupSerializer(groups, many=True).data
-        }
-    return Response(response_data)
+    serializer = GroupSerializer(filtered_groups, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -197,6 +192,23 @@ def my_group_list(request):
     }
     return Response(response_data)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get_member(request):
+    serializer = GetMemberSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        group_id = serializer.validated_data['group']
+        group = Group.objects.filter(group_id=group_id).first()
+        
+        if group:
+            group_serializer = GroupDetailSerializer(group)
+            return Response(group_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def apply_group(request):
@@ -274,7 +286,7 @@ def delete_variation(request):
 def update_user_state(request):
     evaluated_user = request.data.get('evaluated_user')
     evaluated_user_state = UserState.objects.get(user=evaluated_user)
-    serializer = UserStateSerializer(evaluated_user_state, data=request.data, partial=True)
+    serializer = StateUpdateSerializer(evaluated_user_state, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()            
         response_data = serializer.data

@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('delete/', delete_user, name='delete'),
     path('create_group/', create_group, name='create_group'),
+    path('get_member/', get_member, name='get_member'),
     path('recommand_group_list/', recommand_group_list, name='recommand_group_list'),
     path('my_group_list/', my_group_list, name='my_group_list'),
     path('apply_group/', apply_group, name='apply_group'),

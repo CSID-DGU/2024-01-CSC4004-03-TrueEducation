@@ -71,7 +71,9 @@ class GroupMemberSerializer(serializers.ModelSerializer):
         model = GroupMember
         fields = '__all__'
 
-
+class GetMemberSerializer(serializers.Serializer):
+    group = serializers.IntegerField()
+    
 class GroupMemberDetailSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
     user_nickname = serializers.SerializerMethodField()
@@ -114,11 +116,12 @@ class VariationSerializer(serializers.ModelSerializer):
         fields = '__all__'
              
 class UserStateSerializer(serializers.ModelSerializer): ##
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = UserState
         fields = '__all__'
         
-class UserStateSerializer(serializers.ModelSerializer):
+class StateUpdateSerializer(serializers.ModelSerializer):
     evaluateAdd = serializers.ListField(child=serializers.IntegerField(), write_only=True)
     evaluated_user = serializers.IntegerField(write_only=True)
 

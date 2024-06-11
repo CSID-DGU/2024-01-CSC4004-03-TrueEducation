@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 # UserState class
 class UserState(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    grade = models.PositiveSmallIntegerField(null=False, blank=False, default=8)  # NOT NULL
+    grade = models.PositiveSmallIntegerField(null=False, blank=False, default=1)  # NOT NULL
     pos_time_num = models.IntegerField(null=True, blank=True, default=0)  
     pos_manner_num = models.IntegerField(null=True, blank=True, default=0)  
     pos_honor_num = models.IntegerField(null=True, blank=True, default=0) 
@@ -59,7 +59,7 @@ class Schedule(models.Model):
 # Variance class
 class Variance(models.Model):
     variable_time_id = models.AutoField(primary_key=True)
-    variable_time = models.CharField(max_length=26, null=False, blank=False)  # NOT NULL
+    variable_time = models.CharField(max_length=29, null=False, blank=False)  # NOT NULL
     flag = models.BooleanField(null=True, blank=True, default=0)  # NOT NULL
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     day = models.PositiveSmallIntegerField(null=False, blank=False)  # NOT NULL
