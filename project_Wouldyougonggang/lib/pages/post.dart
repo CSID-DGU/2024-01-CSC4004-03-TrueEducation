@@ -144,7 +144,7 @@ class _PostState extends State<Post> {
             ],
           ),
           FutureBuilder<PostList> (
-            future: fetchPost(),
+            future: fetchPost(isRecomend),
             builder: (context, snapshot) {
               postList = snapshot.data;
 
@@ -179,7 +179,21 @@ class _PostState extends State<Post> {
       scrollDirection: Axis.vertical,
       itemCount: postList!.length,
       itemBuilder: (context, index) {
-        final post = (postList!.posts)[index];
+        final PostItem post;
+
+        if (isRecomend) {
+          post = (postList!.posts)[index];
+        }
+        else {
+          final my = postList!.posts;
+          final join = postList!.join;
+          final wait = postList!.wait;
+
+          final posts = my + join! + wait!;
+          posts.sort((a, b) => a.state!.compareTo(b.state!));
+
+          post = posts[index];
+        }
 
         return listviewItem(post);
       },
@@ -187,12 +201,6 @@ class _PostState extends State<Post> {
   }
 
   Widget listviewItem(PostItem post) {
-    final String name = post.groupName.toString();
-    final List<String> start = post.startTime.toString().split(RegExp(r'[ \-\:T]'));
-    final List<String> end = post.endTime.toString().split(RegExp(r'[ \-\:T]'));
-    final int current = post.currentNum.toInt();
-    final int max = post.maxNum.toInt();
-
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
       child: GestureDetector(
@@ -202,15 +210,8 @@ class _PostState extends State<Post> {
               context: context,
               isScrollControlled: true,
               builder: (context) => DetailedPost(
-                name,
-                post.minAge,
-                post.maxAge,
-                post.groupGender,
-                post.minNum,
-                max,
-                start,
-                end,
-                post.description
+                post,
+                true
               ),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
@@ -220,10 +221,26 @@ class _PostState extends State<Post> {
               )
             );
           }
-          else{
+          else if(post.state == 3) {
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => EvaluateMain())
+            );
+          }
+          else{
+            showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => DetailedPost(
+                    post,
+                    false
+                ),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)
+                    )
+                )
             );
           }
         },
@@ -236,14 +253,20 @@ class _PostState extends State<Post> {
             borderRadius: BorderRadius.circular(10)
           ),
           height: unitSize + 20,
-          child: isRecomend ? recommendItem(name, start, end, current, max)
-              : myItem(name, start, end, current, max)
+          child: postItem(post)
         ),
       )
     );
   }
 
-  Widget recommendItem(name, start, end, current, max) {
+  Widget postItem(PostItem post) {
+    String stateText;
+
+    if(post.state == 1) {stateText = '모집\n중';}
+    else if(post.state == 2) {stateText = '모집\n완료';}
+    else if(post.state == 3) {stateText = '모집\n종료';}
+    else {stateText = '참가';}
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -267,7 +290,7 @@ class _PostState extends State<Post> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                post.groupName,
                 style: GoogleFonts.getFont(
                   'Inter',
                   fontWeight: FontWeight.w800,
@@ -276,7 +299,7 @@ class _PostState extends State<Post> {
                 ),
               ),
               Text(
-                '${start[1]}/${start[2]}',
+                '${post.startTime[1]}/${post.startTime[2]}',
                 style: GoogleFonts.getFont(
                   'Inter',
                   fontWeight: FontWeight.w600,
@@ -285,7 +308,7 @@ class _PostState extends State<Post> {
                 ),
               ),
               Text(
-                '${start[3]}:${start[4]} ~ ${end[3]}:${end[4]}',
+                '${post.startTime[3]}:${post.startTime[4]} ~ ${post.endTime[3]}:${post.endTime[4]}',
                 style: GoogleFonts.getFont(
                   'Inter',
                   fontWeight: FontWeight.w400,
@@ -294,7 +317,7 @@ class _PostState extends State<Post> {
                 ),
               ),
               Text(
-                '$current / $max',
+                '${post.currentNum} / ${post.maxNum}',
                 style: GoogleFonts.getFont(
                   'Inter',
                   fontWeight: FontWeight.w400,
@@ -307,7 +330,7 @@ class _PostState extends State<Post> {
         ),
         GestureDetector(
           onTap: () {
-
+            if(post.state == null) applyPost(post.groupId);
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -319,97 +342,8 @@ class _PostState extends State<Post> {
             width: unitSize,
             height: unitSize,
             child: Text(
-              '참가',
-              style: GoogleFonts.getFont(
-                'Inter',
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget myItem(name, start, end, current, max) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: unitSize,
-          height: unitSize,
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/planets_70593516402.jpeg',
-                fit: BoxFit.cover,
-              )
-          ),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width - (unitSize * 2) - 120,
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: GoogleFonts.getFont(
-                  'Inter',
-                  fontWeight: FontWeight.w800,
-                  fontSize: unitFontSize * 24,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                '${start[1]}/${start[2]}',
-                style: GoogleFonts.getFont(
-                  'Inter',
-                  fontWeight: FontWeight.w600,
-                  fontSize: unitFontSize * 18,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                '${start[3]}:${start[4]} ~ ${end[3]}:${end[4]}',
-                style: GoogleFonts.getFont(
-                  'Inter',
-                  fontWeight: FontWeight.w400,
-                  fontSize: unitFontSize * 12,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                '$current / $max',
-                style: GoogleFonts.getFont(
-                  'Inter',
-                  fontWeight: FontWeight.w400,
-                  fontSize: unitFontSize * 12,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color(0xFFd9d9d9),
-            ),
-            width: unitSize,
-            height: unitSize,
-            child: Text(
-              '참가',
+              stateText,
+              textAlign: TextAlign.center,
               style: GoogleFonts.getFont(
                 'Inter',
                 fontWeight: FontWeight.w400,

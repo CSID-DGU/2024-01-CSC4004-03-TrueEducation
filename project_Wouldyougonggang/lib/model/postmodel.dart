@@ -1,31 +1,84 @@
 import 'dart:collection';
 import 'dart:convert';
 
-class PostList {
+import 'package:flutter_app/api/postapi.dart';
+
+abstract class PostList {
   final List<PostItem> posts;
+  final List<PostItem>? join;
+  final List<PostItem>? wait;
 
   PostList({
-    required this.posts
+    required this.posts,
+    this.join,
+    this.wait
   });
-
-  factory PostList.parse(List json) {
-    List list = json;
-
-    List<PostItem> result = [];
-    for (var element in list) {
-      result.add(PostItem.parse(element));
-    }
-
-    return PostList(
-        posts: result
-    );
-  }
 
   get length => posts.length;
 }
 
-class PostItem {
+class RecommendPostList extends PostList{
+  RecommendPostList({
+    required super.posts
+  });
+
+  factory RecommendPostList.parse(List json) {
+    List list = json;
+
+    List<RecommendPostItem> result = [];
+    for (var element in list) {
+      result.add(RecommendPostItem.parse(element));
+    }
+
+    return RecommendPostList(
+        posts: result
+    );
+  }
+}
+
+class MyPostList extends PostList{
+
+  MyPostList({
+    required super.posts,
+    required super.join,
+    required super.wait
+  });
+
+
+  factory MyPostList.parse(Map json) {
+    List<MyPostItem> myGroup = [];
+    List<MyPostItem> join = [];
+    List<MyPostItem> wait = [];
+
+    List list = json['my_group'];
+    for (var element in list) {
+      myGroup.add(MyPostItem.parse(element));
+    }
+
+    list = json['join'];
+    for (var element in list) {
+      join.add(MyPostItem.parse(element));
+    }
+
+    list = json['wait'];
+    for (var element in list) {
+      wait.add(MyPostItem.parse(element));
+    }
+
+    return MyPostList(
+      posts: myGroup,
+      join: join,
+      wait: wait
+    );
+  }
+
+  @override
+  get length => posts.length + join!.length + wait!.length;
+}
+
+abstract class PostItem {
   final int groupId;
+  final List<Member>? member;
   final String? groupImg;
   final String groupName;
   final int minAge;
@@ -34,14 +87,15 @@ class PostItem {
   final int minNum;
   final int maxNum;
   final int currentNum;
-  final String startTime;
-  final String endTime;
+  final List<String> startTime;
+  final List<String> endTime;
   final String description;
-  final bool flag;
+  final int? state;
 
   PostItem({
     required this.groupId,
     this.groupImg,
+    this.member,
     required this.groupName,
     required this.minAge,
     required this.maxAge,
@@ -52,11 +106,45 @@ class PostItem {
     required this.startTime,
     required this.endTime,
     required this.description,
-    required this.flag,
+    this.state,
+  });
+}
+
+class Member {
+  final int id;
+  final int state;
+
+  Member({
+    required this.id,
+    required this.state,
   });
 
-  factory PostItem.parse(Map json) {
-    return PostItem(
+  factory Member.parse(Map json) {
+    return Member(
+      id: json['user'],
+      state: json['state'],
+    );
+  }
+}
+
+class RecommendPostItem extends PostItem{
+  RecommendPostItem({
+    required super.groupId,
+    super.groupImg,
+    required super.groupName,
+    required super.minAge,
+    required super.maxAge,
+    required super.groupGender,
+    required super.minNum,
+    required super.maxNum,
+    required super.currentNum,
+    required super.startTime,
+    required super.endTime,
+    required super.description,
+  });
+
+  factory RecommendPostItem.parse(Map json) {
+    return RecommendPostItem(
       groupId: json['group_id'],
       groupImg: json['group_img'],
       groupName: json['group_name'],
@@ -66,10 +154,54 @@ class PostItem {
       minNum: json['min_num'],
       maxNum: json['max_num'],
       currentNum: json['current_num'],
-      startTime: json['start_time'],
-      endTime: json['end_time'],
+      startTime: json['start_time'].toString().split(RegExp(r'[ \-\:T]')),
+      endTime: json['end_time'].toString().split(RegExp(r'[ \-\:T]')),
       description: json['description'],
-      flag: json['flag'],
+    );
+  }
+}
+
+class MyPostItem extends PostItem{
+  MyPostItem({
+    required super.groupId,
+    super.groupImg,
+    required super.member,
+    required super.groupName,
+    required super.minAge,
+    required super.maxAge,
+    required super.groupGender,
+    required super.minNum,
+    required super.maxNum,
+    required super.currentNum,
+    required super.startTime,
+    required super.endTime,
+    required super.description,
+    required super.state,
+  });
+
+  factory MyPostItem.parse(Map json) {
+    List<Member> member = [];
+
+    List list = json['member'];
+    for (var element in list) {
+      member.add(Member.parse(element));
+    }
+
+    return MyPostItem(
+      groupId: json['group_id'],
+      member: member,
+      groupImg: json['group_img'],
+      groupName: json['group_name'],
+      minAge: json['min_age'],
+      maxAge: json['max_age'],
+      groupGender: json['group_gender'],
+      minNum: json['min_num'],
+      maxNum: json['max_num'],
+      currentNum: json['current_num'],
+      startTime: json['start_time'].toString().split(RegExp(r'[ \-\:T]')),
+      endTime: json['end_time'].toString().split(RegExp(r'[ \-\:T]')),
+      description: json['description'],
+      state: json['current_state']
     );
   }
 }

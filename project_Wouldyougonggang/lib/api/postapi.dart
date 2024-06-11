@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:http/http.dart' as http;
 
-String data = '''
+String recommend = '''
   [
     {
       "group_id": 1,
@@ -119,7 +119,7 @@ String my = '''
 			"start_time": "2024-06-05T09:00:00",
 			"end_time": "2024-06-05T17:00:00",
 			"description": "안녕하세요",
-			"current_state": 1,
+			"current_state": 2,
 			"flag": false,
 			"leader": 1
 		},
@@ -169,7 +169,7 @@ String my = '''
 			"start_time": "2024-06-05T09:00:00",
 			"end_time": "2024-06-05T17:00:00",
 			"description": "안녕하세요",
-			"current_state": 1,
+			"current_state": 3,
 			"flag": false,
 			"leader": 1
 		}
@@ -179,7 +179,7 @@ String my = '''
 }
   ''';
 
-Future<PostList> fetchPost() async {
+Future<PostList> fetchPost(bool state) async {
   // const url = 'https://localhost/posts';
   // final response = await http.get(Uri.parse(url));
   //
@@ -188,9 +188,74 @@ Future<PostList> fetchPost() async {
   //   return PostList.fromJson(jsondata);
   // }
 
-    List jsondata = jsonDecode(data);
+  String data = (state) ? recommend : my;
 
-    return PostList.parse(jsondata);
-
-  // throw Exception(response.statusCode);
+  try {
+    List jsonData = jsonDecode(data);
+    return RecommendPostList.parse(jsonData);
+  }
+  catch (e) {
+    Map jsonData = jsonDecode(data);
+    return MyPostList.parse(jsonData);
+  }
 }
+
+const String url = '';
+
+Future<bool> applyPost(int groupId) async {
+  debugPrint('통신 시작');
+  try {
+    Map<String, int> data = {'group':groupId};
+
+    debugPrint(data.toString());
+
+    final response = await http.post(
+      Uri.parse('${url}login/'),
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: jsonEncode(data)
+    );
+
+    debugPrint(response.toString());
+
+    if(response.statusCode == 201) {
+      debugPrint('성공');
+      return true;
+    }
+
+    else if(response.statusCode == 500){
+    }
+
+    else {
+      debugPrint(response.statusCode.toString());
+    }
+
+    return false;
+  } catch (e) {
+    debugPrint(e.toString());
+    return false;
+  }
+}
+
+Future<bool> createPost(String groupName, int minAge, int maxAge, int groupGender, int minNum, int maxNum,
+    String startTime, String endTime, String description) async {
+  try {
+    Map<String, dynamic> data = {
+      "group_name": groupName,
+      "min_age": minAge,
+      "max_age": maxNum,
+      "group_gender": groupGender,
+      "min_num": minNum,
+      "max_num": maxNum,
+      "start_time": startTime,
+      "end_time": endTime,
+      "description": description
+    };
+
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+

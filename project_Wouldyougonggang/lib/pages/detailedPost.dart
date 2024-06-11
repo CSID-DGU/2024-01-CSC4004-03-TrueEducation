@@ -4,31 +4,21 @@ import 'package:flutter/painting.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../api/postapi.dart';
+import '../model/postmodel.dart';
+
 class DetailedPost extends StatelessWidget {
   late var width;
   late var height;
 
-  String name;
-  int lowerAge;
-  int upperAge;
-  int gender;
-  int min;
-  int max;
-  List<String> start;
-  List<String> end;
-  String? description;
-  String? groupGender;
+  PostItem post;
+  late String groupGender;
+  bool isRecruit;
 
   DetailedPost(
-      this.name,
-      this.lowerAge,
-      this.upperAge,
-      this.gender,
-      this.min,
-      this.max,
-      this.start,
-      this.end,
-      this.description, {super.key}
+      this.post,
+      this.isRecruit,
+      {super.key}
   );
 
   @override
@@ -36,7 +26,7 @@ class DetailedPost extends StatelessWidget {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height * 4 / 5;
 
-    switch(gender){
+    switch(post.groupGender){
       case 1:
         groupGender = "남자만";
         break;
@@ -99,7 +89,7 @@ class DetailedPost extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                       child: Text(
-                        "모임명 : $name",
+                        "모임명 : ${post.groupName}",
                         style: GoogleFonts.getFont(
                             'Inter',
                             fontWeight: FontWeight.w800,
@@ -114,7 +104,7 @@ class DetailedPost extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "○ 나이 : $lowerAge ~ $upperAge살",
+                            "○ 나이 : ${post.minNum} ~ ${post.maxNum}살",
                             style: GoogleFonts.getFont(
                                 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -132,7 +122,7 @@ class DetailedPost extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "○ 인원 : $min ~ $max명",
+                            "○ 인원 : ${post.minAge} ~ ${post.maxAge}명",
                             style: GoogleFonts.getFont(
                                 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -141,7 +131,7 @@ class DetailedPost extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "○ 일정 : ${start[1]}/${start[2]} ${start[3]}:${start[4]} ~ ${end[3]}:${end[4]}",
+                            "○ 일정 : ${post.startTime[1]}/${post.startTime[2]} ${post.startTime[3]}:${post.startTime[4]} ~ ${post.endTime[3]}:${post.endTime[4]}",
                             style: GoogleFonts.getFont(
                                 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -155,7 +145,7 @@ class DetailedPost extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                       child: Text(
-                        "$description",
+                        post.description,
                         style: GoogleFonts.getFont(
                             'Inter',
                             fontWeight: FontWeight.w400,
@@ -166,31 +156,7 @@ class DetailedPost extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  width: width - 50,
-                  height: 50,
-                  margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-                    ),
-                    child: Text(
-                      '참가하기',
-                      style: GoogleFonts.getFont(
-                        'Inter',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: const Color(0xFF000000)
-                      ),
-                    ),
-                  ),
-                )
+                recruit(context)
               ],
             ),
           ),
@@ -221,5 +187,37 @@ class DetailedPost extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget recruit(BuildContext context) {
+    if (isRecruit) {
+      return Container(
+        width: width - 50,
+        height: 50,
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: OutlinedButton(
+          onPressed: () async {
+            Future<bool> isApply = applyPost(post.groupId);
+            if(await isApply) Navigator.pop(context);
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+            ),
+          ),
+          child: Text(
+            '참가하기',
+            style: GoogleFonts.getFont(
+                'Inter',
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+                color: const Color(0xFF000000)
+            ),
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 }
