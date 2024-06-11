@@ -300,14 +300,33 @@ class _DetailedState extends State<DetailedPost> {
             children: [
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  member.nickname,
-                  style: GoogleFonts.getFont(
-                      'Inter',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.black
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        member.nickname,
+                        style: GoogleFonts.getFont(
+                            'Inter',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.black
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        '${member.grade}',
+                        style: GoogleFonts.getFont(
+                            'Inter',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: Colors.black
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
               GestureDetector(
