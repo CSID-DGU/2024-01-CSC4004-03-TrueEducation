@@ -72,6 +72,25 @@ class GroupMemberSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class GroupMemberDetailSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+    user_nickname = serializers.SerializerMethodField()
+    user_grade = serializers.SerializerMethodField()
+
+    class Meta:
+        model = GroupMember
+        fields = ['user', 'state', 'user_name', 'user_nickname', 'user_grade']
+
+    def get_user_name(self, obj):
+        return obj.user.username
+
+    def get_user_nickname(self, obj):
+        return obj.user.nickname
+
+    def get_user_grade(self, obj):
+        user_state = UserState.objects.get(user=obj.user)
+        return user_state.grade
+    
 class GroupDetailSerializer(serializers.ModelSerializer):
     member = serializers.SerializerMethodField()
     class Meta:
@@ -80,7 +99,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
 
     def get_member(self, obj):
         members = GroupMember.objects.filter(group=obj)
-        serializer = GroupMemberSerializer(instance=members, many=True)
+        serializer = GroupMemberDetailSerializer(instance=members, many=True)
         return serializer.data
     
 class AcceptMemberSerializer(serializers.Serializer):

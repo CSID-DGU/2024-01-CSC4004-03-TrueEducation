@@ -41,6 +41,7 @@ def create_calendar(request):
         
         user_schedule.timetable = json.dumps(result)
         user_schedule.save()
+    
         response_data = {
             "timetable" : user_schedule.timetable
         }
@@ -100,6 +101,9 @@ def login(request):
             password = serializer.validated_data['password']
             user = authenticate(email=email, password=password)
             tokens = get_tokens_for_user(user)  # 토큰을 생성
+
+            user_state = UserState.objects.create(user=user)
+            user_state.save() #user_state 값 생성
             response_data = {  # JSON 형식으로 응답 데이터 구성
                 'user_info': UserSerializer(user).data, # 유저 정보를 모두 담기
                 'tokens': tokens
@@ -137,36 +141,41 @@ def create_group(request):
 @permission_classes([IsAuthenticated])
 def recommand_group_list(request):
     groups = Group.objects.all().exclude(leader=request.user)
-    group_members = GroupMember.objects.filter(user = request.user)
-    member_group = {member.group for member in group_members} #현재 가입했거나 대기중인 그룹
-    # 사용자가 속하지 않은 그룹을 필터링
-    filtered_groups = [group for group in groups if group not in member_group and group.leader != request.user]
-
-    timetable = json.loads(Schedule.objects.filter(user=request.user).first().timetable)
-    for i in range(len(timetable)):
-        temp = 0
-        for j in range(len(timetable[i])):
-            temp |= timetable[i][j]
-        
-        str_binary = str(format(temp, '029b'))
-
-        for k in filtered_groups:
-            # 요일 정보 출력
-            weekday = datetime.date(k.start_time.year, k.start_time.month, k.start_time.day).weekday()
-            start_time = k.start_time.hour * 3600 + k.start_time.minute * 60
-            end_time = k.end_time.hour * 3600 + k.end_time.minute * 60
-            start_index = int((start_time/3600 - 9.0) * 2) # 0 ~ 26 인덱스
-            end_index = int((end_time/3600 - 9.0) * 2) # 0 ~ 26 인덱스
-            # if i == weekday: # 시간표의 요일과 그룹 생성 요일이 같은 지 확인
-            #     for t in range(start_index, end_index):
-            #         if str_binary[t] == '1': # 해당 시간 시간표 값이 1 일때(공강이 아닐 때)
-            #             filtered_groups.remove(k)
-            #             break
-                    
-    response_data = {
-        "recommend_group" : GroupSerializer(filtered_groups, many=True).data
-    }
     
+    user_schedule = Schedule.objects.filter(user=request.user).first()
+    if user_schedule :
+        timetable = json.loads(user_schedule).timetable
+        for i in range(len(timetable)):
+            temp = 0
+            for j in range(len(timetable[i])):
+                temp |= timetable[i][j]
+            
+            str_binary = str(format(temp, '029b'))
+
+            for k in filtered_groups:
+                # 요일 정보 출력
+                weekday = datetime.date(k.start_time.year, k.start_time.month, k.start_time.day).weekday()
+                start_time = k.start_time.hour * 3600 + k.start_time.minute * 60
+                end_time = k.end_time.hour * 3600 + k.end_time.minute * 60
+                start_index = int((start_time/3600 - 9.0) * 2) # 0 ~ 26 인덱스
+                end_index = int((end_time/3600 - 9.0) * 2) # 0 ~ 26 인덱스
+                if i == weekday: # 시간표의 요일과 그룹 생성 요일이 같은 지 확인
+                    for t in range(start_index, end_index):
+                        if str_binary[t] == '1': # 해당 시간 시간표 값이 1 일때(공강이 아닐 때)
+                            filtered_groups.remove(k)
+                            break
+        
+        group_members = GroupMember.objects.filter(user = request.user)
+        member_group = {member.group for member in group_members} #현재 가입했거나 대기중인 그룹
+        # 사용자가 속하지 않은 그룹을 필터링
+        filtered_groups = [group for group in groups if group not in member_group and group.leader != request.user]
+        response_data = {
+            "recommend_group" : GroupSerializer(filtered_groups, many=True).data
+        }
+    else:
+        response_data = {
+            "recommend_group" : GroupSerializer(groups, many=True).data
+        }
     return Response(response_data)
 
 @api_view(['GET'])
@@ -231,16 +240,15 @@ def make_variation(request):
                 for k in variance:
                     if k.day == count:
                         timetable[i][j] &= int(k.variable_time, 2)
-                        # print(int(k.variable_time, 2))
-                        # print(timetable[i][j])
             count = count + 1
         
         user_schedule.timetable = json.dumps(timetable)
         user_schedule.save()
+
         response_data = {
             "timetable" : user_schedule.timetable
         }
-        return JsonResponse(response_data, status=status.HTTP_201_CREATED)
+        return Response(response_data, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -252,6 +260,13 @@ def get_variation(request):
     serializer = VariationSerializer(variance, many=True)
     return Response(serializer.data)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_variation(request):
+    variance = Variance.objects.filter(user=request.user)
+   
+    serializer = VariationSerializer(variance, many=True)
+    return Response(serializer.data)
 
 # 유저 평가
 @api_view(['POST'])

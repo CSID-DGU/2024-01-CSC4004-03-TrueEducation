@@ -54,7 +54,7 @@ class UserState(models.Model):
 # Schedule class
 class Schedule(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    timetable = models.TextField()
+    timetable = models.TextField(default=0)
 
 # Variance class
 class Variance(models.Model):
