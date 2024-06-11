@@ -1,10 +1,48 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app/api/postapi.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
-class NewPost extends StatelessWidget {
+class NewPost extends StatefulWidget {
+  const NewPost({super.key});
+
+  @override
+  State<NewPost> createState() => _NewPostState();
+}
+
+class _NewPostState extends State<NewPost> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _minAgeController = TextEditingController();
+  final TextEditingController _maxAgeController = TextEditingController();
+  final TextEditingController _minNumController = TextEditingController();
+  final TextEditingController _maxNumController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedStartDay;
+  TimeOfDay? _selectedEndDay;
+
+  final _genders = ['남자만', '여자만', '상관없음'];
+  String _selectedGender = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      _selectedGender = _genders[2];
+
+      _selectedDate = DateTime.now();
+
+      _selectedStartDay = const TimeOfDay(hour: 9, minute: 0);
+      _selectedEndDay = const TimeOfDay(hour: 10, minute: 0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,17 +106,54 @@ class NewPost extends StatelessWidget {
                     height: 20,
                   ),
                   Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEEEEEE),
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Text(
+                            '이름',
+                            style: GoogleFonts.getFont(
+                              'Inter',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: const Color(0xFF000000)
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            keyboardType: TextInputType.text,
+                            controller: _nameController,
+                          ),
+                        )
+                      ],
+                    )
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
                       height: 80,
+                      width: (MediaQuery.of(context).size.width - 50) / 2 - 12.5,
                       decoration: BoxDecoration(
                           color: const Color(0xFFEEEEEE),
                           borderRadius: BorderRadius.circular(10)
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: Text(
-                              '이름',
+                              '성별',
                               style: GoogleFonts.getFont(
                                   'Inter',
                                   fontWeight: FontWeight.w600,
@@ -86,6 +161,18 @@ class NewPost extends StatelessWidget {
                                   color: const Color(0xFF000000)
                               ),
                             ),
+                          ),
+                          DropdownButton(
+                            value: _selectedGender,
+                            items: _genders.map((element) => DropdownMenuItem(
+                              value: element,
+                              child: Text(element),
+                            )).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedGender = value!;
+                              });
+                            },
                           )
                         ],
                       )
@@ -109,7 +196,7 @@ class NewPost extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Text(
-                                  '성별',
+                                  '최소\n나이',
                                   style: GoogleFonts.getFont(
                                       'Inter',
                                       fontWeight: FontWeight.w600,
@@ -118,6 +205,18 @@ class NewPost extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  controller: _minAgeController,
+                                ),
+                              )
                             ],
                           )
                       ),
@@ -134,7 +233,7 @@ class NewPost extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Text(
-                                  '나이',
+                                  '최대\n나이',
                                   style: GoogleFonts.getFont(
                                       'Inter',
                                       fontWeight: FontWeight.w600,
@@ -143,6 +242,18 @@ class NewPost extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  controller: _maxAgeController,
+                                ),
+                              )
                             ],
                           )
                       )
@@ -167,7 +278,7 @@ class NewPost extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Text(
-                                  '최소 인원',
+                                  '최소\n인원',
                                   style: GoogleFonts.getFont(
                                       'Inter',
                                       fontWeight: FontWeight.w600,
@@ -176,6 +287,18 @@ class NewPost extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  controller: _minNumController,
+                                ),
+                              )
                             ],
                           )
                       ),
@@ -192,7 +315,7 @@ class NewPost extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Text(
-                                  '최대 인원',
+                                  '최대\n인원',
                                   style: GoogleFonts.getFont(
                                       'Inter',
                                       fontWeight: FontWeight.w600,
@@ -201,6 +324,18 @@ class NewPost extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  controller: _maxNumController,
+                                ),
+                              )
                             ],
                           )
                       )
@@ -228,6 +363,53 @@ class NewPost extends StatelessWidget {
                                   color: const Color(0xFF000000)
                               ),
                             ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              showDatePicker(
+                                context: context,
+                                initialDate: _selectedDate!,
+                                firstDate: _selectedDate!,
+                                lastDate: DateTime(DateTime.now().year, DateTime.now().month + 3)
+                              ).then((selectedDate) {
+                                if(selectedDate != null){
+                                  setState(() {
+                                    _selectedDate = selectedDate;
+                                  });
+                                }
+                              });
+                            },
+                            child: Text(DateFormat('MM-dd').format(_selectedDate!)),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              showTimePicker(
+                                context: context,
+                                initialTime: _selectedStartDay!,
+                              ).then((selectedStartDay) {
+                                if(selectedStartDay != null){
+                                  setState(() {
+                                    _selectedStartDay = selectedStartDay;
+                                  });
+                                }
+                              });
+                            },
+                            child: Text('${_selectedStartDay!.hour}:${_selectedStartDay!.minute}'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              showTimePicker(
+                                context: context,
+                                initialTime: _selectedStartDay!,
+                              ).then((selectedEndDay) {
+                                if(selectedEndDay != null){
+                                  setState(() {
+                                    _selectedEndDay = selectedEndDay;
+                                  });
+                                }
+                              });
+                            },
+                            child: Text('${_selectedEndDay!.hour}:${_selectedEndDay!.minute}'),
                           )
                         ],
                       )
@@ -255,7 +437,22 @@ class NewPost extends StatelessWidget {
                                   color: const Color(0xFF000000)
                               ),
                             ),
-                          )
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    decoration: const InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    controller: _descriptionController,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       )
                   ),
@@ -271,8 +468,22 @@ class NewPost extends StatelessWidget {
               height: 80 + 40 * 2,
               margin: const EdgeInsets.symmetric(horizontal: 25),
               child: OutlinedButton(
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: () async {
+                  String day = DateFormat("yyyy-MM-dd").format(_selectedDate!);
+
+                  Future<bool> isCreate = createPost(
+                    _nameController.text,
+                    _minAgeController.text == null ? 0 : int.parse(_minAgeController.text),
+                    _maxAgeController.text == null ? 128 : int.parse(_maxAgeController.text),
+                    _genders.indexOf(_selectedGender) + 1,
+                    0,// _minNumController.text as int,
+                    0,//_maxNumController.text as int,
+                    '${day}T${_selectedStartDay!.hour}:${_selectedStartDay!.minute}:00',
+                    '${day}T${_selectedEndDay!.hour}:${_selectedEndDay!.minute}:00',
+                    _descriptionController.text
+                  );
+
+                  if(await isCreate) Navigator.pop(context);
                 },
                 style: OutlinedButton.styleFrom(
                   shape: RoundedRectangleBorder(
