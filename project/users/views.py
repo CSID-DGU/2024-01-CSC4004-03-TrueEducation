@@ -272,10 +272,9 @@ def delete_variation(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_user_state(request):
-    user = request.user
-    user_state = UserState.objects.get(user=user)
-    
-    serializer = UserStateSerializer(user_state, data=request.data, partial=True)
+    evaluated_user = request.data.get('evaluated_user')
+    evaluated_user_state = UserState.objects.get(user=evaluated_user)
+    serializer = UserStateSerializer(evaluated_user_state, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()            
         response_data = serializer.data
