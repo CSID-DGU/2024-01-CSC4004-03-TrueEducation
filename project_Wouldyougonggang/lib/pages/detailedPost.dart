@@ -156,6 +156,7 @@ class DetailedPost extends StatelessWidget {
                     ),
                   ],
                 ),
+                memberList(),
                 recruit(context)
               ],
             ),
@@ -219,5 +220,75 @@ class DetailedPost extends StatelessWidget {
       );
     }
     return Container();
+  }
+
+  Widget memberList() {
+    if(!post.member!.isEmpty()) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '참가자',
+              style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w800,
+                  fontSize: 24,
+                  color: Colors.black
+              ),
+            ),
+            Container(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: post.member!.length,
+                itemBuilder: (context, index) {
+                  return memberItem(post.member![index])
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget memberItem(Member member) {
+    return GestureDetector{
+      onTap: () {
+        
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(member.profileImage)
+                )
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                member.name,
+                style: GoogleFonts.getFont(
+                    'Inter',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    color: Colors.black
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    };
   }
 }

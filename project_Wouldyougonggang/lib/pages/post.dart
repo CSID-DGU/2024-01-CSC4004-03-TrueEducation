@@ -229,18 +229,18 @@ class _PostState extends State<Post> {
           }
           else{
             showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => DetailedPost(
-                    post,
-                    false
-                ),
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30)
-                    )
-                )
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => DetailedPost(
+                  post,
+                  false
+              ),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30)
+                  )
+              )
             );
           }
         },

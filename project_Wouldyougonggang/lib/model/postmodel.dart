@@ -182,9 +182,13 @@ class MyPostItem extends PostItem{
   factory MyPostItem.parse(Map json) {
     List<Member> member = [];
 
-    List list = json['member'];
-    for (var element in list) {
-      member.add(Member.parse(element));
+    try {
+      List list = json['member'];
+      for (var element in list) {
+        member.add(Member.parse(element));
+      }
+    } catch (e) {
+      member = [];
     }
 
     return MyPostItem(
