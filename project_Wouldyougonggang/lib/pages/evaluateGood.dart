@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/service.dart';
+import 'package:flutter_app/pages/evaluateMain.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -68,8 +69,11 @@ class _EvaluateGoodState extends State<EvaluateGood> {
                 onTap: () async {
                   if (trueNum > 0) {
                     Future<bool> isSubmit = Services.submitEvaluate(
-                        1, isSelected); // 1: 평가 대상 member id 넣어줘야함~!
-                    if (await isSubmit) Navigator.pop(context);
+                        16, isSelected); // 1: 평가 대상 member id 넣어줘야함~!
+                    if (await isSubmit) {
+                      Navigator.pop(context);
+                    } else
+                      Fluttertoast.showToast(msg: "failed!");
                   } else {
                     Fluttertoast.showToast(msg: "하나 이상 선택해주세요!");
                   }

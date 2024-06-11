@@ -109,7 +109,7 @@ class Services {
       print(jsonEncode(data));
 
       final response = await http.post(
-        Uri.parse('${url}register/'),
+        Uri.parse('${url}evaluate_user/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ${User.tokens.access}'
@@ -117,7 +117,7 @@ class Services {
         body: jsonEncode(data),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         // 제출 성공
         print('Submit successful!');
         return true;

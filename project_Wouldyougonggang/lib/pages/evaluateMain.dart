@@ -6,12 +6,18 @@ import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class EvaluateMain extends StatelessWidget {
+class EvaluateMain extends StatefulWidget {
+  const EvaluateMain({super.key});
+
+  @override
+  State<EvaluateMain> createState() => _EvaluateMainState();
+}
+
+class _EvaluateMainState extends State<EvaluateMain> {
   List<String> member = ['hi', 'I am', 'team', '6', 'swim', 'real', 'edu'];
+  List<bool> isEvaluated = [false, false, false, false, false, false, false];
   String title = '모임명';
   String description = '상세설명';
-
-  EvaluateMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -141,13 +147,21 @@ class EvaluateMain extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => EvaluateGood()));
+              setState(() {
+                if (isEvaluated[index] == false) {
+                  isEvaluated[index] = true;
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EvaluateGood()));
+                }
+              });
             },
             child: SizedBox(
               width: 30,
               height: 27.5,
-              child: SvgPicture.asset('assets/vectors/vector_5_x2.svg'),
+              child: SvgPicture.asset(
+                'assets/vectors/vector_5_x2.svg',
+                color: isEvaluated[index] ? Colors.red : Colors.black,
+              ),
             ),
           ),
         ],
