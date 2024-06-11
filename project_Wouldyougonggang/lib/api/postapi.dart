@@ -201,6 +201,8 @@ Future<PostList> fetchPost(bool state) async {
 }
 
 const String url = '';
+String token = '';
+token = 'Bearer ' + token;
 
 Future<bool> applyPost(int groupId) async {
   debugPrint('통신 시작');
@@ -211,7 +213,7 @@ Future<bool> applyPost(int groupId) async {
 
     final response = await http.post(
       Uri.parse('${url}apply_group/'),
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': '$token'},
       body: jsonEncode(data)
     );
 
@@ -251,7 +253,7 @@ Future<bool> createPost(String groupName, int minAge, int maxAge, int groupGende
 
     final response = await http.post(
       Uri.parse('${url}create_group/'),
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': '$token'},
       body: jsonEncode(data)
     );
 
@@ -273,4 +275,4 @@ Future<bool> createPost(String groupName, int minAge, int maxAge, int groupGende
   }
 }
 
-
+Future<bool> 

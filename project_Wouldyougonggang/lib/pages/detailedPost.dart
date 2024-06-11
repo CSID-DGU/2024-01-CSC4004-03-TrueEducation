@@ -244,7 +244,7 @@ class DetailedPost extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 itemCount: post.member!.length,
                 itemBuilder: (context, index) {
-                  return memberItem(post.member![index])
+                  if (post.member![index].state == 1) return memberItem(post.member![index])
                 },
               ),
             ),
@@ -255,40 +255,49 @@ class DetailedPost extends StatelessWidget {
   }
 
   Widget memberItem(Member member) {
-    return GestureDetector{
-      onTap: () {
-        
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        child: Row(
-          children: [
-            Container(
+    return Container(
+      height: 70,
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: Icons.person.image
+              )
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              member.name,
+              style: GoogleFonts.getFont(
+                  'Inter',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  color: Colors.black
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              
+            },
+            child: Container(
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(member.profileImage)
-                )
+                color: const Color(0xFFEEEEEE),
               ),
+              child: Text('수락'),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                member.name,
-                style: GoogleFonts.getFont(
-                    'Inter',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    color: Colors.black
-                ),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
-    };
+    );
   }
 }

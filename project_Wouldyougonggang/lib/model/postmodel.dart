@@ -113,16 +113,25 @@ abstract class PostItem {
 class Member {
   final int id;
   final int state;
+  final String name;
+  final String nickname;
+  final int grade;
 
   Member({
     required this.id,
     required this.state,
+    required this.name,
+    required this.nickname,
+    required this.grade
   });
 
   factory Member.parse(Map json) {
     return Member(
       id: json['user'],
       state: json['state'],
+      name: json['name'],
+      nickname: json['nickname'],
+      grade: json['grade']
     );
   }
 }
