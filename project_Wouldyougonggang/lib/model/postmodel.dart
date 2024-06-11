@@ -129,9 +129,9 @@ class Member {
     return Member(
       id: json['user'],
       state: json['state'],
-      name: json['name'],
-      nickname: json['nickname'],
-      grade: json['grade']
+      name: json['user_name'],
+      nickname: json['user_nickname'],
+      grade: json['user_grade']
     );
   }
 }

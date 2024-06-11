@@ -223,14 +223,14 @@ class DetailedPost extends StatelessWidget {
   }
 
   Widget memberList() {
-    if(!post.member!.isEmpty()) {
+    if(post.member != null && post.member!.isNotEmpty) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '참가자',
+              '승인 대기',
               style: GoogleFonts.getFont(
                   'Inter',
                   fontWeight: FontWeight.w800,
@@ -239,12 +239,14 @@ class DetailedPost extends StatelessWidget {
               ),
             ),
             Container(
-              height: 50,
+              height: 200,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: post.member!.length,
                 itemBuilder: (context, index) {
-                  if (post.member![index].state == 1) return memberItem(post.member![index])
+                  if (post.member![index].state == 1){
+                    return memberItem(post.member![index]);
+                  }
                 },
               ),
             ),
@@ -252,6 +254,7 @@ class DetailedPost extends StatelessWidget {
         ),
       );
     }
+    return Container();
   }
 
   Widget memberItem(Member member) {
@@ -263,18 +266,12 @@ class DetailedPost extends StatelessWidget {
           Container(
             width: 50,
             height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: Icons.person.image
-              )
-            ),
+            child: Image.asset('assets/images/person.png'),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              member.name,
+              member.nickname,
               style: GoogleFonts.getFont(
                   'Inter',
                   fontWeight: FontWeight.w500,
@@ -285,13 +282,11 @@ class DetailedPost extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              
+
             },
             child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: const Color(0xFFEEEEEE),
+              decoration: const BoxDecoration(
+                color: Color(0xFFEEEEEE),
               ),
               child: Text('수락'),
             ),

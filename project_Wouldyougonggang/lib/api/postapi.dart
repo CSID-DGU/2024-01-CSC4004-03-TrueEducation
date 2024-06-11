@@ -119,7 +119,7 @@ String my = '''
 			"start_time": "2024-06-05T09:00:00",
 			"end_time": "2024-06-05T17:00:00",
 			"description": "안녕하세요",
-			"current_state": 2,
+			"current_state": 1,
 			"flag": false,
 			"leader": 1
 		},
@@ -127,11 +127,12 @@ String my = '''
 			"group_id": 13,
 			"member": [
 				{
-					"id": 1,
-					"user": 16,
-					"state": 2,
-					"group": 13
-				}
+					"user": 17,
+					"state": 1,
+					"user_name": "테스트다",
+					"user_nickname": "테스트22",
+					"user_grade": 8
+        }
 			],
 			"group_img": null,
 			"group_name": "예외 테스트2",
@@ -152,10 +153,11 @@ String my = '''
 			"group_id": 14,
 			"member": [
 				{
-					"id": 2,
-					"user": 16,
+					"user": 17,
 					"state": 1,
-					"group": 14
+					"user_name": "테스트다",
+					"user_nickname": "테스트22",
+					"user_grade": 8
 				}
 			],
 			"group_img": null,
@@ -169,7 +171,7 @@ String my = '''
 			"start_time": "2024-06-05T09:00:00",
 			"end_time": "2024-06-05T17:00:00",
 			"description": "안녕하세요",
-			"current_state": 3,
+			"current_state": 1,
 			"flag": false,
 			"leader": 1
 		}
@@ -201,8 +203,7 @@ Future<PostList> fetchPost(bool state) async {
 }
 
 const String url = '';
-String token = '';
-token = 'Bearer ' + token;
+String token = 'Bearer ';
 
 Future<bool> applyPost(int groupId) async {
   debugPrint('통신 시작');
@@ -274,5 +275,3 @@ Future<bool> createPost(String groupName, int minAge, int maxAge, int groupGende
     return false;
   }
 }
-
-Future<bool> 
