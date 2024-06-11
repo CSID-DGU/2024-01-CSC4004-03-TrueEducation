@@ -32,7 +32,6 @@ class _PostState extends State<Post> {
   late var unitFontSize;
 
   List<Color> color = [
-    GREEN_BUTTON_COLOR,
     ENTERED_BUTTON_COLOR,
     MATCHING_BUTTON_COLOR,
     COMPLETED_BUTTON_COLOR
@@ -132,7 +131,7 @@ class _PostState extends State<Post> {
                 ],
               ),
             ),
-            FutureBuilder<PostList>(
+            FutureBuilder<PostList?>(
                 future: fetchPost(isRecomend, User.tokens.access),
                 builder: (context, snapshot) {
                   postList = snapshot.data;
@@ -167,7 +166,10 @@ class _PostState extends State<Post> {
           width: 70,
           height: 70,
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => NewPost()));
+            },
             backgroundColor: PRIMARY_COLOR,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(70)),
@@ -221,8 +223,10 @@ class _PostState extends State<Post> {
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30))));
             } else if (post.state == 3) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => EvaluateMain()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EvaluateMain(post: post)));
             } else {
               showModalBottomSheet(
                   context: context,
@@ -314,15 +318,24 @@ class _PostState extends State<Post> {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            if (post.state == null) applyPost(post.groupId, User.tokens.access);
+          onTap: () async {
+            if (post.state == null) {
+              Future<bool> isApply =
+                  applyPost(post.groupId, User.tokens.access);
+
+              if (await isApply) {
+                setState(() {});
+              }
+            }
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              // color: color[(post.state as int) - 1],
+              color: (post.state != null)
+                  ? color[(post.state as int) - 1]
+                  : GREEN_BUTTON_COLOR,
             ),
             width: unitSize,
             height: unitSize,
@@ -331,7 +344,7 @@ class _PostState extends State<Post> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                   fontFamily: 'Pretendard',
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.w400,
                   color: MAIN_FONT_COLOR),
             ),

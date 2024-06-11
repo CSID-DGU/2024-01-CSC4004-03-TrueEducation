@@ -1,13 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/api/postapi.dart';
+import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/user.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class NewPost extends StatefulWidget {
-  const NewPost({super.key});
+  NewPost({super.key});
 
   @override
   State<NewPost> createState() => _NewPostState();
@@ -78,9 +80,9 @@ class _NewPostState extends State<NewPost> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Container(
-                        height: 450,
+                        height: MediaQuery.of(context).size.height * 0.3,
                         decoration: BoxDecoration(
-                            color: const Color(0xFFEEEEEE),
+                            color: SUB_COLOR,
                             borderRadius: BorderRadius.circular(10)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,12 +90,13 @@ class _NewPostState extends State<NewPost> {
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 20),
-                              child: Text(
+                              child: const Text(
                                 '사진',
-                                style: GoogleFonts.getFont('Inter',
-                                    fontWeight: FontWeight.w600,
+                                style: TextStyle(
+                                    fontFamily: 'Pretendard',
                                     fontSize: 18,
-                                    color: const Color(0xFF000000)),
+                                    fontWeight: FontWeight.w600,
+                                    color: MAIN_FONT_COLOR),
                               ),
                             )
                           ],
@@ -104,19 +107,20 @@ class _NewPostState extends State<NewPost> {
                     Container(
                         height: 80,
                         decoration: BoxDecoration(
-                            color: const Color(0xFFEEEEEE),
+                            color: SUB_COLOR,
                             borderRadius: BorderRadius.circular(10)),
                         child: Row(
                           children: [
                             Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
-                              child: Text(
+                              child: const Text(
                                 '이름',
-                                style: GoogleFonts.getFont('Inter',
-                                    fontWeight: FontWeight.w600,
+                                style: TextStyle(
+                                    fontFamily: 'Pretendard',
                                     fontSize: 18,
-                                    color: const Color(0xFF000000)),
+                                    fontWeight: FontWeight.w600,
+                                    color: MAIN_FONT_COLOR),
                               ),
                             ),
                             Expanded(
@@ -138,7 +142,7 @@ class _NewPostState extends State<NewPost> {
                         width:
                             (MediaQuery.of(context).size.width - 50) / 2 - 12.5,
                         decoration: BoxDecoration(
-                            color: const Color(0xFFEEEEEE),
+                            color: SUB_COLOR,
                             borderRadius: BorderRadius.circular(10)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -146,12 +150,13 @@ class _NewPostState extends State<NewPost> {
                             Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
-                              child: Text(
+                              child: const Text(
                                 '성별',
-                                style: GoogleFonts.getFont('Inter',
-                                    fontWeight: FontWeight.w600,
+                                style: TextStyle(
+                                    fontFamily: 'Pretendard',
                                     fontSize: 18,
-                                    color: const Color(0xFF000000)),
+                                    fontWeight: FontWeight.w600,
+                                    color: MAIN_FONT_COLOR),
                               ),
                             ),
                             DropdownButton(
@@ -182,7 +187,7 @@ class _NewPostState extends State<NewPost> {
                                 (MediaQuery.of(context).size.width - 50) / 2 -
                                     12.5,
                             decoration: BoxDecoration(
-                                color: const Color(0xFFEEEEEE),
+                                color: SUB_COLOR,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,12 +195,13 @@ class _NewPostState extends State<NewPost> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  child: Text(
+                                  child: const Text(
                                     '최소\n나이',
-                                    style: GoogleFonts.getFont('Inter',
-                                        fontWeight: FontWeight.w600,
+                                    style: TextStyle(
+                                        fontFamily: 'Pretendard',
                                         fontSize: 18,
-                                        color: const Color(0xFF000000)),
+                                        fontWeight: FontWeight.w600,
+                                        color: MAIN_FONT_COLOR),
                                   ),
                                 ),
                                 Expanded(
@@ -218,7 +224,7 @@ class _NewPostState extends State<NewPost> {
                                 (MediaQuery.of(context).size.width - 50) / 2 -
                                     12.5,
                             decoration: BoxDecoration(
-                                color: const Color(0xFFEEEEEE),
+                                color: SUB_COLOR,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,12 +232,13 @@ class _NewPostState extends State<NewPost> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  child: Text(
+                                  child: const Text(
                                     '최대\n나이',
-                                    style: GoogleFonts.getFont('Inter',
-                                        fontWeight: FontWeight.w600,
+                                    style: TextStyle(
+                                        fontFamily: 'Pretendard',
                                         fontSize: 18,
-                                        color: const Color(0xFF000000)),
+                                        fontWeight: FontWeight.w600,
+                                        color: MAIN_FONT_COLOR),
                                   ),
                                 ),
                                 Expanded(
@@ -262,7 +269,7 @@ class _NewPostState extends State<NewPost> {
                                 (MediaQuery.of(context).size.width - 50) / 2 -
                                     12.5,
                             decoration: BoxDecoration(
-                                color: const Color(0xFFEEEEEE),
+                                color: SUB_COLOR,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,12 +277,13 @@ class _NewPostState extends State<NewPost> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  child: Text(
+                                  child: const Text(
                                     '최소\n인원',
-                                    style: GoogleFonts.getFont('Inter',
-                                        fontWeight: FontWeight.w600,
+                                    style: TextStyle(
+                                        fontFamily: 'Pretendard',
                                         fontSize: 18,
-                                        color: const Color(0xFF000000)),
+                                        fontWeight: FontWeight.w600,
+                                        color: MAIN_FONT_COLOR),
                                   ),
                                 ),
                                 Expanded(
@@ -298,7 +306,7 @@ class _NewPostState extends State<NewPost> {
                                 (MediaQuery.of(context).size.width - 50) / 2 -
                                     12.5,
                             decoration: BoxDecoration(
-                                color: const Color(0xFFEEEEEE),
+                                color: SUB_COLOR,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -306,12 +314,13 @@ class _NewPostState extends State<NewPost> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15),
-                                  child: Text(
+                                  child: const Text(
                                     '최대\n인원',
-                                    style: GoogleFonts.getFont('Inter',
-                                        fontWeight: FontWeight.w600,
+                                    style: TextStyle(
+                                        fontFamily: 'Pretendard',
                                         fontSize: 18,
-                                        color: const Color(0xFF000000)),
+                                        fontWeight: FontWeight.w600,
+                                        color: MAIN_FONT_COLOR),
                                   ),
                                 ),
                                 Expanded(
@@ -336,19 +345,20 @@ class _NewPostState extends State<NewPost> {
                     Container(
                         height: 80,
                         decoration: BoxDecoration(
-                            color: const Color(0xFFEEEEEE),
+                            color: SUB_COLOR,
                             borderRadius: BorderRadius.circular(10)),
                         child: Row(
                           children: [
                             Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
-                              child: Text(
+                              child: const Text(
                                 '시간',
-                                style: GoogleFonts.getFont('Inter',
-                                    fontWeight: FontWeight.w600,
+                                style: TextStyle(
+                                    fontFamily: 'Pretendard',
                                     fontSize: 18,
-                                    color: const Color(0xFF000000)),
+                                    fontWeight: FontWeight.w600,
+                                    color: MAIN_FONT_COLOR),
                               ),
                             ),
                             ElevatedButton(
@@ -408,37 +418,32 @@ class _NewPostState extends State<NewPost> {
                       height: 20,
                     ),
                     Container(
-                        height: 450,
+                        height: MediaQuery.of(context).size.height * 0.3,
                         decoration: BoxDecoration(
-                            color: const Color(0xFFEEEEEE),
+                            color: SUB_COLOR,
                             borderRadius: BorderRadius.circular(10)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 20),
-                              child: Text(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                              child: const Text(
                                 '상세설명',
-                                style: GoogleFonts.getFont('Inter',
-                                    fontWeight: FontWeight.w600,
+                                style: TextStyle(
+                                    fontFamily: 'Pretendard',
                                     fontSize: 18,
-                                    color: const Color(0xFF000000)),
+                                    fontWeight: FontWeight.w600,
+                                    color: MAIN_FONT_COLOR),
                               ),
                             ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                      ),
-                                      keyboardType: TextInputType.text,
-                                      controller: _descriptionController,
-                                    ),
-                                  )
-                                ],
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                keyboardType: TextInputType.text,
+                                controller: _descriptionController,
                               ),
                             ),
                           ],

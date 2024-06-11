@@ -188,7 +188,7 @@ Future<PostList?> fetchPost(bool state, String token) async {
     String urlPath =
         (state) ? '${url}recommand_group_list/' : '${url}my_group_list/';
 
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse(urlPath),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -196,13 +196,15 @@ Future<PostList?> fetchPost(bool state, String token) async {
       },
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       debugPrint('성공');
       try {
-        List jsonData = jsonDecode(response.body);
+        print(response.body);
+        List jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+        print(jsonData[0]);
         return RecommendPostList.parse(jsonData);
       } catch (e) {
-        Map jsonData = jsonDecode(response.body);
+        Map jsonData = jsonDecode(utf8.decode(response.bodyBytes));
         return MyPostList.parse(jsonData);
       }
     } else if (response.statusCode == 500) {
@@ -273,7 +275,7 @@ Future<bool> createPost(
     final response = await http.post(Uri.parse('${url}create_group/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': '$token'
+          'Authorization': 'Bearer $token'
         },
         body: jsonEncode(data));
 

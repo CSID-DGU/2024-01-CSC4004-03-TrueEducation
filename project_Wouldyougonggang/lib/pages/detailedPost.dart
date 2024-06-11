@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/user.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
@@ -71,7 +72,7 @@ class DetailedPost extends StatelessWidget {
           ),
           Container(
             height: height * 3 / 4,
-            color: const Color(0xFFEEEEEE),
+            color: SUB_COLOR,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +156,7 @@ class DetailedPost extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFEEEEEE),
+          color: SUB_COLOR,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Container(

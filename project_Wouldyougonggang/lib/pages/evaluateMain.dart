@@ -1,23 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/model/postmodel.dart';
 import 'package:flutter_app/pages/evaluateGood.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class EvaluateMain extends StatefulWidget {
-  const EvaluateMain({super.key});
+  PostItem post;
+
+  EvaluateMain({super.key, required this.post});
 
   @override
-  State<EvaluateMain> createState() => _EvaluateMainState();
+  State<EvaluateMain> createState() => _EvaluateMainState(post: post);
 }
 
 class _EvaluateMainState extends State<EvaluateMain> {
-  List<String> member = ['hi', 'I am', 'team', '6', 'swim', 'real', 'edu'];
   List<bool> isEvaluated = [false, false, false, false, false, false, false];
-  String title = '모임명';
-  String description = '상세설명';
+
+  PostItem post;
+
+  _EvaluateMainState({required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,7 @@ class _EvaluateMainState extends State<EvaluateMain> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            title,
+                            post.groupName,
                             style: const TextStyle(
                                 fontFamily: 'Pretendard',
                                 fontSize: 40,
@@ -57,7 +61,7 @@ class _EvaluateMainState extends State<EvaluateMain> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            description,
+                            post.description,
                             style: const TextStyle(
                                 fontFamily: 'Pretendard',
                                 fontSize: 25,
@@ -98,7 +102,7 @@ class _EvaluateMainState extends State<EvaluateMain> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (int i = 0; i < member.length; i++)
+                    for (int i = 0; i < post.member!.length; i++)
                       userList(i, context),
                   ],
                 ),
@@ -136,7 +140,7 @@ class _EvaluateMainState extends State<EvaluateMain> {
                 ),
               ),
               Text(
-                member[index],
+                post.member![index].name,
                 style: const TextStyle(
                     fontFamily: 'Pretendard',
                     fontSize: 24,
