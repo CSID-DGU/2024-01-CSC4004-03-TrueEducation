@@ -119,7 +119,7 @@ class _DetailedState extends State<DetailedPost> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "○ 나이 : ${post.minNum} ~ ${post.maxNum}살",
+                            "○ 나이 : ${post.minAge} ~ ${post.maxAge}살",
                             style: GoogleFonts.getFont(
                                 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -137,7 +137,7 @@ class _DetailedState extends State<DetailedPost> {
                             ),
                           ),
                           Text(
-                            "○ 인원 : ${post.minAge} ~ ${post.maxAge}명",
+                            "○ 인원 : ${post.minNum} ~ ${post.maxNum}명",
                             style: GoogleFonts.getFont(
                                 'Inter',
                                 fontWeight: FontWeight.w500,
@@ -224,6 +224,66 @@ class _DetailedState extends State<DetailedPost> {
           ),
           child: Text(
             '참가하기',
+            style: GoogleFonts.getFont(
+                'Inter',
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+                color: const Color(0xFF000000)
+            ),
+          ),
+        ),
+      );
+    }
+    else if(post.state == 1 && post.currentNum >= post.minNum && post.member != null) {
+      return Container(
+        width: width - 50,
+        height: 50,
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: OutlinedButton(
+          onPressed: () async {
+            Future<bool> isChanged = changeState(post.groupId);
+            if(await isChanged) {
+              setState(() {});
+            }
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+            ),
+          ),
+          child: Text(
+            '모임 시작',
+            style: GoogleFonts.getFont(
+                'Inter',
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+                color: const Color(0xFF000000)
+            ),
+          ),
+        ),
+      );
+    }
+    else if(post.state == 2 && post.member != null) {
+      return Container(
+        width: width - 50,
+        height: 50,
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: OutlinedButton(
+          onPressed: () async {
+            Future<bool> isChanged = changeState(post.groupId);
+            if(await isChanged) {
+              setState(() {});
+            }
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+            ),
+          ),
+          child: Text(
+            '모임 종료',
             style: GoogleFonts.getFont(
                 'Inter',
                 fontWeight: FontWeight.w500,
