@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
@@ -17,7 +18,6 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     User.tokens = Tokens.fromJson(json["tokens"]);
-
     return User(userInfo: UserInfo.fromJson(json["user_info"]));
   }
 
@@ -27,8 +27,51 @@ class User {
       };
 }
 
+class Timetable {
+  List<List<int>> timetable;
+
+  Timetable({
+    required this.timetable,
+  });
+
+  factory Timetable.fromJson(Map<String, dynamic> json) {
+    List<dynamic> timetableDynamic = jsonDecode(json['timetable']);
+    List<List<int>> timetableList = timetableDynamic.map((dynamic sublist) {
+      return List<int>.from(sublist);
+    }).toList();
+
+    return Timetable(
+      timetable: timetableList,
+    );
+  }
+
+  Map<String, dynamic> toJson(Map<String, dynamic> json) => {
+        "timetable": timetable,
+      };
+}
+
+class Variation {
+  String text;
+  int day;
+  String time;
+
+  Variation({
+    required this.text,
+    required this.day,
+    required this.time,
+  });
+
+  factory Variation.fromJson(Map<String, dynamic> json) => Variation(
+      text: json["text"], day: json["day"], time: json["variable_time"]);
+
+  Map<String, dynamic> toJson() => {
+        "text": text,
+        "day": day,
+        "variable_time": time,
+      };
+}
+
 class Tokens {
-  late String test;
   String refresh;
   String access;
 
@@ -55,7 +98,6 @@ class UserInfo {
   String username;
   DateTime birthdate;
   int gender;
-  List<List<int>> timetable;
 
   UserInfo({
     required this.userId,
@@ -64,15 +106,9 @@ class UserInfo {
     required this.username,
     required this.birthdate,
     required this.gender,
-    required this.timetable,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
-    List<dynamic> timetableDynamic = jsonDecode(json['timetable']);
-    List<List<int>> timetableList = timetableDynamic.map((dynamic sublist) {
-      return List<int>.from(sublist);
-    }).toList();
-
     return UserInfo(
       userId: json["user_id"],
       email: json["email"],
@@ -80,7 +116,6 @@ class UserInfo {
       username: json["username"],
       birthdate: DateTime.parse(json["birthdate"]),
       gender: json["gender"],
-      timetable: timetableList,
     );
   }
 
@@ -92,6 +127,5 @@ class UserInfo {
         "birthdate":
             "${birthdate.year.toString().padLeft(4, '0')}-${birthdate.month.toString().padLeft(2, '0')}-${birthdate.day.toString().padLeft(2, '0')}",
         "gender": gender,
-        'timetable': jsonEncode(timetable),
       };
 }

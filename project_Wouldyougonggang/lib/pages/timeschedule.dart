@@ -1,22 +1,23 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/user.dart';
+import 'package:flutter_app/widgets/variWidget.dart';
 
-import 'package:flutter_app/widgets/schechanges.dart';
 import 'package:flutter_app/widgets/timetable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/bitmaskings.dart';
+import 'dart:math';
 import '../service.dart';
 
 class TimeSchedule extends StatefulWidget {
   TimeTable timetable = TimeTable(
     height: 380,
   );
-  List<ScheChanges> ScheChangesList = [];
 
   TimeSchedule({super.key});
 
@@ -25,39 +26,60 @@ class TimeSchedule extends StatefulWidget {
 }
 
 class TimeScheduleState extends State<TimeSchedule> {
-  List<ScheChanges> ScheChangesList = [];
-
-  late User _user;
+  final _scaffoldKey = GlobalKey<TimeScheduleState>();
+  Timetable? _timetable;
   bool loading = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // Services.fetchUserData(
-    //         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2ODg0NjczLCJpYXQiOjE3MTY4ODI4NzMsImp0aSI6IjNhY2VjYjExY2JkOTRlNmE4ZGU2YTIzYWQwY2I1YjQ2IiwidXNlcl9pZCI6MX0.VIS6RRQKHzgXHhG3nvYKDciE_F9QaTYdTqU_llP7uhQ")
-    //     .then((value) {
-    //   setState(() {
-    //     _user = value;
-    //     loading = true;
-    //   });
-    // });
   }
 
   void LoadTimeTable() {
     print('tapped');
   }
 
-  void removeWidget(Widget widget) {
-    setState(() {
-      ScheChangesList.remove(widget);
-    });
+  void addVari(VariWidget variation) {
+    context.read<Bitmaskings>().addVariWidget(variation);
   }
 
-  void InputScheChanges() {
+  void initVariList() {
+    context.read<Bitmaskings>().initVariList();
+  }
+
+  void InputVariations() {
     DateTime selectedDay = DateTime.now();
-    DateTime selectedTime = DateTime(2024, 1, 1, 9, 0);
+    String? yoil;
+    switch (selectedDay.weekday) {
+      case 1:
+        yoil = '월';
+        break;
+      case 2:
+        yoil = '화';
+        break;
+      case 3:
+        yoil = '수';
+        break;
+      case 4:
+        yoil = '목';
+        break;
+      case 5:
+        yoil = '금';
+        break;
+      case 6:
+        yoil = '토';
+        break;
+      case 7:
+        yoil = '일';
+        break;
+    }
+    DateTime startTime = DateTime(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day, 9, 00);
+    DateTime endTime = DateTime(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day, 21, 00);
     String reason = '';
+    String variTime = List.filled(26, '1').join();
 
     showDialog(
       context: context,
@@ -95,12 +117,35 @@ class TimeScheduleState extends State<TimeSchedule> {
                           if (dateTime != null) {
                             setState2(() {
                               selectedDay = dateTime;
+                              switch (selectedDay.weekday) {
+                                case 1:
+                                  yoil = '월';
+                                  break;
+                                case 2:
+                                  yoil = '화';
+                                  break;
+                                case 3:
+                                  yoil = '수';
+                                  break;
+                                case 4:
+                                  yoil = '목';
+                                  break;
+                                case 5:
+                                  yoil = '금';
+                                  break;
+                                case 6:
+                                  yoil = '토';
+                                  break;
+                                case 7:
+                                  yoil = '일';
+                                  break;
+                              }
                             });
                           }
                         },
                       ),
                       Text(
-                          '${selectedDay.year} - ${selectedDay.month} - ${selectedDay.day}'),
+                          '${selectedDay.year} - ${selectedDay.month} - ${selectedDay.day} ($yoil)'),
                     ],
                   ),
                   Row(
@@ -108,17 +153,6 @@ class TimeScheduleState extends State<TimeSchedule> {
                       IconButton(
                         icon: const Icon(Icons.access_time),
                         onPressed: () async {
-                          // final TimeOfDay? timeOfDay = await showTimePicker(
-                          //   context: context,
-                          //   initialTime: const TimeOfDay(hour: 9, minute: 0),
-                          //   initialEntryMode: TimePickerEntryMode.inputOnly,
-                          // );
-
-                          // if (timeOfDay != null) {
-                          //   setState2(() {
-                          //     selectedTime = timeOfDay;
-                          //   });
-                          // }
                           showCupertinoModalPopup<void>(
                             context: context,
                             builder: (BuildContext context) => Container(
@@ -137,12 +171,56 @@ class TimeScheduleState extends State<TimeSchedule> {
                               child: SafeArea(
                                 top: false,
                                 child: CupertinoDatePicker(
-                                  initialDateTime: selectedTime,
-                                  mode: CupertinoDatePickerMode.time,
                                   use24hFormat: true,
+                                  initialDateTime: startTime.isAfter(DateTime(
+                                          DateTime.now().year,
+                                          DateTime.now().month,
+                                          DateTime.now().day,
+                                          20,
+                                          30))
+                                      ? DateTime(
+                                          DateTime.now().year,
+                                          DateTime.now().month,
+                                          DateTime.now().day,
+                                          20,
+                                          30)
+                                      : startTime.isBefore(DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              9,
+                                              00))
+                                          ? DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              9,
+                                              00)
+                                          : startTime,
+                                  minimumDate: DateTime(
+                                      DateTime.now().year,
+                                      DateTime.now().month,
+                                      DateTime.now().day,
+                                      9,
+                                      00),
+                                  maximumDate: DateTime(
+                                      DateTime.now().year,
+                                      DateTime.now().month,
+                                      DateTime.now().day,
+                                      20,
+                                      30),
+                                  minuteInterval: 30,
+                                  mode: CupertinoDatePickerMode.time,
                                   // This is called when the user changes the time.
                                   onDateTimeChanged: (DateTime newTime) {
-                                    setState2(() => selectedTime = newTime);
+                                    setState2(() {
+                                      startTime = newTime;
+                                      if (endTime.isBefore(startTime
+                                          .add(const Duration(minutes: 30)))) {
+                                        endTime = startTime
+                                            .add(const Duration(minutes: 30));
+                                      }
+                                    });
                                   },
                                 ),
                               ),
@@ -151,7 +229,68 @@ class TimeScheduleState extends State<TimeSchedule> {
                         },
                       ),
                       Text(
-                          "${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}"),
+                          "${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}     ~ "),
+                      IconButton(
+                        icon: const Icon(Icons.access_time),
+                        onPressed: () async {
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (BuildContext context) => Container(
+                              height: 216,
+                              padding: const EdgeInsets.only(top: 6.0),
+                              // The bottom margin is provided to align the popup above the system
+                              // navigation bar.
+                              margin: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              // Provide a background color for the popup.
+                              color: CupertinoColors.systemBackground
+                                  .resolveFrom(context),
+                              // Use a SafeArea widget to avoid system overlaps.
+                              child: SafeArea(
+                                top: false,
+                                child: CupertinoDatePicker(
+                                  use24hFormat: true,
+                                  initialDateTime: endTime.isAfter(DateTime(
+                                          DateTime.now().year,
+                                          DateTime.now().month,
+                                          DateTime.now().day,
+                                          21,
+                                          0))
+                                      ? DateTime(
+                                          DateTime.now().year,
+                                          DateTime.now().month,
+                                          DateTime.now().day,
+                                          21,
+                                          0)
+                                      : endTime.isBefore(startTime
+                                              .add(const Duration(minutes: 30)))
+                                          ? startTime
+                                              .add(const Duration(minutes: 30))
+                                          : endTime,
+                                  minimumDate: startTime
+                                      .add(const Duration(minutes: 30)),
+                                  maximumDate: DateTime(
+                                      DateTime.now().year,
+                                      DateTime.now().month,
+                                      DateTime.now().day,
+                                      21,
+                                      0),
+                                  minuteInterval: 30,
+                                  mode: CupertinoDatePickerMode.time,
+                                  // This is called when the user changes the time.
+                                  onDateTimeChanged: (DateTime newTime) {
+                                    setState2(() => endTime = newTime);
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Text(
+                          "${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}"),
                     ],
                   ),
                   TextField(
@@ -188,42 +327,73 @@ class TimeScheduleState extends State<TimeSchedule> {
                   ),
                   onPressed: () {
                     if (reason.isNotEmpty) {
-                      String yoil = '';
-
-                      setState2(() {
-                        switch (selectedDay.weekday) {
-                          case 1:
-                            yoil = '월';
-                            break;
-                          case 2:
-                            yoil = '화';
-                            break;
-                          case 3:
-                            yoil = '수';
-                            break;
-                          case 4:
-                            yoil = '목';
-                            break;
-                          case 5:
-                            yoil = '금';
-                            break;
-                          case 6:
-                            yoil = '토';
-                            break;
-                          case 7:
-                            yoil = '일';
-                            break;
-                        }
-                      });
                       setState(() {
-                        ScheChangesList.add(
-                          ScheChanges(
-                            bgColor: const Color.fromARGB(255, 0, 234, 255),
-                            text: reason,
-                            date:
-                                '${selectedDay.month}/${selectedDay.day} ($yoil)',
-                          ),
-                        );
+                        int startIndex = (startTime.hour - 9) * 2 +
+                            (startTime.minute == 30 ? 1 : 0);
+                        int endIndex = (endTime.hour - 9) * 2 +
+                            (endTime.minute == 30 ? 1 : 0);
+                        for (int i = startIndex; i < endIndex; i++) {
+                          variTime =
+                              '${variTime.substring(0, i)}0${variTime.substring(i + 1)}';
+                        }
+
+                        Services.makeUserVariation(User.tokens.access, reason,
+                                selectedDay.weekday, variTime)
+                            .then((value) {
+                          setState(() {
+                            _timetable = value;
+                            loading = true;
+
+                            List<String> tmpBitmaskings = [
+                              List.filled(26, '0').join(),
+                              List.filled(26, '0').join(),
+                              List.filled(26, '0').join(),
+                              List.filled(26, '0').join(),
+                              List.filled(26, '0').join(),
+                              List.filled(26, '0').join(),
+                              List.filled(26, '0').join(),
+                            ];
+
+                            int idx = 0;
+
+                            for (List<int> i in _timetable!.timetable) {
+                              int temp = 0;
+                              for (int j in i) {
+                                temp |= j;
+                              }
+
+                              tmpBitmaskings[idx] =
+                                  temp.toRadixString(2).padLeft(29, '0');
+                              idx++;
+                            }
+                            _scaffoldKey.currentContext!
+                                .read<Bitmaskings>()
+                                .updateBitmaskings(tmpBitmaskings);
+
+                            Bitmaskings.variList = [];
+
+                            Services.getUserVariation(User.tokens.access)
+                                .then((value) {
+                              setState(() {
+                                for (var item in value!) {
+                                  VariWidget variation = VariWidget(
+                                    bgColor: Color.fromARGB(
+                                      255,
+                                      Random().nextInt(256),
+                                      Random().nextInt(256),
+                                      Random().nextInt(256),
+                                    ),
+                                    text: item.text,
+                                    day: item.day,
+                                    time: item.time,
+                                  );
+                                  addVari(variation);
+                                }
+                              });
+                            });
+                          });
+                        });
+
                         Navigator.of(context).pop();
                       });
                     } else {
@@ -246,6 +416,7 @@ class TimeScheduleState extends State<TimeSchedule> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        key: _scaffoldKey,
         body: Container(
           padding: const EdgeInsets.symmetric(
             vertical: 5,
@@ -285,60 +456,41 @@ class TimeScheduleState extends State<TimeSchedule> {
                                         .then((image) {
                                       if (image != null) {
                                         setState(() {
-                                          Services.fetchUserTimetable(
-                                                  User.tokens.toString(), image)
+                                          Services.makeUserTimetable(
+                                                  User.tokens.access, image)
                                               .then((value) {
                                             setState(() {
-                                              if (value != null) {
-                                                _user = value;
-                                                // Do something with _user
-                                                loading =
-                                                    true; // Assume loading is false when data is successfully loaded
-                                                List<String> tmpBitmaskings = [
-                                                  List.filled(26, '0').join(),
-                                                  List.filled(26, '0').join(),
-                                                  List.filled(26, '0').join(),
-                                                  List.filled(26, '0').join(),
-                                                  List.filled(26, '0').join(),
-                                                  List.filled(26, '0').join(),
-                                                  List.filled(26, '0').join(),
-                                                ];
-                                                int idx = 0;
+                                              _timetable = value;
+                                              loading = true;
 
-                                                print(_user.userInfo.timetable);
+                                              List<String> tmpBitmaskings = [
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                                List.filled(26, '0').join(),
+                                              ];
 
-                                                for (List<int> i in _user
-                                                    .userInfo.timetable) {
-                                                  int temp = 0;
-                                                  for (int j in i) {
-                                                    temp |= j;
-                                                  }
+                                              int idx = 0;
 
-                                                  tmpBitmaskings[idx] = temp
-                                                      .toRadixString(2)
-                                                      .padLeft(29, '0');
-                                                  print(
-                                                      'tempToString$tmpBitmaskings[idx]');
-
-                                                  context
-                                                      .read<Bitmaskings>()
-                                                      .initBitmaskings(
-                                                          tmpBitmaskings);
-
-                                                  idx++;
+                                              for (List<int> i
+                                                  in _timetable!.timetable) {
+                                                int temp = 0;
+                                                for (int j in i) {
+                                                  temp |= j;
                                                 }
-                                              } else {
-                                                // Handle the null case, perhaps by setting an error state or similar
-                                                loading = false;
-                                                // Optionally set an error message or take other actions
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                        const SnackBar(
-                                                  content: Text(
-                                                      'Failed to load timetable'),
-                                                  duration:
-                                                      Duration(seconds: 2),
-                                                ));
+                                                tmpBitmaskings[idx] = temp
+                                                    .toRadixString(2)
+                                                    .padLeft(29, '0');
+
+                                                context
+                                                    .read<Bitmaskings>()
+                                                    .updateBitmaskings(
+                                                        tmpBitmaskings);
+
+                                                idx++;
                                               }
                                             });
                                           });
@@ -351,7 +503,7 @@ class TimeScheduleState extends State<TimeSchedule> {
                                   iconSize: 40,
                                 ),
                                 IconButton(
-                                  onPressed: InputScheChanges,
+                                  onPressed: InputVariations,
                                   icon: const Icon(
                                       Icons.drive_file_rename_outline_outlined),
                                   iconSize: 40,
@@ -383,7 +535,9 @@ class TimeScheduleState extends State<TimeSchedule> {
                           ),
                         ),
                       ),
-                      for (var scheChange in ScheChangesList) scheChange,
+                      for (var variation
+                          in context.read<Bitmaskings>().getVariList)
+                        variation,
                     ],
                   ),
                 ),

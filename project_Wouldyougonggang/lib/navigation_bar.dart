@@ -54,7 +54,7 @@ class _NavigationState extends State<Navigation> {
           children: [
             const Post(),
             TimeSchedule(), // Timetable
-            const Home(), // Home
+            Home(), // Home
             const Mypage(), // Mypage
             const Settings(), // Settings
           ],

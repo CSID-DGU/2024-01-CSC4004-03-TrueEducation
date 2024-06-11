@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/widgets/variWidget.dart';
 
 class Bitmaskings with ChangeNotifier {
-  static List<String> _bitmaskings = [
+  static List<String> bitmaskings = [
     List.filled(26, '0').join(),
     List.filled(26, '0').join(),
     List.filled(26, '0').join(),
@@ -11,38 +12,64 @@ class Bitmaskings with ChangeNotifier {
     List.filled(26, '0').join(),
   ];
 
-  String getBitmasking(String day) {
+  static List<VariWidget> variList = [];
+  List<VariWidget> get getVariList => variList;
+
+  List<VariWidget> getDayVaris(int col) {
+    return variList.where((vari) => vari.day == col - 1).toList();
+  }
+
+  String getBitmasking(int col) {
     String bitmasking = List.filled(26, '0').join();
 
-    switch (day) {
-      case '월':
-        bitmasking = _bitmaskings[0];
+    switch (col) {
+      case 1:
+        bitmasking = bitmaskings[0];
         break;
-      case '화':
-        bitmasking = _bitmaskings[1];
+      case 2:
+        bitmasking = bitmaskings[1];
         break;
-      case '수':
-        bitmasking = _bitmaskings[2];
+      case 3:
+        bitmasking = bitmaskings[2];
         break;
-      case '목':
-        bitmasking = _bitmaskings[3];
+      case 4:
+        bitmasking = bitmaskings[3];
         break;
-      case '금':
-        bitmasking = _bitmaskings[4];
+      case 5:
+        bitmasking = bitmaskings[4];
         break;
-      case '토':
-        bitmasking = _bitmaskings[5];
+      case 6:
+        bitmasking = bitmaskings[5];
         break;
-      case '일':
-        bitmasking = _bitmaskings[6];
+      case 7:
+        bitmasking = bitmaskings[6];
         break;
     }
 
     return bitmasking;
   }
 
-  void initBitmaskings(List<String> newBitmaskings) {
-    _bitmaskings = newBitmaskings;
+  void updateBitmaskings(List<String> newBitmaskings) {
+    bitmaskings = newBitmaskings;
+    notifyListeners();
+  }
+
+  void initVariList() {
+    variList = [];
+    notifyListeners();
+  }
+
+  void addVariWidget(VariWidget widget) {
+    variList.add(widget);
+    notifyListeners();
+  }
+
+  void removeVariWidget(Widget widget) {
+    variList.remove(widget);
+    notifyListeners();
+  }
+
+  void rebuild() {
     notifyListeners();
   }
 }
