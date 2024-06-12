@@ -219,7 +219,10 @@ class _PostState extends State<Post> {
               showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  builder: (context) => DetailedPost(post: post, isRecruit: true,),
+                  builder: (context) => DetailedPost(
+                        post: post,
+                        isRecruit: true,
+                      ),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
@@ -233,7 +236,10 @@ class _PostState extends State<Post> {
               showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  builder: (context) => DetailedPost(post: post, isRecruit: false,),
+                  builder: (context) => DetailedPost(
+                        post: post,
+                        isRecruit: false,
+                      ),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
@@ -346,9 +352,9 @@ class _PostState extends State<Post> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                   fontFamily: 'Pretendard',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: MAIN_FONT_COLOR),
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: BUTTON_FONT_COLOR),
             ),
           ),
         ),
