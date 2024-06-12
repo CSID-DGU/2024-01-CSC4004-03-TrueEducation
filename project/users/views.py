@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer, VariationSerializer, UserStateSerializer, StateUpdateSerializer, GetMemberSerializer
+from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, GroupSerializer, GroupMemberSerializer, GroupDetailSerializer, AcceptMemberSerializer, VariationSerializer, UserStateSerializer, StateUpdateSerializer, GetLeaderSerializer, GroupMemberDetailSerializer
 
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from .Extraction import *
-from .models import Schedule, Group, GroupMember, Variance, UserState
+from .models import Schedule, Group, GroupMember, Variance, UserState, User
 import json, datetime
 
 # 시간표 정보를 리턴하는 메소드
@@ -133,7 +133,7 @@ def create_group(request):
     serializer = GroupSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(leader=request.user)
-        
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -149,7 +149,7 @@ def recommand_group_list(request):
     filtered_groups = [group for group in groups if group not in member_group and group.leader != request.user]
     user_schedule = Schedule.objects.filter(user=request.user).first()
     if user_schedule :
-        timetable = json.loads(user_schedule).timetable
+        timetable = json.loads(user_schedule.timetable)
         for i in range(len(timetable)):
             temp = 0
             for j in range(len(timetable[i])):
@@ -195,19 +195,18 @@ def my_group_list(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_member(request):
-    serializer = GetMemberSerializer(data=request.data)
-    
-    if serializer.is_valid():
-        group_id = serializer.validated_data['group']
-        group = Group.objects.filter(group_id=group_id).first()
-        
-        if group:
-            group_serializer = GroupDetailSerializer(group)
-            return Response(group_serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Group not found'}, status=status.HTTP_404_NOT_FOUND)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    group = request.data.get('group')
+
+    if not group:
+        return Response({"detail": "Group ID is required."}, status=400)
+
+    group_members = GroupMember.objects.filter(group_id=group, state=2)
+    response_data = {
+        "leader": GetLeaderSerializer(instance=request.user).data,
+        "member": GroupMemberDetailSerializer(group_members, many=True).data,
+    }
+    return Response(response_data)
+
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -303,3 +302,23 @@ def get_user_state(request):
     
     serializer = UserStateSerializer(user_state)
     return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def trans_group_state(request):
+    group = request.data.get('group')
+
+    if not group:
+        return Response({"detail": "Group ID is required."}, status=400)
+
+    cur_group = Group.objects.filter(group_id=group).first()
+    if cur_group.current_state == 1: # 모집 중일 때
+        cur_group.current_state = 2
+    elif cur_group.current_state == 2: # 모집 완료일 때
+        cur_group.current_state = 3 # 모집 종료로 변경
+    cur_group.save()
+
+    response_data = {
+        "changed_state" : cur_group.current_state
+    }
+    return Response(response_data)

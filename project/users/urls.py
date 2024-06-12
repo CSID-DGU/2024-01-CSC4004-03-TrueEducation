@@ -20,4 +20,5 @@ urlpatterns = [
     path('get_variation/', get_variation, name='get_variation'),
     path('evaluate_user/', update_user_state, name='evaluate_userState'), 
     path('get_userState/', get_user_state, name='get_userState'), 
+    path('trans_group_state/', trans_group_state, name='trans_group_state'), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
