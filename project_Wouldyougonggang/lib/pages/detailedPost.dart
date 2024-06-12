@@ -229,7 +229,7 @@ class _DetailedState extends State<DetailedPost> {
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: OutlinedButton(
           onPressed: () async {
-            Future<bool> isChanged = changeState(post.groupId);
+            Future<bool> isChanged = changeState(post.groupId, User.tokens.access);
             if(await isChanged) {
               setState(() {});
             }
@@ -259,7 +259,7 @@ class _DetailedState extends State<DetailedPost> {
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: OutlinedButton(
           onPressed: () async {
-            Future<bool> isChanged = changeState(post.groupId);
+            Future<bool> isChanged = changeState(post.groupId, User.tokens.access);
             if(await isChanged) {
               setState(() {});
             }
@@ -377,7 +377,7 @@ class _DetailedState extends State<DetailedPost> {
               ),
               GestureDetector(
                 onTap: () async {
-                  Future<bool> isAccept = acceptMember(post.groupId, member.id);
+                  Future<bool> isAccept = acceptMember(post.groupId, member.id, User.tokens.access);
 
                   if(await isAccept) {
 
