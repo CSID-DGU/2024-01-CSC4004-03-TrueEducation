@@ -9,15 +9,27 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui';
 
 class EvaluateGood extends StatefulWidget {
-  const EvaluateGood({super.key});
+  int id;
+
+  EvaluateGood({
+    required this.id,
+    super.key
+  });
 
   @override
-  State<EvaluateGood> createState() => _EvaluateGoodState();
+  State<EvaluateGood> createState() => _EvaluateGoodState(id: id);
 }
 
 class _EvaluateGoodState extends State<EvaluateGood> {
   List<int> isSelected = [0, 0, 0, 0, 0, 0];
   int trueNum = 0;
+
+  int id;
+
+  _EvaluateGoodState({
+    required this.id
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +85,7 @@ class _EvaluateGoodState extends State<EvaluateGood> {
                 onTap: () async {
                   if (trueNum > 0) {
                     Future<bool> isSubmit = Services.submitEvaluate(
-                        16, isSelected); // 1: 평가 대상 member id 넣어줘야함~!
+                        id, isSelected);
                     if (await isSubmit) {
                       Navigator.pop(context);
                     } else
