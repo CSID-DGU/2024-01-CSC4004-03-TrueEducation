@@ -11,10 +11,7 @@ import 'dart:ui';
 class EvaluateGood extends StatefulWidget {
   int id;
 
-  EvaluateGood({
-    required this.id,
-    super.key
-  });
+  EvaluateGood({required this.id, super.key});
 
   @override
   State<EvaluateGood> createState() => _EvaluateGoodState(id: id);
@@ -26,9 +23,7 @@ class _EvaluateGoodState extends State<EvaluateGood> {
 
   int id;
 
-  _EvaluateGoodState({
-    required this.id
-  });
+  _EvaluateGoodState({required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +79,8 @@ class _EvaluateGoodState extends State<EvaluateGood> {
               GestureDetector(
                 onTap: () async {
                   if (trueNum > 0) {
-                    Future<bool> isSubmit = Services.submitEvaluate(
-                        id, isSelected);
+                    Future<bool> isSubmit =
+                        Services.submitEvaluate(id, isSelected);
                     if (await isSubmit) {
                       Navigator.pop(context);
                     } else

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/api/postapi.dart';
@@ -81,7 +82,7 @@ class _MyWidgetState extends State<Home> {
                 const SizedBox(
                   height: 7,
                 ),
-                Padding(
+                Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,11 +111,12 @@ class _MyWidgetState extends State<Home> {
                           child: Column(
                             children: [
                               FutureBuilder<PostList?>(
-                                  future: fetchPost(true, User.tokens.access),
+                                  future: fetchPost(false, User.tokens.access),
                                   builder: (context, snapshot) {
                                     postList = snapshot.data;
 
-                                    if (snapshot.connectionState != ConnectionState.done) {
+                                    if (snapshot.connectionState !=
+                                        ConnectionState.done) {
                                       return const Center(
                                         child: CircularProgressIndicator(),
                                       );
@@ -127,7 +129,8 @@ class _MyWidgetState extends State<Home> {
                                       );
                                     }
 
-                                    if (postList != null && postList!.posts.isNotEmpty) {
+                                    if (postList != null &&
+                                        postList!.posts.isNotEmpty) {
                                       return Expanded(child: listviewBuilder());
                                     }
 
@@ -169,9 +172,9 @@ class _MyWidgetState extends State<Home> {
                 context: context,
                 isScrollControlled: true,
                 builder: (context) => DetailedPost(
-                  post: post,
-                  isRecruit: true,
-                ),
+                      post: post,
+                      isRecruit: true,
+                    ),
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
