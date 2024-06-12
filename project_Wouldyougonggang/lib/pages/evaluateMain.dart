@@ -114,8 +114,10 @@ class _EvaluateMainState extends State<EvaluateMain> {
                     builder: (context, snapshot) {
                       members = [];
 
+                      debugPrint('leader : ${snapshot.data!.leader.name}');
                       members.add(snapshot.data!.leader);
                       for (Member i in snapshot.data!.member) {
+                        debugPrint('member : ${i.name}');
                         members.add(i);
                       }
 
@@ -161,58 +163,61 @@ class _EvaluateMainState extends State<EvaluateMain> {
   }
 
   Widget userItem(Member member) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: SUB_COLOR,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: const SizedBox(
-                  width: 45,
-                  height: 45,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: SUB_COLOR,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: const SizedBox(
+                    width: 45,
+                    height: 45,
+                  ),
                 ),
               ),
-            ),
-            Text(
-              member.name,
-              style: const TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: MAIN_FONT_COLOR),
-            ),
-          ],
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              // if (isEvaluated[index] == false) {
-              //   isEvaluated[index] = true;
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EvaluateGood()));
-              // }
-            });
-          },
-          child: SizedBox(
-            width: 30,
-            height: 27.5,
-            child: SvgPicture.asset(
-              'assets/vectors/vector_5_x2.svg',
-              color: Colors.black,
-              // color: isEvaluated[index] ? Colors.red : Colors.black,
+              Text(
+                member.name,
+                style: const TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    color: MAIN_FONT_COLOR),
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                // if (isEvaluated[index] == false) {
+                //   isEvaluated[index] = true;
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EvaluateGood()));
+                // }
+              });
+            },
+            child: SizedBox(
+              width: 30,
+              height: 27.5,
+              child: SvgPicture.asset(
+                'assets/vectors/vector_5_x2.svg',
+                color: Colors.black,
+                // color: isEvaluated[index] ? Colors.red : Colors.black,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

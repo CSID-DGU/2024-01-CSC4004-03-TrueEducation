@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/service.dart';
@@ -49,28 +50,15 @@ class _MypageState extends State<Mypage> {
   @override
   void initState() {
     super.initState();
-    _loadUserData();
   }
 
-  Future<void> _loadUserData() async {
-    var data = await Services.fetchMypage(User.tokens.access);
-    if (data != null) {
-      setState(() {
-        mygrade = data['grade'];
-        num[0] = data['pos_time_num'];
-        num[1] = data['pos_manner_num'];
-        num[2] = data['pos_honor_num'];
-        num[3] = data['pos_ready_num'];
-        num[4] = data['pos_conven_num'];
-        num[5] = data['pos_leadership_num'];
-      });
-    }
-  }
+  late Map<String, dynamic>? myEvaluate;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Container(
         width: screenWidth,
@@ -107,7 +95,7 @@ class _MypageState extends State<Mypage> {
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                     alignment: Alignment.center,
                     child: Text(
-                      '현재 김민수님의 평가등급은\n${grade[mygrade - 1]}입니다!',
+                      '현재 ${User.userInfo.username}님의 평가등급은\n${grade[mygrade - 1]}입니다!',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontFamily: 'Pretendard',
@@ -116,7 +104,38 @@ class _MypageState extends State<Mypage> {
                           color: MAIN_FONT_COLOR),
                     ),
                   ),
-                  for (int i = 0; i < 6; i++) evaluateThing(i),
+                  FutureBuilder<Map<String, dynamic>?>(
+                      future: Services.fetchMypage(User.tokens.access),
+                      builder: (context, snapshot) {
+                        myEvaluate = snapshot.data;
+
+                        if (snapshot.connectionState != ConnectionState.done) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        if (snapshot.hasError) {
+                          debugPrint('error${snapshot.error}');
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        }
+
+                        if (myEvaluate != null) {
+                          mygrade = myEvaluate!['grade'];
+                          num[0] = myEvaluate!['pos_time_num'];
+                          num[1] = myEvaluate!['pos_manner_num'];
+                          num[2] = myEvaluate!['pos_honor_num'];
+                          num[3] = myEvaluate!['pos_ready_num'];
+                          num[4] = myEvaluate!['pos_conven_num'];
+                          num[5] = myEvaluate!['pos_leadership_num'];
+
+                          return Expanded(child: listviewBuilder());
+                        }
+
+                        return const Text('no data found');
+                      })
                 ],
               ),
             ),
@@ -126,10 +145,21 @@ class _MypageState extends State<Mypage> {
     );
   }
 
+  Widget listviewBuilder() {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        return evaluateThing(index);
+      },
+    );
+  }
+
   Widget evaluateThing(int index) {
     return Container(
       width: MediaQuery.of(context).size.width - 20 * 2,
       height: 60,
+      margin: EdgeInsets.fromLTRB(20, 0, 20, 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: SUB_COLOR,
