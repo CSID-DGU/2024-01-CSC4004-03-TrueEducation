@@ -300,7 +300,7 @@ class _DetailedState extends State<DetailedPost> {
                   color: Colors.black),
             ),
             Container(
-              height: 200,
+              height: 150,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: post.member!.length,

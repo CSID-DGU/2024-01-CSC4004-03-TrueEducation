@@ -153,7 +153,7 @@ class MyPostItem extends PostItem {
   MyPostItem({
     required super.groupId,
     super.groupImg,
-    required super.member,
+    super.member,
     required super.groupName,
     required super.minAge,
     required super.maxAge,
@@ -168,7 +168,7 @@ class MyPostItem extends PostItem {
   });
 
   factory MyPostItem.parse(Map json) {
-    List<Member> member = [];
+    List<Member>? member = [];
 
     try {
       List list = json['member'];
@@ -176,7 +176,7 @@ class MyPostItem extends PostItem {
         member.add(Member.parse(element));
       }
     } catch (e) {
-      member = [];
+      member = null;
     }
 
     return MyPostItem(
