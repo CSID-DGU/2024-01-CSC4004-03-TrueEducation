@@ -318,6 +318,18 @@ class _DetailedState extends State<DetailedPost> {
     return Container();
   }
 
+  final List<String> grade = [
+    '수성(1단계)',
+    '금성(2단계)',
+    '지구(3단계)',
+    '화성(4단계)',
+    '목성(5단계)',
+    '토성(6단계)',
+    '천왕성(7단계)',
+    '해왕성(8단계)',
+    '태양(9단계)'
+  ];
+
   Widget memberItem(Member member) {
     return Container(
       height: height / 10,
@@ -363,7 +375,7 @@ class _DetailedState extends State<DetailedPost> {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        '${member.grade}',
+                        grade[member.grade - 1],
                         style: GoogleFonts.getFont(
                             'Inter',
                             fontWeight: FontWeight.w500,
