@@ -197,15 +197,13 @@ Future<MemberList?> getMember(int groupId, String token) async {
   try {
     Map<String, int> data = {'group': groupId};
 
-    debugPrint(data.toString());
-
     final response = await http.post(Uri.parse('${url}get_member/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(data));
-
+    print(response.body.toString());
     if (response.statusCode == 200) {
       debugPrint('성공');
       return MemberList.parse(jsonDecode(utf8.decode(response.bodyBytes)));
