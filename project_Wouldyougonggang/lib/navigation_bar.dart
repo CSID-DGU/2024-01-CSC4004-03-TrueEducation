@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/home.dart';
 import 'package:flutter_app/pages/mypage.dart';
 import 'package:flutter_app/pages/post.dart';
-import 'package:flutter_app/pages/settings.dart';
 import 'package:flutter_app/pages/timeschedule.dart';
 
 class Navigation extends StatefulWidget {
@@ -19,6 +18,7 @@ class _NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
+        height: 80,
         selectedIndex: selectedIndex,
         onDestinationSelected: (value) => setState(() {
           selectedIndex = value;
@@ -40,10 +40,10 @@ class _NavigationState extends State<Navigation> {
             icon: Icon(Icons.person),
             label: "Mypage",
           ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: "Settings",
-          ),
+          // NavigationDestination(
+          //   icon: Icon(Icons.settings),
+          //   label: "Settings",
+          // ),
         ],
         animationDuration: const Duration(milliseconds: 500),
       ),
@@ -51,11 +51,11 @@ class _NavigationState extends State<Navigation> {
         child: IndexedStack(
           index: selectedIndex,
           children: [
-            const Post(),
-            const TimeSchedule(), // Timetable
-            const Home(), // Home
-            Mypage(), // Mypage
-            const Settings(), // Settings
+            Post(),
+            TimeSchedule(),
+            Home(),
+            Mypage(),
+            // Settings(),
           ],
         ),
       ),

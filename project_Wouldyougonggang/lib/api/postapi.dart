@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:http/http.dart' as http;
 
+const String url = 'https://3a2b-210-94-220-228.ngrok-free.app/';
+
 String recommend = '''
   [
     {
@@ -181,44 +183,61 @@ String my = '''
 }
   ''';
 
-Future<PostList?> fetchPost(bool state) async {
-  String data = (state) ? recommend : my;
-
+Future<PostList?> fetchPost(bool state, String token) async {
   try {
-    List jsonData = jsonDecode(data);
-    return RecommendPostList.parse(jsonData);
-  }
-  catch (e) {
-    Map jsonData = jsonDecode(data);
-    return MyPostList.parse(jsonData);
+    String urlPath =
+        (state) ? '${url}recommand_group_list/' : '${url}my_group_list/';
+
+    final response = await http.get(
+      Uri.parse(urlPath),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint('성공');
+      try {
+        print(response.body);
+        List jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+        print(jsonData[0]);
+        return RecommendPostList.parse(jsonData);
+      } catch (e) {
+        Map jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+        return MyPostList.parse(jsonData);
+      }
+    } else if (response.statusCode == 500) {
+    } else {
+      debugPrint(response.statusCode.toString());
+    }
+
+    return null;
+  } catch (e) {
+    debugPrint(e.toString());
+    return null;
   }
 }
 
-const String url = '';
-String token = 'Bearer ';
-
-Future<bool> applyPost(int groupId) async {
+Future<bool> applyPost(int groupId, String token) async {
   debugPrint('통신 시작');
   try {
-    Map<String, int> data = {'group':groupId};
+    Map<String, int> data = {'group': groupId};
 
     debugPrint(data.toString());
 
-    final response = await http.post(
-      Uri.parse('${url}apply_group/'),
-      headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': '$token'},
-      body: jsonEncode(data)
-    );
+    final response = await http.post(Uri.parse('${url}apply_group/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(data));
 
-    if(response.statusCode == 201) {
+    if (response.statusCode == 201) {
       debugPrint('성공');
       return true;
-    }
-
-    else if(response.statusCode == 500){
-    }
-
-    else {
+    } else if (response.statusCode == 500) {
+    } else {
       debugPrint(response.statusCode.toString());
     }
 
@@ -229,8 +248,17 @@ Future<bool> applyPost(int groupId) async {
   }
 }
 
-Future<bool> createPost(String groupName, int minAge, int maxAge, int groupGender, int minNum, int maxNum,
-    String startTime, String endTime, String description) async {
+Future<bool> createPost(
+    String groupName,
+    int minAge,
+    int maxAge,
+    int groupGender,
+    int minNum,
+    int maxNum,
+    String startTime,
+    String endTime,
+    String description,
+    String token) async {
   try {
     Map<String, dynamic> data = {
       "group_name": groupName,
@@ -244,21 +272,18 @@ Future<bool> createPost(String groupName, int minAge, int maxAge, int groupGende
       "description": description
     };
 
-    final response = await http.post(
-      Uri.parse('${url}create_group/'),
-      headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': token},
-      body: jsonEncode(data)
-    );
+    final response = await http.post(Uri.parse('${url}create_group/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode(data));
 
-    if(response.statusCode == 201) {
+    if (response.statusCode == 201) {
       debugPrint('성공');
       return true;
-    }
-
-    else if(response.statusCode == 500){
-    }
-
-    else {
+    } else if (response.statusCode == 500) {
+    } else {
       debugPrint(response.statusCode.toString());
     }
 

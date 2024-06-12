@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_app/theme/colors.dart';
+import 'package:flutter_app/user.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -41,7 +43,7 @@ class _DetailedState extends State<DetailedPost> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height * 4 / 5;
 
-    switch(post.groupGender){
+    switch (post.groupGender) {
       case 1:
         groupGender = "남자만";
         break;
@@ -64,17 +66,13 @@ class _DetailedState extends State<DetailedPost> {
             height: height / 4,
             width: width,
             decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30)
-              ),
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(
-                  'assets/images/planets_70593516402.jpeg'
-                )
-              )
-            ),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)),
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image:
+                        AssetImage('assets/images/planets_70593516402.jpeg'))),
             child: Container(
               margin: EdgeInsets.fromLTRB(10, height / 4 - 50, 10, 10),
               child: Align(
@@ -93,7 +91,7 @@ class _DetailedState extends State<DetailedPost> {
           ),
           Container(
             height: height * 3 / 4,
-            color: const Color(0xFFEEEEEE),
+            color: SUB_COLOR,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,19 +100,19 @@ class _DetailedState extends State<DetailedPost> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 10),
                       child: Text(
                         "모임명 : ${post.groupName}",
-                        style: GoogleFonts.getFont(
-                            'Inter',
+                        style: GoogleFonts.getFont('Inter',
                             fontWeight: FontWeight.w800,
                             fontSize: 24,
-                            color: Colors.black
-                        ),
+                            color: Colors.black),
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -124,17 +122,14 @@ class _DetailedState extends State<DetailedPost> {
                                 'Inter',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
-                                color: Colors.black
-                            ),
+                                color: Colors.black),
                           ),
                           Text(
                             "○ 성별 : $groupGender",
-                            style: GoogleFonts.getFont(
-                                'Inter',
+                            style: GoogleFonts.getFont('Inter',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
-                                color: Colors.black
-                            ),
+                                color: Colors.black),
                           ),
                           Text(
                             "○ 인원 : ${post.minNum} ~ ${post.maxNum}명",
@@ -142,31 +137,27 @@ class _DetailedState extends State<DetailedPost> {
                                 'Inter',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
-                                color: Colors.black
-                            ),
+                                color: Colors.black),
                           ),
                           Text(
                             "○ 일정 : ${post.startTime[1]}/${post.startTime[2]} ${post.startTime[3]}:${post.startTime[4]} ~ ${post.endTime[3]}:${post.endTime[4]}",
-                            style: GoogleFonts.getFont(
-                                'Inter',
+                            style: GoogleFonts.getFont('Inter',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
-                                color: Colors.black
-                            ),
+                                color: Colors.black),
                           )
                         ],
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 10),
                       child: Text(
                         post.description,
-                        style: GoogleFonts.getFont(
-                            'Inter',
+                        style: GoogleFonts.getFont('Inter',
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
-                            color: Colors.black
-                        ),
+                            color: Colors.black),
                       ),
                     ),
                   ],
@@ -186,7 +177,7 @@ class _DetailedState extends State<DetailedPost> {
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFEEEEEE),
+          color: SUB_COLOR,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Container(
@@ -213,23 +204,20 @@ class _DetailedState extends State<DetailedPost> {
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: OutlinedButton(
           onPressed: () async {
-            Future<bool> isApply = applyPost(post.groupId);
-            if(await isApply) Navigator.pop(context);
+            Future<bool> isApply = applyPost(post.groupId, User.tokens.access);
+            if (await isApply) Navigator.pop(context);
           },
           style: OutlinedButton.styleFrom(
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
           child: Text(
             '참가하기',
-            style: GoogleFonts.getFont(
-                'Inter',
+            style: GoogleFonts.getFont('Inter',
                 fontWeight: FontWeight.w500,
                 fontSize: 20,
-                color: const Color(0xFF000000)
-            ),
+                color: const Color(0xFF000000)),
           ),
         ),
       );
@@ -306,12 +294,10 @@ class _DetailedState extends State<DetailedPost> {
           children: [
             Text(
               '승인 대기',
-              style: GoogleFonts.getFont(
-                  'Inter',
+              style: GoogleFonts.getFont('Inter',
                   fontWeight: FontWeight.w800,
                   fontSize: 24,
-                  color: Colors.black
-              ),
+                  color: Colors.black),
             ),
             Container(
               height: 200,
@@ -319,7 +305,7 @@ class _DetailedState extends State<DetailedPost> {
                 scrollDirection: Axis.vertical,
                 itemCount: post.member!.length,
                 itemBuilder: (context, index) {
-                  if (post.member![index].state == 1){
+                  if (post.member![index].state == 1) {
                     return memberItem(post.member![index]);
                   }
                 },
