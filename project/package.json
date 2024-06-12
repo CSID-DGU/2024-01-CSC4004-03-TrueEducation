@@ -1,0 +1,6 @@
+"scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+
+"homepage": "https://csid-dgu.github.io/2024-01-CSC4004-03-TrueEducation/"
