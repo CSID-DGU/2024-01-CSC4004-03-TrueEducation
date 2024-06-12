@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:http/http.dart' as http;
 
-const String url = 'https://2841-210-94-220-228.ngrok-free.app/';
+const String url = 'http://ec2-3-37-89-235.ap-northeast-2.compute.amazonaws.com/';
 
 Future<PostList?> fetchPost(bool state, String token) async {
   try {
@@ -161,7 +161,6 @@ Future<bool> acceptMember(int groupId, int userId, String token) async {
 }
 
 Future<bool> changeState(int groupId, String token) async {
-  debugPrint('통신 시작');
   try {
     Map<String, int> data = {'group': groupId};
 
@@ -174,7 +173,7 @@ Future<bool> changeState(int groupId, String token) async {
         },
         body: jsonEncode(data));
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       debugPrint('성공');
       return true;
     } else if (response.statusCode == 500) {
@@ -193,3 +192,37 @@ Future<bool> changeState(int groupId, String token) async {
     return false;
   }
 }
+
+Future<MemberList?> getMember(int groupId, String token) async {
+  try {
+    Map<String, int> data = {'group': groupId};
+
+    debugPrint(data.toString());
+
+    final response = await http.post(Uri.parse('${url}get_member/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(data));
+
+    if (response.statusCode == 200) {
+      debugPrint('성공');
+      return MemberList.parse(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else if (response.statusCode == 500) {
+      debugPrint('서버 내부 오류');
+    } else if (response.statusCode == 401) {
+      debugPrint('토큰 오류');
+    } else if (response.statusCode == 405) {
+      debugPrint('request 형식 오류');
+    } else {
+      debugPrint(response.statusCode.toString());
+    }
+
+    return null;
+  } catch (e) {
+    debugPrint(e.toString());
+    return null;
+  }
+}
+

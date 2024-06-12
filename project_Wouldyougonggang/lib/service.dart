@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Services {
-  static const String url = 'https://2841-210-94-220-228.ngrok-free.app/';
+  static const String url = 'http://ec2-3-37-89-235.ap-northeast-2.compute.amazonaws.com/';
 
   static Future<User?> attemptLogin(String email, String password) async {
     try {
@@ -248,13 +249,14 @@ class Services {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
+        debugPrint(data.toString());
         return data;
       } else {
-        print('Error: ${response.statusCode}');
+        debugPrint('Error: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Exception: $e');
+      debugPrint('Exception: $e');
       return null;
     }
   }
