@@ -196,8 +196,8 @@ class _EvaluateMainState extends State<EvaluateMain> {
               setState(() {
                 // if (isEvaluated[index] == false) {
                 //   isEvaluated[index] = true;
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EvaluateGood()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EvaluateGood(id: member.id,)));
                 // }
               });
             },
