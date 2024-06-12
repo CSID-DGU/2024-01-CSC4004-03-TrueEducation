@@ -185,6 +185,16 @@ String my = '''
   ''';
 
 Future<PostList?> fetchPost(bool state, String token) async {
+  // String data = (state) ? recommend : my;
+  //
+  // try {
+  //   List jsonData = jsonDecode(data);
+  //   return RecommendPostList.parse(jsonData);
+  // } catch (e) {
+  //   Map jsonData = jsonDecode(data);
+  //   return MyPostList.parse(jsonData);
+  // }
+
   try {
     String urlPath =
         (state) ? '${url}recommand_group_list/' : '${url}my_group_list/';
@@ -200,9 +210,7 @@ Future<PostList?> fetchPost(bool state, String token) async {
     if (response.statusCode == 200) {
       debugPrint('성공');
       try {
-        print(response.body);
         List jsonData = jsonDecode(utf8.decode(response.bodyBytes));
-        print(jsonData[0]);
         return RecommendPostList.parse(jsonData);
       } catch (e) {
         Map jsonData = jsonDecode(utf8.decode(response.bodyBytes));
@@ -290,6 +298,66 @@ Future<bool> createPost(
 
     return false;
   } catch (e) {
+    return false;
+  }
+}
+
+Future<bool> acceptMember(int groupId, int userId, String token) async {
+  try {
+    Map<String, dynamic> data = {
+      "group": groupId,
+      "user": userId
+    };
+
+    final response = await http.post(
+        Uri.parse('${url}accept_member/'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': token},
+        body: jsonEncode(data)
+    );
+
+    if(response.statusCode == 201) {
+      debugPrint('성공');
+      return true;
+    }
+
+    else if(response.statusCode == 500){
+    }
+
+    else {
+      debugPrint(response.statusCode.toString());
+    }
+
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<bool> changeState(int groupId, String token) async {
+  debugPrint('통신 시작');
+  try {
+    Map<String, int> data = {'group': groupId};
+
+    debugPrint(data.toString());
+
+    final response = await http.post(Uri.parse('${url}trans_group_state/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(data));
+
+    if (response.statusCode == 201) {
+      debugPrint('성공');
+      return true;
+    } else if (response.statusCode == 500) {
+    } else {
+      debugPrint(response.statusCode.toString());
+    }
+
+    return false;
+  } catch (e) {
+    debugPrint(e.toString());
     return false;
   }
 }
