@@ -240,7 +240,7 @@ class Services {
   static Future<Map<String, dynamic>?> fetchMypage(String token) async {
     try {
       final response = await http.get(
-        Uri.parse('${url}/get_userState'),
+        Uri.parse('${url}get_userState/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token'
