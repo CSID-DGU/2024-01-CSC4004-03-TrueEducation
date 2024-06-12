@@ -26,7 +26,6 @@ class _EvaluateMainState extends State<EvaluateMain> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -106,41 +105,40 @@ class _EvaluateMainState extends State<EvaluateMain> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:  [
-                  FutureBuilder<MemberList?>(
-                    future: getMember(post.groupId, User.tokens.access),
-                    builder: (context, snapshot) {
-                      members = [];
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FutureBuilder<MemberList?>(
+                        future: getMember(post.groupId, User.tokens.access),
+                        builder: (context, snapshot) {
+                          members = [];
 
-                      members.add(snapshot.data!.leader);
-                      for (Member i in snapshot.data!.member) {
-                        members.add(i);
-                      }
+                          members.add(snapshot.data!.leader);
+                          for (Member i in snapshot.data!.member) {
+                            members.add(i);
+                          }
 
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
+                          if (snapshot.connectionState !=
+                              ConnectionState.done) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
 
-                      if (snapshot.hasError) {
-                        debugPrint('error${snapshot.error}');
-                        return Center(
-                          child: Text(snapshot.error.toString()),
-                        );
-                      }
+                          if (snapshot.hasError) {
+                            debugPrint('error${snapshot.error}');
+                            return Center(
+                              child: Text(snapshot.error.toString()),
+                            );
+                          }
 
-                      if (members.isNotEmpty) {
-                        return Expanded(child: userList());
-                      }
+                          if (members.isNotEmpty) {
+                            return Expanded(child: userList());
+                          }
 
-                      return const Text('error');
-                    }
-                  )
-                ]
-              ),
+                          return const Text('error');
+                        })
+                  ]),
             ),
           ],
         ),
@@ -150,69 +148,71 @@ class _EvaluateMainState extends State<EvaluateMain> {
 
   Widget userList() {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: members.length,
-      itemBuilder: (context, index) {
-        final Member member = members[index];
+        scrollDirection: Axis.vertical,
+        itemCount: members.length,
+        itemBuilder: (context, index) {
+          final Member member = members[index];
 
-        return userItem(member);
-      }
-    );
+          return userItem(member);
+        });
   }
 
   Widget userItem(Member member) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: SUB_COLOR,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: const SizedBox(
-                  width: 45,
-                  height: 45,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: SUB_COLOR,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: const SizedBox(
+                    width: 45,
+                    height: 45,
+                  ),
                 ),
               ),
-            ),
-            Text(
-              member.name,
-              style: const TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: MAIN_FONT_COLOR),
-            ),
-          ],
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              // if (isEvaluated[index] == false) {
-              //   isEvaluated[index] = true;
+              Text(
+                member.name,
+                style: const TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    color: MAIN_FONT_COLOR),
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                // if (isEvaluated[index] == false) {
+                //   isEvaluated[index] = true;
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => EvaluateGood()));
-              // }
-            });
-          },
-          child: SizedBox(
-            width: 30,
-            height: 27.5,
-            child: SvgPicture.asset(
-              'assets/vectors/vector_5_x2.svg',
-              color: Colors.black,
-              // color: isEvaluated[index] ? Colors.red : Colors.black,
+                // }
+              });
+            },
+            child: SizedBox(
+              width: 30,
+              height: 27.5,
+              child: SvgPicture.asset(
+                'assets/vectors/vector_5_x2.svg',
+                color: Colors.black,
+                // color: isEvaluated[index] ? Colors.red : Colors.black,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

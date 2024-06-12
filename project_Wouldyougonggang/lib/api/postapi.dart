@@ -130,18 +130,16 @@ Future<bool> createPost(
 
 Future<bool> acceptMember(int groupId, int userId, String token) async {
   try {
-    Map<String, dynamic> data = {
-      "group": groupId,
-      "user": userId
-    };
+    Map<String, dynamic> data = {"group": groupId, "user": userId};
 
-    final response = await http.post(
-        Uri.parse('${url}accept_member/'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': token},
-        body: jsonEncode(data)
-    );
+    final response = await http.post(Uri.parse('${url}accept_member/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode(data));
 
-    if(response.statusCode == 201) {
+    if (response.statusCode == 201) {
       debugPrint('성공');
       return true;
     } else if (response.statusCode == 500) {
@@ -205,7 +203,6 @@ Future<MemberList?> getMember(int groupId, String token) async {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(data));
-
     if (response.statusCode == 200) {
       debugPrint('성공');
       return MemberList.parse(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -225,4 +222,3 @@ Future<MemberList?> getMember(int groupId, String token) async {
     return null;
   }
 }
-

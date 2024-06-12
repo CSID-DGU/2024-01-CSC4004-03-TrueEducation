@@ -15,6 +15,7 @@ class Mypage extends StatefulWidget {
 class _MypageState extends State<Mypage> {
   int mygrade = 1;
   List<int> num = [0, 0, 0, 0, 0, 0];
+  String name = '';
   final List<String> grade = [
     '수성(1단계)',
     '금성(2단계)',
@@ -63,6 +64,7 @@ class _MypageState extends State<Mypage> {
         num[3] = data['pos_ready_num'];
         num[4] = data['pos_conven_num'];
         num[5] = data['pos_leadership_num'];
+        name = data['username'];
       });
     }
   }
@@ -107,7 +109,7 @@ class _MypageState extends State<Mypage> {
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                     alignment: Alignment.center,
                     child: Text(
-                      '현재 김민수님의 평가등급은\n${grade[mygrade - 1]}입니다!',
+                      '현재 $name님의 평가등급은\n${grade[mygrade - 1]}입니다!',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontFamily: 'Pretendard',
