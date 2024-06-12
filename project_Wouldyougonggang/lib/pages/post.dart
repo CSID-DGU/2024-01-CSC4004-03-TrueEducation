@@ -169,7 +169,7 @@ class _PostState extends State<Post> {
           child: FloatingActionButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => NewPost()));
+                  context, MaterialPageRoute(builder: (context) => NewPost(col: -1, row: -1)));
             },
             backgroundColor: PRIMARY_COLOR,
             shape:

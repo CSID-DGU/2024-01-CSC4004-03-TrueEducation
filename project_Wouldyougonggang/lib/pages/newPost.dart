@@ -9,11 +9,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class NewPost extends StatefulWidget {
-  String testText;
-  NewPost({this.testText = '', super.key});
+  int col;
+  int row;
+
+  NewPost({
+    required this.col,
+    required this.row,
+    super.key
+  });
 
   @override
-  State<NewPost> createState() => _NewPostState();
+  State<NewPost> createState() => _NewPostState(col: col, row: row);
 }
 
 class _NewPostState extends State<NewPost> {
@@ -36,6 +42,14 @@ class _NewPostState extends State<NewPost> {
   DateTime endTime = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day, 21, 00);
 
+  final int col;
+  final int row;
+
+  _NewPostState({
+    required this.col,
+    required this.row
+  });
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +58,18 @@ class _NewPostState extends State<NewPost> {
       _selectedGender = _genders[2];
 
       _selectedDate = DateTime.now();
+      if(col != -1) {
+        int weekDiff = (col - _selectedDate.weekday + 7) % 7;
+        _selectedDate = _selectedDate.add(Duration(days: weekDiff));
+
+        double time = (row / 2) + 9;
+        int hour = time.toInt();
+        int minute = (((time * 10) % 10) == 0 ? 0 : 30);
+
+        startTime = DateTime(
+            _selectedDate.year, _selectedDate.month, _selectedDate.day, hour, minute);
+        endTime = startTime.add(const Duration(minutes: 30));
+      }
 
       _selectedStartDay = const TimeOfDay(hour: 9, minute: 0);
       _selectedEndDay = const TimeOfDay(hour: 10, minute: 0);
@@ -366,7 +392,7 @@ class _NewPostState extends State<NewPost> {
                                 onPressed: () async {
                                   final DateTime? dateTime = await showDatePicker(
                                     context: context,
-                                    initialDate: _selectedDate,
+                                    initialDate: DateTime.now(),
                                     firstDate: _selectedDate,
                                     lastDate: DateTime(DateTime.now().year, DateTime.now().month + 3),
                                     initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -402,31 +428,7 @@ class _NewPostState extends State<NewPost> {
                                         top: false,
                                         child: CupertinoDatePicker(
                                           use24hFormat: true,
-                                          initialDateTime: startTime.isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              20,
-                                              30))
-                                              ? DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              20,
-                                              30)
-                                              : startTime.isBefore(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              9,
-                                              00))
-                                              ? DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              9,
-                                              00)
-                                              : startTime,
+                                          initialDateTime: startTime,
                                           minimumDate: DateTime(
                                               DateTime.now().year,
                                               DateTime.now().month,
@@ -482,23 +484,7 @@ class _NewPostState extends State<NewPost> {
                                         top: false,
                                         child: CupertinoDatePicker(
                                           use24hFormat: true,
-                                          initialDateTime: endTime.isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              21,
-                                              0))
-                                              ? DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              21,
-                                              0)
-                                              : endTime.isBefore(startTime
-                                              .add(const Duration(minutes: 30)))
-                                              ? startTime
-                                              .add(const Duration(minutes: 30))
-                                              : endTime,
+                                          initialDateTime: endTime,
                                           minimumDate: startTime
                                               .add(const Duration(minutes: 30)),
                                           maximumDate: DateTime(
