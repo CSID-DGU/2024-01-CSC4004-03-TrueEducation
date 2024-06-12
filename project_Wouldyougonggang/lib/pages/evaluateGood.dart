@@ -21,9 +21,13 @@ class _EvaluateGoodState extends State<EvaluateGood> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        toolbarHeight: 60,
+      ),
       body: Container(
         decoration: const BoxDecoration(color: BACKGROUND_COLOR),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height - 60,
         child: Container(
           padding: const EdgeInsets.fromLTRB(20, 25, 20, 20),
           child: Column(
