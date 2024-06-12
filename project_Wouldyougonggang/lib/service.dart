@@ -5,7 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Services {
-  static const String url = 'https://3a2b-210-94-220-228.ngrok-free.app/';
+  static const String url =
+      'http://ec2-3-37-89-235.ap-northeast-2.compute.amazonaws.com/';
 
   static Future<User?> attemptLogin(String email, String password) async {
     try {

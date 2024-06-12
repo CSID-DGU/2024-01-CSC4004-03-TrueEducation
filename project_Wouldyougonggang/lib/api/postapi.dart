@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:http/http.dart' as http;
 
-const String url = 'https://3a2b-210-94-220-228.ngrok-free.app/';
+const String url =
+    'http://ec2-3-37-89-235.ap-northeast-2.compute.amazonaws.com/';
 
 String recommend = '''
   [

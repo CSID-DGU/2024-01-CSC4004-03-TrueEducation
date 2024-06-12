@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/widgets/meeting.dart';
 import 'package:flutter_app/widgets/timetable.dart';
 
@@ -19,8 +20,11 @@ class _MyWidgetState extends State<Home> {
     return MaterialApp(
       home: Scaffold(
         body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: BACKGROUND_COLOR,
           padding: const EdgeInsets.symmetric(
-            vertical: 5,
+            vertical: 20,
           ),
           child: SingleChildScrollView(
             child: Column(

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:flutter_app/pages/detailedPost.dart';
 import 'package:flutter_app/pages/newPost.dart';
-import 'dart:ui';
 import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/api/postapi.dart';
 import 'package:flutter_app/user.dart';
-
-import 'evaluateMain.dart';
+import 'package:flutter_app/pages/evaluateMain.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -64,7 +63,10 @@ class _PostState extends State<Post> {
             Container(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: SUB_COLOR))),
+                border: Border(
+                  bottom: BorderSide(color: SUB_COLOR, width: 2),
+                ),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +164,7 @@ class _PostState extends State<Post> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Container(
+        child: SizedBox(
           width: 70,
           height: 70,
           child: FloatingActionButton(
@@ -210,7 +212,7 @@ class _PostState extends State<Post> {
 
   Widget listviewItem(PostItem post) {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: GestureDetector(
           onTap: () {
             if (isRecomend) {
@@ -241,7 +243,7 @@ class _PostState extends State<Post> {
           child: Container(
               decoration: const BoxDecoration(
                 border: Border.symmetric(
-                    horizontal: BorderSide(color: SUB_FONT_COLOR)),
+                    horizontal: BorderSide(color: SUB_COLOR, width: 2)),
               ),
               height: unitSize + 20,
               child: postItem(post)),
