@@ -54,20 +54,25 @@ class Variation {
   String text;
   int day;
   String time;
+  int id;
 
-  Variation({
-    required this.text,
-    required this.day,
-    required this.time,
-  });
+  Variation(
+      {required this.text,
+      required this.day,
+      required this.time,
+      this.id = -1});
 
   factory Variation.fromJson(Map<String, dynamic> json) => Variation(
-      text: json["text"], day: json["day"], time: json["variable_time"]);
+      text: json["text"],
+      day: json["day"],
+      time: json["variable_time"],
+      id: json["variable_time_id"]);
 
   Map<String, dynamic> toJson() => {
         "text": text,
         "day": day,
         "variable_time": time,
+        "variable_time_id": id,
       };
 }
 

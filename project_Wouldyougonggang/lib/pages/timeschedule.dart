@@ -386,6 +386,7 @@ class TimeScheduleState extends State<TimeSchedule> {
                                     text: item.text,
                                     day: item.day,
                                     time: item.time,
+                                    id: item.id,
                                   );
                                   addVari(variation);
                                 }

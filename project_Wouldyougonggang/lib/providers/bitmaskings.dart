@@ -64,12 +64,8 @@ class Bitmaskings with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeVariWidget(Widget widget) {
+  void removeVariWidget(Widget widget) async {
     variList.remove(widget);
-    notifyListeners();
-  }
-
-  void rebuild() {
     notifyListeners();
   }
 }

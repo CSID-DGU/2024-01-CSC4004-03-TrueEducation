@@ -106,10 +106,37 @@ class _PostState extends State<Post> {
                 ],
               ),
             ),
+<<<<<<< Updated upstream
             CompletedPoster(),
             MatchingPoster(),
             EnteredPoster(),
             Poster(),
+=======
+            FutureBuilder<PostList?>(
+                future: fetchPost(isRecomend, User.tokens.access),
+                builder: (context, snapshot) {
+                  postList = snapshot.data;
+
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    debugPrint('error${snapshot.error}');
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  }
+
+                  if (postList != null && postList!.posts.isNotEmpty) {
+                    return Expanded(child: listviewBuilder());
+                  }
+
+                  return const Text('no data found');
+                })
+>>>>>>> Stashed changes
           ],
         ),
       ),

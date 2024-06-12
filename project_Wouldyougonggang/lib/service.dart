@@ -10,7 +10,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Services {
+<<<<<<< Updated upstream
   static const String url = 'https://3a2b-210-94-220-228.ngrok-free.app/';
+=======
+  static const String url = 'https://b777-210-94-220-228.ngrok-free.app/';
+>>>>>>> Stashed changes
 
   static Future<User?> attemptLogin(String email, String password) async {
     try {
@@ -150,6 +154,35 @@ class Services {
     return null;
   }
 
+  static Future<void> deleteUserVariation(String accessToken, int id,
+      {bool flag = false}) async {
+    print(id);
+    try {
+      Map<String, int> data = {"id": id};
+
+      // HTTP POST 요청을 사용하여 로그인 시도
+      final response = await http.post(
+        Uri.parse('${url}delete_variation/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(data),
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+      } else {
+        // 로그인 실패
+        print('deleting variation failed. Status code: ${response.statusCode}');
+        // 여기서 실패 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
+      }
+    } catch (e) {
+      // 오류 처리
+      print('Error deleting making variation: $e');
+      // 여기서 오류 발생 시 처리할 작업을 수행하세요 (예: 오류 메시지 표시 등)
+    }
+  }
+
   static Future<List<Variation>?> getUserVariation(String accessToken) async {
     try {
       // HTTP POST 요청을 사용하여 로그인 시도
@@ -182,4 +215,94 @@ class Services {
 
     return null;
   }
+<<<<<<< Updated upstream
+=======
+
+  static Future<bool> attemptSignup(String userID, String password,
+      String nickname, String username, String birthYear, String gender) async {
+    try {
+      Map<String, dynamic> data = {
+        "email": userID,
+        "password": password,
+        "nickname": nickname,
+        "username": username,
+        "birthdate": birthYear,
+        "gender": gender,
+      };
+
+      final response = await http.post(
+        Uri.parse('${url}register/'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 201) {
+        // 회원가입 성공
+        print('Signup successful!');
+        return true;
+      } else {
+        // 회원가입 실패
+        print('Signup failed. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during Signup: $e');
+    }
+    return false;
+  }
+
+  static Future<bool> submitEvaluate(int userID, List<int> isSelected) async {
+    try {
+      Map<String, dynamic> data = {
+        "evaluated_user": userID,
+        "evaluateAdd": isSelected,
+      };
+      print(jsonEncode(data));
+
+      final response = await http.post(
+        Uri.parse('${url}evaluate_user/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ${User.tokens.access}'
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200) {
+        // 제출 성공
+        print('Submit successful!');
+        return true;
+      } else {
+        // 제출 실패
+        print('Submit failed. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during Signup: $e');
+    }
+    return false;
+  }
+
+  static Future<Map<String, dynamic>?> fetchMypage(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${url}get_userState/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        debugPrint(data.toString());
+        return data;
+      } else {
+        debugPrint('Error: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Exception: $e');
+      return null;
+    }
+  }
+>>>>>>> Stashed changes
 }

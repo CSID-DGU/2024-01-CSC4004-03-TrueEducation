@@ -1,30 +1,84 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/timeschedule.dart';
 import 'package:flutter_app/providers/bitmaskings.dart';
+import 'package:flutter_app/service.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_app/user.dart';
 
 class VariWidget extends StatefulWidget {
   final Color bgColor;
   final String text;
   final int day;
   final String time;
+  final int id;
 
-  const VariWidget(
-      {super.key,
-      required this.bgColor,
-      required this.text,
-      required this.day,
-      required this.time});
+  const VariWidget({
+    super.key,
+    required this.bgColor,
+    required this.text,
+    required this.day,
+    required this.time,
+    required this.id,
+  });
 
   @override
   State<VariWidget> createState() => _VariWidgetState();
 }
 
 class _VariWidgetState extends State<VariWidget> {
-  void removeWidget() {
-    // 여기서 context를 사용하지 않고 bitmaskings를 사용합니다.
-    setState(() {
-      context.read<Bitmaskings>().removeVariWidget(widget);
+  void removeWidget() async {
+    Provider.of<Bitmaskings>(context, listen: false).removeVariWidget(widget);
+    Services.deleteUserVariation(User.tokens.access, widget.id);
+
+    await Services.getUserVariation(User.tokens.access).then((value) {
+      setState(() {
+        for (var item in value!) {
+          VariWidget variation = VariWidget(
+            bgColor: Color.fromARGB(
+              255,
+              Random().nextInt(256),
+              Random().nextInt(256),
+              Random().nextInt(256),
+            ),
+            text: item.text,
+            day: item.day,
+            time: item.time,
+            id: item.id,
+          );
+          context.read<Bitmaskings>().addVariWidget(variation);
+        }
+      });
+    });
+
+    await Services.getUserTimetable(User.tokens.access).then((value) {
+      setState(() {
+        Timetable timetable = value!;
+
+        List<String> tmpBitmaskings = [
+          List.filled(26, '0').join(),
+          List.filled(26, '0').join(),
+          List.filled(26, '0').join(),
+          List.filled(26, '0').join(),
+          List.filled(26, '0').join(),
+          List.filled(26, '0').join(),
+          List.filled(26, '0').join(),
+        ];
+
+        int idx = 0;
+
+        for (List<int> i in timetable.timetable) {
+          int temp = 0;
+          for (int j in i) {
+            temp |= j;
+          }
+          tmpBitmaskings[idx] = temp.toRadixString(2).padLeft(29, '0');
+
+          context.read<Bitmaskings>().updateBitmaskings(tmpBitmaskings);
+
+          idx++;
+        }
+      });
     });
   }
 
