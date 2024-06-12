@@ -137,7 +137,6 @@ class _PostState extends State<Post> {
                   postList = snapshot.data;
 
                   if (snapshot.connectionState != ConnectionState.done) {
-                    debugPrint('connect error');
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
@@ -150,7 +149,7 @@ class _PostState extends State<Post> {
                     );
                   }
 
-                  if (postList != null) {
+                  if (postList != null && postList!.posts.isNotEmpty) {
                     return Expanded(child: listviewBuilder());
                   }
 

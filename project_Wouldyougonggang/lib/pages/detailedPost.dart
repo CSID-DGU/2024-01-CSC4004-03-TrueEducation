@@ -380,7 +380,9 @@ class _DetailedState extends State<DetailedPost> {
                   Future<bool> isAccept = acceptMember(post.groupId, member.id, User.tokens.access);
 
                   if(await isAccept) {
+                    setState(() {
 
+                    });
                   }
                 },
                 child: Container(

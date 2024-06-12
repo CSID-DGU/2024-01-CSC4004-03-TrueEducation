@@ -10,7 +10,7 @@ String userToJson(User data) => json.encode(data.toJson());
 
 class User {
   UserInfo userInfo;
-  static late final Tokens tokens;
+  static late Tokens tokens;
 
   User({
     required this.userInfo,
