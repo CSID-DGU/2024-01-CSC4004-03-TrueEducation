@@ -24,12 +24,17 @@ class _NewPostState extends State<NewPost> {
   final TextEditingController _maxNumController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedStartDay;
-  TimeOfDay? _selectedEndDay;
+  late DateTime _selectedDate;
+  late TimeOfDay _selectedStartDay;
+  late TimeOfDay _selectedEndDay;
 
   final _genders = ['남자만', '여자만', '상관없음'];
   String _selectedGender = '';
+
+  DateTime startTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 9, 00);
+  DateTime endTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 21, 00);
 
   @override
   void initState() {
@@ -354,56 +359,169 @@ class _NewPostState extends State<NewPost> {
                                   color: MAIN_FONT_COLOR),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              showDatePicker(
-                                      context: context,
-                                      initialDate: _selectedDate!,
-                                      firstDate: _selectedDate!,
-                                      lastDate: DateTime(DateTime.now().year,
-                                          DateTime.now().month + 3))
-                                  .then((selectedDate) {
-                                if (selectedDate != null) {
-                                  setState(() {
-                                    _selectedDate = selectedDate;
-                                  });
-                                }
-                              });
-                            },
-                            child: Text(
-                                DateFormat('MM-dd').format(_selectedDate!)),
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              showTimePicker(
-                                context: context,
-                                initialTime: _selectedStartDay!,
-                              ).then((selectedStartDay) {
-                                if (selectedStartDay != null) {
-                                  setState(() {
-                                    _selectedStartDay = selectedStartDay;
-                                  });
-                                }
-                              });
-                            },
-                            child: Text(
-                                '${_selectedStartDay!.hour}:${_selectedStartDay!.minute}'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              showTimePicker(
-                                context: context,
-                                initialTime: _selectedStartDay!,
-                              ).then((selectedEndDay) {
-                                if (selectedEndDay != null) {
-                                  setState(() {
-                                    _selectedEndDay = selectedEndDay;
-                                  });
-                                }
-                              });
-                            },
-                            child: Text(
-                                '${_selectedEndDay!.hour}:${_selectedEndDay!.minute}'),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.calendar_today_outlined),
+                                onPressed: () async {
+                                  final DateTime? dateTime = await showDatePicker(
+                                    context: context,
+                                    initialDate: _selectedDate,
+                                    firstDate: _selectedDate,
+                                    lastDate: DateTime(DateTime.now().year, DateTime.now().month + 3),
+                                    initialEntryMode: DatePickerEntryMode.calendarOnly,
+                                    locale: const Locale('ko', 'KR'),
+                                  );
+                                  if (dateTime != null) {
+                                    setState(() {
+                                    });
+                                  }
+                                },
+                              ),
+                              Text(
+                                  '${_selectedDate.month.toString().padLeft(2, '0')} - ${_selectedDate.day.toString().padLeft(2, '0')}'),
+                              IconButton(
+                                icon: const Icon(Icons.access_time),
+                                onPressed: () async {
+                                  showCupertinoModalPopup<void>(
+                                    context: context,
+                                    builder: (BuildContext context) => Container(
+                                      height: 216,
+                                      padding: const EdgeInsets.only(top: 6.0),
+                                      // The bottom margin is provided to align the popup above the system
+                                      // navigation bar.
+                                      margin: EdgeInsets.only(
+                                        bottom:
+                                        MediaQuery.of(context).viewInsets.bottom,
+                                      ),
+                                      // Provide a background color for the popup.
+                                      color: CupertinoColors.systemBackground
+                                          .resolveFrom(context),
+                                      // Use a SafeArea widget to avoid system overlaps.
+                                      child: SafeArea(
+                                        top: false,
+                                        child: CupertinoDatePicker(
+                                          use24hFormat: true,
+                                          initialDateTime: startTime.isAfter(DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              20,
+                                              30))
+                                              ? DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              20,
+                                              30)
+                                              : startTime.isBefore(DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              9,
+                                              00))
+                                              ? DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              9,
+                                              00)
+                                              : startTime,
+                                          minimumDate: DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              9,
+                                              00),
+                                          maximumDate: DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              20,
+                                              30),
+                                          minuteInterval: 30,
+                                          mode: CupertinoDatePickerMode.time,
+                                          // This is called when the user changes the time.
+                                          onDateTimeChanged: (DateTime newTime) {
+                                            setState(() {
+                                              startTime = newTime;
+                                              if (endTime.isBefore(startTime
+                                                  .add(const Duration(minutes: 30)))) {
+                                                endTime = startTime
+                                                    .add(const Duration(minutes: 30));
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Text(
+                                  "${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')}     ~ "),
+                              IconButton(
+                                icon: const Icon(Icons.access_time),
+                                onPressed: () async {
+                                  showCupertinoModalPopup<void>(
+                                    context: context,
+                                    builder: (BuildContext context) => Container(
+                                      height: 216,
+                                      padding: const EdgeInsets.only(top: 6.0),
+                                      // The bottom margin is provided to align the popup above the system
+                                      // navigation bar.
+                                      margin: EdgeInsets.only(
+                                        bottom:
+                                        MediaQuery.of(context).viewInsets.bottom,
+                                      ),
+                                      // Provide a background color for the popup.
+                                      color: CupertinoColors.systemBackground
+                                          .resolveFrom(context),
+                                      // Use a SafeArea widget to avoid system overlaps.
+                                      child: SafeArea(
+                                        top: false,
+                                        child: CupertinoDatePicker(
+                                          use24hFormat: true,
+                                          initialDateTime: endTime.isAfter(DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              21,
+                                              0))
+                                              ? DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              21,
+                                              0)
+                                              : endTime.isBefore(startTime
+                                              .add(const Duration(minutes: 30)))
+                                              ? startTime
+                                              .add(const Duration(minutes: 30))
+                                              : endTime,
+                                          minimumDate: startTime
+                                              .add(const Duration(minutes: 30)),
+                                          maximumDate: DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month,
+                                              DateTime.now().day,
+                                              21,
+                                              0),
+                                          minuteInterval: 30,
+                                          mode: CupertinoDatePickerMode.time,
+                                          // This is called when the user changes the time.
+                                          onDateTimeChanged: (DateTime newTime) {
+                                            setState(() => endTime = newTime);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Text(
+                                  "${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}"),
+                            ],
                           )
                         ],
                       )),
@@ -462,10 +580,10 @@ class _NewPostState extends State<NewPost> {
 
                   Future<bool> isCreate = createPost(
                       _nameController.text,
-                      _minAgeController.text == null
+                      _minAgeController.text == ""
                           ? 0
                           : int.parse(_minAgeController.text),
-                      _maxAgeController.text == null
+                      _maxAgeController.text == ""
                           ? 128
                           : int.parse(_maxAgeController.text),
                       _genders.indexOf(_selectedGender) + 1,
