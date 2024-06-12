@@ -98,6 +98,7 @@ class _MyWidgetState extends State<Home> {
                       ),
                       Align(
                         child: Container(
+                          height: (unitSize + 60) * 2,
                           padding: const EdgeInsets.all(
                             10,
                           ),
@@ -149,7 +150,7 @@ class _MyWidgetState extends State<Home> {
 
   Widget listviewBuilder() {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: min(postList!.length, 2),
       itemBuilder: (context, index) {
         final PostItem post;
