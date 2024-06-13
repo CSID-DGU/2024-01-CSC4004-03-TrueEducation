@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
-import 'package:flutter_app/service.dart';
+import 'package:flutter_app/api/service.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});

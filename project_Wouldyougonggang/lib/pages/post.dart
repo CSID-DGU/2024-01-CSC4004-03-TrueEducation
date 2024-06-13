@@ -10,7 +10,7 @@ import 'package:flutter_app/pages/detailedPost.dart';
 import 'package:flutter_app/pages/newPost.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/api/postapi.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'package:flutter_app/pages/evaluateMain.dart';
 
 class Post extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:flutter_app/api/postapi.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:flutter_app/pages/evaluateGood.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'dart:ui';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -105,40 +105,44 @@ class _EvaluateMainState extends State<EvaluateMain> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2,
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FutureBuilder<MemberList?>(
-                        future: getMember(post.groupId, User.tokens.access),
-                        builder: (context, snapshot) {
-                          members = [];
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder<MemberList?>(
+                    future: getMember(post.groupId, User.tokens.access),
+                    builder: (context, snapshot) {
+                      members = [];
 
-                          members.add(snapshot.data!.leader);
-                          for (Member i in snapshot.data!.member) {
-                            members.add(i);
-                          }
+                    if (snapshot.connectionState !=
+                        ConnectionState.done) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-                          if (snapshot.connectionState !=
-                              ConnectionState.done) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
+                    if (snapshot.hasError) {
+                      debugPrint('error${snapshot.error}');
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }
 
-                          if (snapshot.hasError) {
-                            debugPrint('error${snapshot.error}');
-                            return Center(
-                              child: Text(snapshot.error.toString()),
-                            );
-                          }
+                    if (snapshot.data != null) {
+                      members.add(snapshot.data!.leader);
+                      for (Member i in snapshot.data!.member) {
+                        members.add(i);
+                      }
+                    }
 
-                          if (members.isNotEmpty) {
-                            return Expanded(child: userList());
-                          }
+                    if (members.isNotEmpty) {
+                      return Expanded(child: userList());
+                    }
 
-                          return const Text('error');
-                        })
-                  ]),
+                      return const Text('error');
+                    }
+                  )
+                ]
+              ),
             ),
           ],
         ),

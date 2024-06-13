@@ -7,7 +7,7 @@ import 'package:flutter_app/api/postapi.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:flutter_app/pages/detailedPost.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'package:flutter_app/widgets/meeting.dart';
 import 'package:flutter_app/widgets/timetable.dart';
 
@@ -88,7 +88,7 @@ class _MyWidgetState extends State<Home> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "내 모임",
+                        "추천 모임",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w600,
