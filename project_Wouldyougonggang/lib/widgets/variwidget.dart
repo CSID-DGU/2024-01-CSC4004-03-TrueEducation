@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/timeschedule.dart';
 import 'package:flutter_app/providers/bitmaskings.dart';
-import 'package:flutter_app/service.dart';
+import 'package:flutter_app/api/service.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 
 class VariWidget extends StatefulWidget {
   final Color bgColor;

@@ -80,6 +80,36 @@ class _LoginState extends State<Login> {
                               controller: _emailController,
                             ),
                           ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(50, 0, 50, 20),
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                  labelText: 'Enter password'),
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                              controller: _passwordController,
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(0, 0, 60, 0),
+                            alignment: Alignment.bottomRight,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Signup()));
+                              },
+                              child: const Text(
+                                '회원가입',
+                                style: TextStyle(
+                                    fontFamily: 'Pretendard',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: PRIMARY_COLOR),
+                              ),
+                            ),
+                          ),
                           GestureDetector(
                             onTap: () async {
                               // 로그인 버튼이 눌렸을 때의 처리

@@ -11,10 +11,9 @@ class Daychart extends StatelessWidget {
   late String bitmasking;
   late List<VariWidget> varis;
 
-  Daychart({
-    super.key,
-    required this.col,
-  });
+  final Function() updateState;
+
+  Daychart({super.key, required this.col, required this.updateState});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +66,11 @@ class Daychart extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => NewPost(col: col, row: row)));
+                    builder: (context) => NewPost(
+                          col: col,
+                          row: row,
+                          updateState: updateState,
+                        )));
           } else {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('해당 시간은 모임을 생성할 수 없습니다!'),

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:http/http.dart' as http;
 
-const String url = 'https://b777-210-94-220-228.ngrok-free.app/';
+const String url = 'https://8a53-210-94-220-228.ngrok-free.app/';
 
 Future<PostList?> fetchPost(bool state, String token) async {
   try {

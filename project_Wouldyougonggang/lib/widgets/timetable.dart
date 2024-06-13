@@ -4,29 +4,8 @@ import 'package:flutter_app/widgets/meeting.dart';
 
 class TimeTable extends StatefulWidget {
   final double height;
-  Daychart monChart = Daychart(
-    col: 1,
-  );
-  Daychart tuesChart = Daychart(
-    col: 2,
-  );
-  Daychart wednesChart = Daychart(
-    col: 3,
-  );
-  Daychart thursChart = Daychart(
-    col: 4,
-  );
-  Daychart friChart = Daychart(
-    col: 5,
-  );
-  Daychart saturChart = Daychart(
-    col: 6,
-  );
-  Daychart sunChart = Daychart(
-    col: 7,
-  );
 
-  TimeTable({
+  const TimeTable({
     super.key,
     required this.height,
   });
@@ -36,12 +15,57 @@ class TimeTable extends StatefulWidget {
 }
 
 class _TimeTableState extends State<TimeTable> {
+  void updateState() {
+    setState(() {});
+  }
+
+  late Daychart monChart;
+  late Daychart tuesChart;
+  late Daychart wednesChart;
+  late Daychart thursChart;
+  late Daychart friChart;
+  late Daychart saturChart;
+  late Daychart sunChart;
+
   void onClicked() {
     setState(
       () {
         print('timetable tapped');
       },
     );
+  }
+
+  @override
+  void initState() {
+    monChart = Daychart(
+      col: 1,
+      updateState: updateState,
+    );
+    tuesChart = Daychart(
+      col: 2,
+      updateState: updateState,
+    );
+    wednesChart = Daychart(
+      col: 3,
+      updateState: updateState,
+    );
+    thursChart = Daychart(
+      col: 4,
+      updateState: updateState,
+    );
+    friChart = Daychart(
+      col: 5,
+      updateState: updateState,
+    );
+    saturChart = Daychart(
+      col: 6,
+      updateState: updateState,
+    );
+    sunChart = Daychart(
+      col: 7,
+      updateState: updateState,
+    );
+    super.initState();
   }
 
   @override
@@ -257,37 +281,37 @@ class _TimeTableState extends State<TimeTable> {
                     color: Colors.black,
                     width: 1,
                   ),
-                  widget.monChart,
+                  monChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 1,
                   ),
-                  widget.tuesChart,
+                  tuesChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  widget.wednesChart,
+                  wednesChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  widget.thursChart,
+                  thursChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  widget.friChart,
+                  friChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  widget.saturChart,
+                  saturChart,
                   const VerticalDivider(
                     color: Colors.black,
                     width: 0.5,
                   ),
-                  widget.sunChart,
+                  sunChart,
                 ],
               ),
             ),
