@@ -127,11 +127,73 @@ class _LoginState extends State<Login> {
                                   _passwordController.text.toString();
 
                               Services.attemptLogin(email, password).then(
-                                (value) {
+                                (value) async {
                                   setState(() {
                                     _user = value;
                                   });
                                   if (_user != null) {
+                                    await Services.getUserTimetable(
+                                            User.tokens.access)
+                                        .then((value) {
+                                      setState(() {
+                                        _timetable = value;
+                                        loading = true;
+
+                                        List<String> tmpBitmaskings = [
+                                          List.filled(26, '0').join(),
+                                          List.filled(26, '0').join(),
+                                          List.filled(26, '0').join(),
+                                          List.filled(26, '0').join(),
+                                          List.filled(26, '0').join(),
+                                          List.filled(26, '0').join(),
+                                          List.filled(26, '0').join(),
+                                        ];
+
+                                        int idx = 0;
+
+                                        for (List<int> i
+                                            in _timetable!.timetable) {
+                                          int temp = 0;
+                                          for (int j in i) {
+                                            temp |= j;
+                                          }
+                                          tmpBitmaskings[idx] = temp
+                                              .toRadixString(2)
+                                              .padLeft(29, '0');
+
+                                          context
+                                              .read<Bitmaskings>()
+                                              .updateBitmaskings(
+                                                  tmpBitmaskings);
+
+                                          idx++;
+                                        }
+                                      });
+                                    });
+
+                                    await Services.getUserVariation(
+                                            User.tokens.access)
+                                        .then((value) {
+                                      setState(() {
+                                        for (var item in value!) {
+                                          VariWidget variation = VariWidget(
+                                            bgColor: Color.fromARGB(
+                                              255,
+                                              Random().nextInt(256),
+                                              Random().nextInt(256),
+                                              Random().nextInt(256),
+                                            ),
+                                            text: item.text,
+                                            day: item.day,
+                                            time: item.time,
+                                            id: item.id,
+                                          );
+                                          context
+                                              .read<Bitmaskings>()
+                                              .addVariWidget(variation);
+                                        }
+                                      });
+                                    });
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -142,65 +204,6 @@ class _LoginState extends State<Login> {
                                     Fluttertoast.showToast(
                                         msg: "아이디와 비밀번호가 틀렸습니다.");
                                   }
-
-                                  Services.getUserTimetable(User.tokens.access)
-                                      .then((value) {
-                                    setState(() {
-                                      _timetable = value;
-                                      loading = true;
-
-                                      List<String> tmpBitmaskings = [
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                      ];
-
-                                      int idx = 0;
-
-                                      for (List<int> i
-                                          in _timetable!.timetable) {
-                                        int temp = 0;
-                                        for (int j in i) {
-                                          temp |= j;
-                                        }
-                                        tmpBitmaskings[idx] = temp
-                                            .toRadixString(2)
-                                            .padLeft(29, '0');
-
-                                        context
-                                            .read<Bitmaskings>()
-                                            .updateBitmaskings(tmpBitmaskings);
-
-                                        idx++;
-                                      }
-                                    });
-                                  });
-
-                                  Services.getUserVariation(User.tokens.access)
-                                      .then((value) {
-                                    setState(() {
-                                      for (var item in value!) {
-                                        VariWidget variation = VariWidget(
-                                          bgColor: Color.fromARGB(
-                                            255,
-                                            Random().nextInt(256),
-                                            Random().nextInt(256),
-                                            Random().nextInt(256),
-                                          ),
-                                          text: item.text,
-                                          day: item.day,
-                                          time: item.time,
-                                        );
-                                        context
-                                            .read<Bitmaskings>()
-                                            .addVariWidget(variation);
-                                      }
-                                    });
-                                  });
                                 },
                               );
                             },
@@ -234,186 +237,10 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                     ),
-<<<<<<< Updated upstream
                   ],
                 ),
-=======
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 60, 0),
-                          alignment: Alignment.bottomRight,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Signup()));
-                            },
-                            child: const Text(
-                              '회원가입',
-                              style: TextStyle(
-                                  fontFamily: 'Pretendard',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: PRIMARY_COLOR),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            // 로그인 버튼이 눌렸을 때의 처리
-                            // 아이디와 비밀번호를 사용하여 로그인을 시도하고 결과에 따라 처리
-
-                            String email = _emailController.text.toString();
-                            String password =
-                                _passwordController.text.toString();
-
-                            Services.attemptLogin(email, password).then(
-                              (value) async {
-                                setState(() {
-                                  _user = value;
-                                });
-                                if (_user != null) {
-                                  await Services.getUserTimetable(
-                                          User.tokens.access)
-                                      .then((value) {
-                                    setState(() {
-                                      if (value == null) {
-                                        return;
-                                      }
-                                      _timetable = value;
-                                      loading = true;
-
-                                      List<String> tmpBitmaskings = [
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                        List.filled(26, '0').join(),
-                                      ];
-
-                                      int idx = 0;
-
-                                      for (List<int> i
-                                          in _timetable!.timetable) {
-                                        int temp = 0;
-                                        for (int j in i) {
-                                          temp |= j;
-                                        }
-                                        tmpBitmaskings[idx] = temp
-                                            .toRadixString(2)
-                                            .padLeft(29, '0');
-
-                                        context
-                                            .read<Bitmaskings>()
-                                            .updateBitmaskings(tmpBitmaskings);
-
-                                        idx++;
-                                      }
-                                    });
-                                  });
-
-                                  await Services.getUserVariation(
-                                          User.tokens.access)
-                                      .then((value) {
-                                    setState(() {
-                                      for (var item in value!) {
-                                        VariWidget variation = VariWidget(
-                                          bgColor: Color.fromARGB(
-                                            255,
-                                            Random().nextInt(256),
-                                            Random().nextInt(256),
-                                            Random().nextInt(256),
-                                          ),
-                                          text: item.text,
-                                          day: item.day,
-                                          time: item.time,
-                                          id: item.id,
-                                        );
-                                        context
-                                            .read<Bitmaskings>()
-                                            .addVariWidget(variation);
-                                      }
-                                    });
-                                  });
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Navigation()),
-                                  );
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: "아이디와 비밀번호가 틀렸습니다.");
-                                }
-                              },
-                            );
-
-                            // String email = _emailController.text.toString();
-                            // String password =
-                            //     _passwordController.text.toString();
-
-                            // Services.attemptLogin(email, password).then(
-                            //   (value) {
-                            //     setState(() {
-                            //       _user = value;
-                            //     });
-                            //     if (_user != null) {
-                            //       Navigator.push(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //             builder: (context) =>
-                            //                 const Navigation()),
-                            //       );
-                            //       Fluttertoast.showToast(msg: "로그인 성공!");
-                            //     } else {
-                            //       Fluttertoast.showToast(
-                            //           msg: "아이디와 비밀번호가 틀렸습니다.");
-                            //     }
-                            //   },
-                            // );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: PRIMARY_COLOR,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x40000000),
-                                  offset: Offset(0, 4),
-                                  blurRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 300,
-                              height: 60,
-                              child: const Text(
-                                '로그인',
-                                style: TextStyle(
-                                    fontFamily: 'Pretendard',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
->>>>>>> Stashed changes
               ),
-            ),
+            )
           ],
         ),
       ),

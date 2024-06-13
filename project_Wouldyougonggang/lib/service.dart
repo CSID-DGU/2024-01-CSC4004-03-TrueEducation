@@ -10,11 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Services {
-<<<<<<< Updated upstream
-  static const String url = 'https://3a2b-210-94-220-228.ngrok-free.app/';
-=======
-  static const String url = 'https://b777-210-94-220-228.ngrok-free.app/';
->>>>>>> Stashed changes
+  static const String url = 'https://8a53-210-94-220-228.ngrok-free.app/';
 
   static Future<User?> attemptLogin(String email, String password) async {
     try {
@@ -215,8 +211,6 @@ class Services {
 
     return null;
   }
-<<<<<<< Updated upstream
-=======
 
   static Future<bool> attemptSignup(String userID, String password,
       String nickname, String username, String birthYear, String gender) async {
@@ -304,5 +298,4 @@ class Services {
       return null;
     }
   }
->>>>>>> Stashed changes
 }

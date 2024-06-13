@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/timeschedule.dart';
 import 'package:flutter_app/providers/bitmaskings.dart';
 import 'package:flutter_app/service.dart';
 import 'package:provider/provider.dart';
@@ -28,27 +29,29 @@ class VariWidget extends StatefulWidget {
 
 class _VariWidgetState extends State<VariWidget> {
   void removeWidget() async {
-    Provider.of<Bitmaskings>(context, listen: false).removeVariWidget(widget);
-    Services.deleteUserVariation(User.tokens.access, widget.id);
+    // Provider.of<Bitmaskings>(context, listen: false).removeVariWidget(widget);
+
+    await Services.deleteUserVariation(User.tokens.access, widget.id);
+
+    Bitmaskings.variList = [];
 
     await Services.getUserVariation(User.tokens.access).then((value) {
-      setState(() {
-        for (var item in value!) {
-          VariWidget variation = VariWidget(
-            bgColor: Color.fromARGB(
-              255,
-              Random().nextInt(256),
-              Random().nextInt(256),
-              Random().nextInt(256),
-            ),
-            text: item.text,
-            day: item.day,
-            time: item.time,
-            id: item.id,
-          );
-          context.read<Bitmaskings>().addVariWidget(variation);
-        }
-      });
+      for (var item in value!) {
+        VariWidget variation = VariWidget(
+          bgColor: Color.fromARGB(
+            255,
+            Random().nextInt(256),
+            Random().nextInt(256),
+            Random().nextInt(256),
+          ),
+          text: item.text,
+          day: item.day,
+          time: item.time,
+          id: item.id,
+        );
+        Provider.of<Bitmaskings>(context, listen: false)
+            .addVariWidget(variation);
+      }
     });
 
     await Services.getUserTimetable(User.tokens.access).then((value) {
@@ -79,6 +82,7 @@ class _VariWidgetState extends State<VariWidget> {
           idx++;
         }
       });
+      context.findAncestorStateOfType<TimeScheduleState>()?.setState(() {});
     });
   }
 
