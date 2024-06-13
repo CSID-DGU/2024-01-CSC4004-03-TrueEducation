@@ -13,15 +13,17 @@ import '../model/postmodel.dart';
 class DetailedPost extends StatefulWidget {
   bool isRecruit;
   PostItem post;
+  final Function() updateState;
 
   DetailedPost({
     super.key,
     required this.post,
-    required this.isRecruit
+    required this.isRecruit,
+    required this.updateState
   });
 
   @override
-  State<DetailedPost> createState() => _DetailedState(isRecruit: isRecruit, post: post);
+  State<DetailedPost> createState() => _DetailedState(isRecruit: isRecruit, post: post, updateState: updateState);
 }
 
 class _DetailedState extends State<DetailedPost> {
@@ -32,10 +34,12 @@ class _DetailedState extends State<DetailedPost> {
 
   bool isRecruit;
   PostItem post;
+  final Function() updateState;
 
   _DetailedState({
     required this.post,
-    required this.isRecruit
+    required this.isRecruit,
+    required this.updateState
   });
 
   @override
@@ -205,6 +209,8 @@ class _DetailedState extends State<DetailedPost> {
         child: OutlinedButton(
           onPressed: () async {
             Future<bool> isApply = applyPost(post.groupId, User.tokens.access);
+            widget.updateState!();
+            setState(() {});
             if (await isApply) Navigator.pop(context);
           },
           style: OutlinedButton.styleFrom(
@@ -231,7 +237,8 @@ class _DetailedState extends State<DetailedPost> {
           onPressed: () async {
             Future<bool> isChanged = changeState(post.groupId, User.tokens.access);
             if(await isChanged) {
-              setState(() {});
+              widget.updateState!();
+              setState(() {post.state = (post.state! + 1);});
             }
           },
           style: OutlinedButton.styleFrom(
@@ -261,7 +268,9 @@ class _DetailedState extends State<DetailedPost> {
           onPressed: () async {
             Future<bool> isChanged = changeState(post.groupId, User.tokens.access);
             if(await isChanged) {
-              setState(() {});
+              widget.updateState!();
+              setState(() {post.state = (post.state! + 1);});
+              Navigator.pop(context);
             }
           },
           style: OutlinedButton.styleFrom(
@@ -392,9 +401,8 @@ class _DetailedState extends State<DetailedPost> {
                   Future<bool> isAccept = acceptMember(post.groupId, member.id, User.tokens.access);
 
                   if(await isAccept) {
-                    setState(() {
-
-                    });
+                    widget.updateState!();
+                    setState(() {member.state = 2;});
                   }
                 },
                 child: Container(

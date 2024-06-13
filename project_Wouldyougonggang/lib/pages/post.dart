@@ -43,6 +43,10 @@ class _PostState extends State<Post> {
     super.initState();
   }
 
+  void updateState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     unitSize = min(MediaQuery.of(context).size.height / 8,
@@ -169,9 +173,7 @@ class _PostState extends State<Post> {
           child: FloatingActionButton(
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NewPost(col: -1, row: -1)));
+                  context, MaterialPageRoute(builder: (context) => NewPost(col: -1, row: -1, updateState: updateState,)));
             },
             backgroundColor: PRIMARY_COLOR,
             shape:
@@ -223,6 +225,7 @@ class _PostState extends State<Post> {
                   builder: (context) => DetailedPost(
                         post: post,
                         isRecruit: true,
+                        updateState: updateState,
                       ),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -240,6 +243,7 @@ class _PostState extends State<Post> {
                   builder: (context) => DetailedPost(
                         post: post,
                         isRecruit: false,
+                        updateState: updateState,
                       ),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(

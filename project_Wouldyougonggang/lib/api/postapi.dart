@@ -129,12 +129,11 @@ Future<bool> acceptMember(int groupId, int userId, String token) async {
   try {
     Map<String, dynamic> data = {"group": groupId, "user": userId};
 
-    final response = await http.post(Uri.parse('${url}accept_member/'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $token'
-        },
-        body: jsonEncode(data));
+    final response = await http.post(
+        Uri.parse('${url}accept_member/'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'},
+        body: jsonEncode(data)
+    );
 
     if(response.statusCode == 201) {
       return true;
