@@ -114,12 +114,12 @@ class _EvaluateMainState extends State<EvaluateMain> {
                     builder: (context, snapshot) {
                       members = [];
 
-                          if (snapshot.connectionState !=
-                              ConnectionState.done) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
+                      if (snapshot.connectionState !=
+                          ConnectionState.done) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
                       if (snapshot.hasError) {
                         debugPrint('error${snapshot.error}');
@@ -128,14 +128,16 @@ class _EvaluateMainState extends State<EvaluateMain> {
                         );
                       }
 
-                          if (members.isNotEmpty) {
-                            members.add(snapshot.data!.leader);
-                            for (Member i in snapshot.data!.member) {
-                              members.add(i);
-                            }
+                      if (snapshot.data != null) {
+                        members.add(snapshot.data!.leader);
+                        for (Member i in snapshot.data!.member) {
+                          members.add(i);
+                        }
+                      }
 
-                            return Expanded(child: userList());
-                          }
+                      if (members.isNotEmpty) {
+                        return Expanded(child: userList());
+                      }
 
                       return const Text('error');
                     }
