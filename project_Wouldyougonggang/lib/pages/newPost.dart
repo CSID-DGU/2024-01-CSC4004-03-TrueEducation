@@ -11,15 +11,17 @@ import 'package:intl/intl.dart';
 class NewPost extends StatefulWidget {
   int col;
   int row;
+  final Function() updateState;
 
   NewPost({
     required this.col,
     required this.row,
+    required this.updateState,
     super.key
   });
 
   @override
-  State<NewPost> createState() => _NewPostState(col: col, row: row);
+  State<NewPost> createState() => _NewPostState(col: col, row: row, updateState: updateState);
 }
 
 class _NewPostState extends State<NewPost> {
@@ -44,10 +46,12 @@ class _NewPostState extends State<NewPost> {
 
   final int col;
   final int row;
+  final Function()? updateState;
 
   _NewPostState({
     required this.col,
-    required this.row
+    required this.row,
+    required this.updateState
   });
 
   @override
@@ -556,7 +560,7 @@ class _NewPostState extends State<NewPost> {
               margin: const EdgeInsets.symmetric(horizontal: 25),
               child: OutlinedButton(
                 onPressed: () async {
-                  String day = DateFormat("yyyy-MM-dd").format(_selectedDate!);
+                  String day = DateFormat("yyyy-MM-dd").format(_selectedDate);
 
                   if (_nameController.text.isEmpty ||
                       _minNumController.text.isEmpty ||
@@ -575,12 +579,15 @@ class _NewPostState extends State<NewPost> {
                       _genders.indexOf(_selectedGender) + 1,
                       int.parse(_minNumController.text),
                       int.parse(_maxNumController.text),
-                      '${day}T${_selectedStartDay!.hour}:${_selectedStartDay!.minute}:00',
-                      '${day}T${_selectedEndDay!.hour}:${_selectedEndDay!.minute}:00',
+                      '${day}T${_selectedStartDay.hour}:${_selectedStartDay.minute}:00',
+                      '${day}T${_selectedEndDay.hour}:${_selectedEndDay.minute}:00',
                       _descriptionController.text,
                       User.tokens.access);
 
-                  if (await isCreate) Navigator.pop(context);
+                  if (await isCreate) {
+                    widget.updateState;
+                    Navigator.pop(context);
+                  }
                 },
                 style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(

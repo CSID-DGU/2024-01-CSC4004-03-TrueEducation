@@ -71,7 +71,7 @@ abstract class PostItem {
   final List<String> startTime;
   final List<String> endTime;
   final String description;
-  final int? state;
+  int? state;
 
   PostItem({
     required this.groupId,

@@ -26,6 +26,10 @@ class _MyWidgetState extends State<Home> {
   late var unitSize;
   late var unitFontSize;
 
+  void updateState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     unitSize = min(MediaQuery.of(context).size.height / 8,
@@ -170,6 +174,7 @@ class _MyWidgetState extends State<Home> {
                 builder: (context) => DetailedPost(
                   post: post,
                   isRecruit: true,
+                  updateState: updateState,
                 ),
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(

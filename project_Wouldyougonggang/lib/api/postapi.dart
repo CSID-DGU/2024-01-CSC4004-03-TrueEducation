@@ -134,7 +134,7 @@ Future<bool> acceptMember(int groupId, int userId, String token) async {
 
     final response = await http.post(
         Uri.parse('${url}accept_member/'),
-        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': token},
+        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'},
         body: jsonEncode(data)
     );
 
