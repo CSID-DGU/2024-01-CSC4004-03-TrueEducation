@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 

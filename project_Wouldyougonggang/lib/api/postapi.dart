@@ -20,7 +20,6 @@ Future<PostList?> fetchPost(bool state, String token) async {
     );
 
     if (response.statusCode == 200) {
-      debugPrint('성공');
       try {
         List jsonData = jsonDecode(utf8.decode(response.bodyBytes));
         return RecommendPostList.parse(jsonData);
@@ -59,7 +58,6 @@ Future<bool> applyPost(int groupId, String token) async {
         body: jsonEncode(data));
 
     if (response.statusCode == 201) {
-      debugPrint('성공');
       return true;
     } else if (response.statusCode == 500) {
       debugPrint('서버 내부 오류');
@@ -110,7 +108,6 @@ Future<bool> createPost(
         body: jsonEncode(data));
 
     if (response.statusCode == 201) {
-      debugPrint('성공');
       return true;
     } else if (response.statusCode == 500) {
       debugPrint('서버 내부 오류');
@@ -142,7 +139,6 @@ Future<bool> acceptMember(int groupId, int userId, String token) async {
     );
 
     if(response.statusCode == 201) {
-      debugPrint('성공');
       return true;
     } else if (response.statusCode == 500) {
       debugPrint('서버 내부 오류');
@@ -164,8 +160,6 @@ Future<bool> changeState(int groupId, String token) async {
   try {
     Map<String, int> data = {'group': groupId};
 
-    debugPrint(data.toString());
-
     final response = await http.post(Uri.parse('${url}trans_group_state/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -174,7 +168,6 @@ Future<bool> changeState(int groupId, String token) async {
         body: jsonEncode(data));
 
     if (response.statusCode == 200) {
-      debugPrint('성공');
       return true;
     } else if (response.statusCode == 500) {
       debugPrint('서버 내부 오류');
@@ -203,9 +196,7 @@ Future<MemberList?> getMember(int groupId, String token) async {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(data));
-    print(response.body.toString());
     if (response.statusCode == 200) {
-      debugPrint('성공');
       return MemberList.parse(jsonDecode(utf8.decode(response.bodyBytes)));
     } else if (response.statusCode == 500) {
       debugPrint('서버 내부 오류');

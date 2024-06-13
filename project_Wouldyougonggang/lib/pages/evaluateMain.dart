@@ -5,7 +5,7 @@ import 'package:flutter_app/api/postapi.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:flutter_app/pages/evaluateGood.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'dart:ui';
 import 'package:flutter_svg/flutter_svg.dart';
 

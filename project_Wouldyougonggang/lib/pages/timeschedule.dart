@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'package:flutter_app/widgets/variWidget.dart';
 import 'package:flutter_app/widgets/timetable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/bitmaskings.dart';
 import 'dart:math';
-import 'package:flutter_app/service.dart';
+import 'package:flutter_app/api/service.dart';
 
 class TimeSchedule extends StatefulWidget {
   TimeTable timetable = TimeTable(

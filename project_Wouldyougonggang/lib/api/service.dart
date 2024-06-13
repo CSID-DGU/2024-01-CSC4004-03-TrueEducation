@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,8 +13,6 @@ class Services {
       // 서버로 보낼 데이터를 맵 형태로 구성
       Map<String, dynamic> data = {"email": email, "password": password};
 
-      print(Uri.parse('${url}login/'));
-
       // HTTP POST 요청을 사용하여 로그인 시도
       final response = await http.post(
         Uri.parse('${url}login/'),
@@ -24,8 +22,6 @@ class Services {
 
       // HTTP 응답 코드 확인
       if (response.statusCode == 201) {
-        // 로그인 성공
-        print('Login successful!');
         User user = User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
         return user;
       } else {
@@ -212,7 +208,6 @@ class Services {
         "evaluated_user": userID,
         "evaluateAdd": isSelected,
       };
-      print(jsonEncode(data));
 
       final response = await http.post(
         Uri.parse('${url}evaluate_user/'),
@@ -249,7 +244,6 @@ class Services {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
-        debugPrint(data.toString());
         return data;
       } else {
         debugPrint('Error: ${response.statusCode}');

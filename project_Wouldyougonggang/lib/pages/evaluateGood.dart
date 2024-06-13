@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/service.dart';
+import 'package:flutter_app/api/service.dart';
 import 'package:flutter_app/pages/evaluateMain.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui';
 
