@@ -9,16 +9,15 @@ String userToJson(User data) => json.encode(data.toJson());
 //     final user = userFromJson(jsonString);
 
 class User {
-  UserInfo userInfo;
-  static late final Tokens tokens;
+  static late UserInfo userInfo;
+  static late Tokens tokens;
 
-  User({
-    required this.userInfo,
-  });
+  User();
 
   factory User.fromJson(Map<String, dynamic> json) {
     User.tokens = Tokens.fromJson(json["tokens"]);
-    return User(userInfo: UserInfo.fromJson(json["user_info"]));
+    User.userInfo = UserInfo.fromJson(json["user_info"]);
+    return User();
   }
 
   Map<String, dynamic> toJson() => {
@@ -77,21 +76,17 @@ class Variation {
 }
 
 class Tokens {
-  String refresh;
   String access;
 
   Tokens({
-    required this.refresh,
     required this.access,
   });
 
   factory Tokens.fromJson(Map<String, dynamic> json) => Tokens(
-        refresh: json["refresh"],
         access: json["access"],
       );
 
   Map<String, dynamic> toJson() => {
-        "refresh": refresh,
         "access": access,
       };
 }

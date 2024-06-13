@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_app/model/postmodel.dart';
 import 'package:flutter_app/pages/detailedPost.dart';
 import 'package:flutter_app/pages/newPost.dart';
-import 'dart:ui';
 import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_app/api/postapi.dart';
-import 'package:flutter_app/user.dart';
-
-import 'evaluateMain.dart';
+import 'package:flutter_app/model/user.dart';
+import 'package:flutter_app/pages/evaluateMain.dart';
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -44,6 +43,10 @@ class _PostState extends State<Post> {
     super.initState();
   }
 
+  void updateState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     unitSize = min(MediaQuery.of(context).size.height / 8,
@@ -64,7 +67,10 @@ class _PostState extends State<Post> {
             Container(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: SUB_COLOR))),
+                border: Border(
+                  bottom: BorderSide(color: SUB_COLOR, width: 2),
+                ),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +143,6 @@ class _PostState extends State<Post> {
                   postList = snapshot.data;
 
                   if (snapshot.connectionState != ConnectionState.done) {
-                    debugPrint('connect error');
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
@@ -150,7 +155,7 @@ class _PostState extends State<Post> {
                     );
                   }
 
-                  if (postList != null) {
+                  if (postList != null && postList!.posts.isNotEmpty) {
                     return Expanded(child: listviewBuilder());
                   }
 
@@ -168,7 +173,7 @@ class _PostState extends State<Post> {
           child: FloatingActionButton(
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => NewPost()));
+                  context, MaterialPageRoute(builder: (context) => NewPost(col: -1, row: -1, updateState: updateState,)));
             },
             backgroundColor: PRIMARY_COLOR,
             shape:
@@ -210,26 +215,36 @@ class _PostState extends State<Post> {
 
   Widget listviewItem(PostItem post) {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: GestureDetector(
           onTap: () {
             if (isRecomend) {
               showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  builder: (context) => DetailedPost(post, true),
+                  builder: (context) => DetailedPost(
+                        post: post,
+                        isRecruit: true,
+                        updateState: updateState,
+                      ),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30))));
             } else if (post.state == 3) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => EvaluateMain()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EvaluateMain(post: post)));
             } else {
               showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  builder: (context) => DetailedPost(post, false),
+                  builder: (context) => DetailedPost(
+                        post: post,
+                        isRecruit: false,
+                        updateState: updateState,
+                      ),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
@@ -239,7 +254,7 @@ class _PostState extends State<Post> {
           child: Container(
               decoration: const BoxDecoration(
                 border: Border.symmetric(
-                    horizontal: BorderSide(color: SUB_FONT_COLOR)),
+                    horizontal: BorderSide(color: SUB_COLOR, width: 2)),
               ),
               height: unitSize + 20,
               child: postItem(post)),
@@ -259,96 +274,99 @@ class _PostState extends State<Post> {
       stateText = '참가';
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: unitSize,
-          height: unitSize,
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/planets_70593516402.jpeg',
-                fit: BoxFit.cover,
-              )),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width - (unitSize * 2) - 120,
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                post.groupName,
-                style: TextStyle(
-                    fontFamily: 'Pretendard',
-                    fontSize: unitFontSize * 24,
-                    fontWeight: FontWeight.w800,
-                    color: MAIN_FONT_COLOR),
-              ),
-              Text(
-                '${post.startTime[1]}/${post.startTime[2]}',
-                style: TextStyle(
-                    fontFamily: 'Pretendard',
-                    fontSize: unitFontSize * 18,
-                    fontWeight: FontWeight.w600,
-                    color: MAIN_FONT_COLOR),
-              ),
-              Text(
-                '${post.startTime[3]}:${post.startTime[4]} ~ ${post.endTime[3]}:${post.endTime[4]}',
-                style: TextStyle(
-                    fontFamily: 'Pretendard',
-                    fontSize: unitFontSize * 16,
-                    fontWeight: FontWeight.w500,
-                    color: MAIN_FONT_COLOR),
-              ),
-              Text(
-                '${post.currentNum} / ${post.maxNum}',
-                style: TextStyle(
-                    fontFamily: 'Pretendard',
-                    fontSize: unitFontSize * 12,
-                    fontWeight: FontWeight.w400,
-                    color: MAIN_FONT_COLOR),
-              ),
-            ],
-          ),
-        ),
-        GestureDetector(
-          onTap: () async {
-            if (post.state == null) {
-              Future<bool> isApply =
-                  applyPost(post.groupId, User.tokens.access);
-
-              if (await isApply) {
-                setState(() {});
-              }
-            }
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: (post.state != null)
-                  ? color[(post.state as int) - 1]
-                  : GREEN_BUTTON_COLOR,
-            ),
+    return Container(
+      color: BACKGROUND_COLOR,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
             width: unitSize,
             height: unitSize,
-            child: Text(
-              stateText,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: MAIN_FONT_COLOR),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/images/planets_70593516402.jpeg',
+                  fit: BoxFit.cover,
+                )),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width - (unitSize * 2) - 120,
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  post.groupName,
+                  style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: unitFontSize * 24,
+                      fontWeight: FontWeight.w800,
+                      color: MAIN_FONT_COLOR),
+                ),
+                Text(
+                  '${post.startTime[1]}/${post.startTime[2]}',
+                  style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: unitFontSize * 18,
+                      fontWeight: FontWeight.w600,
+                      color: MAIN_FONT_COLOR),
+                ),
+                Text(
+                  '${post.startTime[3]}:${post.startTime[4]} ~ ${post.endTime[3]}:${post.endTime[4]}',
+                  style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: unitFontSize * 16,
+                      fontWeight: FontWeight.w500,
+                      color: MAIN_FONT_COLOR),
+                ),
+                Text(
+                  '${post.currentNum} / ${post.maxNum}',
+                  style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: unitFontSize * 12,
+                      fontWeight: FontWeight.w400,
+                      color: MAIN_FONT_COLOR),
+                ),
+              ],
             ),
           ),
-        ),
-      ],
+          GestureDetector(
+            onTap: () async {
+              if (post.state == null) {
+                Future<bool> isApply =
+                    applyPost(post.groupId, User.tokens.access);
+
+                if (await isApply) {
+                  setState(() {});
+                }
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: (post.state != null)
+                    ? color[(post.state as int) - 1]
+                    : GREEN_BUTTON_COLOR,
+              ),
+              width: unitSize,
+              height: unitSize,
+              child: Text(
+                stateText,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: BUTTON_FONT_COLOR),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

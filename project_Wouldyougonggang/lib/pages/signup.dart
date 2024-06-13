@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
+import 'package:flutter_app/api/service.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -10,13 +11,16 @@ class Signup extends StatefulWidget {
 }
 
 class _SignUpState extends State<Signup> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordCheckController =
       TextEditingController();
-  final TextEditingController _nameControll = TextEditingController();
-  final TextEditingController _nicknameControll = TextEditingController();
-  final TextEditingController _birthControll = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _birthYearController = TextEditingController();
+  String _selectedGender = '3';
+  String _passwordError = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,127 +38,195 @@ class _SignUpState extends State<Signup> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
-                          child: TextField(
-                            decoration: const InputDecoration(labelText: '이메일'),
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _emailController,
-                          ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: TextField(
+                          decoration: const InputDecoration(labelText: '아이디'),
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _userIDController,
                         ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
-                          child: TextField(
-                            decoration:
-                                const InputDecoration(labelText: '비밀번호'),
-                            keyboardType: TextInputType.text,
-                            obscureText: true,
-                            controller: _passwordController,
-                          ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: TextField(
+                          decoration: const InputDecoration(labelText: '비밀번호'),
+                          keyboardType: TextInputType.text,
+                          obscureText: true,
+                          controller: _passwordController,
                         ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
-                          child: TextField(
-                            decoration:
-                                const InputDecoration(labelText: '비밀번호 확인'),
-                            keyboardType: TextInputType.text,
-                            obscureText: true,
-                            controller: _passwordCheckController,
-                          ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextField(
+                              decoration:
+                                  const InputDecoration(labelText: '비밀번호 확인'),
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                              controller: _passwordCheckController,
+                            ),
+                            if (_passwordError.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  _passwordError,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
-                          child: TextField(
-                            decoration: const InputDecoration(labelText: '이름'),
-                            keyboardType: TextInputType.text,
-                            controller: _nameControll,
-                          ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: TextField(
+                          decoration: const InputDecoration(labelText: '닉네임'),
+                          keyboardType: TextInputType.text,
+                          controller: _nicknameController,
                         ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
-                          child: TextField(
-                            decoration: const InputDecoration(labelText: '닉네임'),
-                            keyboardType: TextInputType.text,
-                            controller: _nicknameControll,
-                          ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: TextField(
+                          decoration: const InputDecoration(labelText: '이름'),
+                          keyboardType: TextInputType.text,
+                          controller: _usernameController,
                         ),
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(40, 0, 40, 100),
-                          child: TextField(
-                            decoration:
-                                const InputDecoration(labelText: '탄생년도'),
-                            keyboardType: TextInputType.number,
-                            controller: _birthControll,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            labelText: '탄생년도',
+                            hintText: '2024-12-25', // 추가된 힌트 텍스트
                           ),
+                          keyboardType: TextInputType.datetime,
+                          controller: _birthYearController,
                         ),
-                        GestureDetector(
-                          onTap: () async {
-                            String email = _emailController.toString();
-                            String password = _passwordController.toString();
-                            String passwordCheck =
-                                _passwordCheckController.toString();
-                            String name = _nameControll.toString();
-                            String nickname = _nicknameControll.toString();
-                            String birth = _birthControll.toString();
-
-                            // 로그인 버튼이 눌렸을 때의 처리
-                            // 아이디와 비밀번호를 사용하여 로그인을 시도하고 결과에 따라 처리
-                            // String email = _emailController.text.toString();
-                            // String password =
-                            //     _passwordController.text.toString();
-
-                            // Services.attemptLogin(email, password).then(
-                            //   (value) {
-                            //     setState(() {
-                            //       _user = value;
-                            //     });
-                            //     if (_user != null) {
-                            //       Navigator.push(
-                            //         context,
-                            //         MaterialPageRoute(
-                            //             builder: (context) => Navigation()),
-                            //       );
-                            //     } else {
-                            //       Fluttertoast.showToast(
-                            //           msg: "아이디와 비밀번호가 틀렸습니다.");
-                            //     }
-                            //   },
-                            // );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: PRIMARY_COLOR,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: SUB_COLOR,
-                                  offset: Offset(0, 4),
-                                  blurRadius: 2,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '성별',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('남'),
+                                    value: '1',
+                                    groupValue: _selectedGender,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedGender = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('여'),
+                                    value: '2',
+                                    groupValue: _selectedGender,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedGender = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('X'),
+                                    value: '3',
+                                    groupValue: _selectedGender,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedGender = value!;
+                                      });
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 300,
-                              height: 60,
-                              child: const Text(
-                                '가입하기',
-                                style: TextStyle(
-                                    fontFamily: 'Pretendard',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          String userID = _userIDController.text.toString();
+                          String password = _passwordController.text.toString();
+                          String passwordCheck =
+                              _passwordCheckController.text.toString();
+                          String nickname = _nicknameController.text.toString();
+                          String username = _usernameController.text.toString();
+                          String birthYear =
+                              _birthYearController.text.toString();
+                          String gender = _selectedGender;
+
+                          if (password == passwordCheck) {
+                            setState(() {
+                              _passwordError = '';
+                            });
+
+                            Future<bool> isSignup = Services.attemptSignup(
+                              userID,
+                              password,
+                              nickname,
+                              username,
+                              birthYear,
+                              gender,
+                            );
+
+                            if (await isSignup) {
+                              Navigator.pop(context);
+                            }
+                          } else {
+                            setState(() {
+                              _passwordError = '비밀번호가 일치하지 않습니다';
+                            });
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: PRIMARY_COLOR,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: SUB_COLOR,
+                                offset: Offset(0, 4),
+                                blurRadius: 2,
                               ),
+                            ],
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 300,
+                            height: 60,
+                            child: const Text(
+                              '가입하기',
+                              style: TextStyle(
+                                  fontFamily: 'Pretendard',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: BUTTON_FONT_COLOR),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -162,10 +234,10 @@ class _SignUpState extends State<Signup> {
                 bottom: -68,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFFFFF),
+                    color: BACKGROUND_COLOR,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Container(
+                  child: const SizedBox(
                     width: 273,
                     height: 55,
                   ),

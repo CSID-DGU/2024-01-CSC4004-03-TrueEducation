@@ -1,60 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/theme/colors.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 
-class EvaluateBad extends StatelessWidget {
+class EvaluateBad extends StatefulWidget {
+  const EvaluateBad({super.key});
+
+  @override
+  State<EvaluateBad> createState() => _EvaluateBadState();
+}
+
+class _EvaluateBadState extends State<EvaluateBad> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(toolbarHeight: 60),
       body: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFFEEEEEE),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-        ),
+        decoration: const BoxDecoration(color: BACKGROUND_COLOR),
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 30, 12.3, 20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 38),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xFFD9D9D9),
-                            borderRadius: BorderRadius.circular(62.5),
-                          ),
-                          child: Container(
-                            width: 125,
-                            height: 125,
-                          ),
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: SUB_COLOR,
+                          borderRadius: BorderRadius.circular(62.5),
                         ),
+                        child: const SizedBox(width: 125, height: 125),
                       ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(0, 48, 0, 47),
-                        child: Text(
-                          '닉네임',
-                          style: GoogleFonts.getFont(
-                            'Inter',
+                    ),
+                    Container(
+                      child: Text(
+                        '닉네임',
+                        style: TextStyle(
+                            fontFamily: 'Pretendard',
+                            fontSize: 30,
                             fontWeight: FontWeight.w400,
-                            fontSize: 25,
-                            color: Color(0xFF000000),
-                          ),
-                        ),
+                            color: MAIN_FONT_COLOR),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -71,7 +66,7 @@ class EvaluateBad extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Color(0xFFD9D9D9),
                           ),
-                          child: Container(
+                          child: SizedBox(
                             width: 35,
                             height: 35,
                           ),
@@ -81,28 +76,21 @@ class EvaluateBad extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                '부정적인 태도',
-                                style: GoogleFonts.getFont(
-                                  'Inter',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 20,
-                                  color: Color(0xFF000000),
-                                ),
-                              ),
-                            ),
+                          Text(
+                            '부정적인 태도',
+                            style: TextStyle(
+                                fontFamily: 'Pretendard',
+                                fontSize: 23,
+                                fontWeight: FontWeight.w400,
+                                color: MAIN_FONT_COLOR),
                           ),
                           Text(
                             '고의적으로 모임을 망침',
-                            style: GoogleFonts.getFont(
-                              'Inter',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                              color: Color(0xFF989696),
-                            ),
+                            style: TextStyle(
+                                fontFamily: 'Pretendard',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                color: SUB_FONT_COLOR),
                           ),
                         ],
                       ),
@@ -124,7 +112,7 @@ class EvaluateBad extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Color(0xFFD9D9D9),
                           ),
-                          child: Container(
+                          child: SizedBox(
                             width: 35,
                             height: 35,
                           ),
@@ -176,7 +164,7 @@ class EvaluateBad extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Color(0xFFD9D9D9),
                         ),
-                        child: Container(
+                        child: SizedBox(
                           width: 35,
                           height: 35,
                         ),
@@ -231,7 +219,7 @@ class EvaluateBad extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Color(0xFFD9D9D9),
                           ),
-                          child: Container(
+                          child: SizedBox(
                             width: 35,
                             height: 35,
                           ),

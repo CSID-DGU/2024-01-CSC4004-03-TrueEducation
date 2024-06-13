@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/navigation_bar.dart';
 import 'package:flutter_app/pages/signup.dart';
-import 'package:flutter_app/service.dart';
+import 'package:flutter_app/api/service.dart';
 import 'package:flutter_app/theme/colors.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 
-import '../user.dart';
+import 'package:flutter_app/model/user.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -27,7 +27,8 @@ class _LoginState extends State<Login> {
   bool loading = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  late User? _user;
+  static late User? _user;
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -37,85 +38,46 @@ class _LoginState extends State<Login> {
         child: Column(
           children: [
             Container(
-              child: Container(
-                padding: EdgeInsets.fromLTRB(
-                    0,
-                    MediaQuery.of(context).padding.top,
-                    0,
-                    MediaQuery.of(context).padding.bottom),
-                width: screenWidth,
-                height: screenHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Flexible(
-                      flex: 3,
-                      child: SizedBox(
-                        height: 200,
-                        child: Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                                fontFamily: 'Pretendard',
-                                fontSize: 60,
-                                fontWeight: FontWeight.w500,
-                                color: MAIN_FONT_COLOR),
-                          ),
+              padding: EdgeInsets.fromLTRB(
+                  0,
+                  MediaQuery.of(context).padding.top,
+                  0,
+                  MediaQuery.of(context).padding.bottom),
+              width: screenWidth,
+              height: screenHeight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Flexible(
+                    flex: 3,
+                    child: SizedBox(
+                      height: 200,
+                      child: Center(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                              fontFamily: 'Pretendard',
+                              fontSize: 60,
+                              fontWeight: FontWeight.w500,
+                              color: MAIN_FONT_COLOR),
                         ),
                       ),
                     ),
-                    Flexible(
-                      flex: 2,
-                      child: SizedBox(
-                        height: 300,
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(50, 0, 50, 20),
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Enter Email'),
-                                keyboardType: TextInputType.emailAddress,
-                                controller: _emailController,
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(50, 0, 50, 20),
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Enter password'),
-                                keyboardType: TextInputType.text,
-                                obscureText: true,
-                                controller: _passwordController,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 2,
+                  ),
+                  Flexible(
+                    flex: 2,
+                    child: SizedBox(
+                      height: 300,
                       child: Column(
                         children: [
                           Container(
-                            margin: const EdgeInsets.fromLTRB(0, 0, 60, 0),
-                            alignment: Alignment.bottomRight,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Signup()));
-                              },
-                              child: const Text(
-                                '회원가입',
-                                style: TextStyle(
-                                    fontFamily: 'Pretendard',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: PRIMARY_COLOR),
-                              ),
+                            margin: const EdgeInsets.fromLTRB(50, 0, 50, 20),
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                  labelText: 'Enter Email'),
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailController,
                             ),
                           ),
                           GestureDetector(
@@ -237,8 +199,8 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             )
           ],

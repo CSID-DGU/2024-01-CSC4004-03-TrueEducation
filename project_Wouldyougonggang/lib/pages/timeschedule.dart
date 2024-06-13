@@ -1,18 +1,15 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/theme/colors.dart';
+import 'package:flutter_app/model/user.dart';
 import 'package:flutter_app/widgets/variWidget.dart';
-
 import 'package:flutter_app/widgets/timetable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/providers/bitmaskings.dart';
 import 'dart:math';
-import '../service.dart';
+import 'package:flutter_app/api/service.dart';
 
 class TimeSchedule extends StatefulWidget {
   TimeTable timetable = TimeTable(
@@ -419,8 +416,11 @@ class TimeScheduleState extends State<TimeSchedule> {
       home: Scaffold(
         key: _scaffoldKey,
         body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: BACKGROUND_COLOR,
           padding: const EdgeInsets.symmetric(
-            vertical: 5,
+            vertical: 15,
           ),
           child: SingleChildScrollView(
             child: Column(

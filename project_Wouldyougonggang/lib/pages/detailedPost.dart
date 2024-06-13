@@ -1,23 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_app/theme/colors.dart';
-import 'package:flutter_app/user.dart';
+import 'package:flutter_app/model/user.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../api/postapi.dart';
 import '../model/postmodel.dart';
 
-class DetailedPost extends StatelessWidget {
+class DetailedPost extends StatefulWidget {
+  bool isRecruit;
+  PostItem post;
+  final Function() updateState;
+
+  DetailedPost(
+      {super.key,
+      required this.post,
+      required this.isRecruit,
+      required this.updateState});
+
+  @override
+  State<DetailedPost> createState() => _DetailedState(
+      isRecruit: isRecruit, post: post, updateState: updateState);
+}
+
+class _DetailedState extends State<DetailedPost> {
   late var width;
   late var height;
 
-  PostItem post;
   late String groupGender;
-  bool isRecruit;
 
-  DetailedPost(this.post, this.isRecruit, {super.key});
+  bool isRecruit;
+  PostItem post;
+  final Function() updateState;
+
+  _DetailedState(
+      {required this.post, required this.isRecruit, required this.updateState});
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +118,7 @@ class DetailedPost extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "○ 나이 : ${post.minNum} ~ ${post.maxNum}살",
+                            "○ 나이 : ${post.minAge} ~ ${post.maxAge}살",
                             style: GoogleFonts.getFont('Inter',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
@@ -112,7 +132,7 @@ class DetailedPost extends StatelessWidget {
                                 color: Colors.black),
                           ),
                           Text(
-                            "○ 인원 : ${post.minAge} ~ ${post.maxAge}명",
+                            "○ 인원 : ${post.minNum} ~ ${post.maxNum}명",
                             style: GoogleFonts.getFont('Inter',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
@@ -184,6 +204,8 @@ class DetailedPost extends StatelessWidget {
         child: OutlinedButton(
           onPressed: () async {
             Future<bool> isApply = applyPost(post.groupId, User.tokens.access);
+            widget.updateState();
+            setState(() {});
             if (await isApply) Navigator.pop(context);
           },
           style: OutlinedButton.styleFrom(
@@ -200,12 +222,75 @@ class DetailedPost extends StatelessWidget {
           ),
         ),
       );
+    } else if (post.state == 1 &&
+        post.currentNum >= post.minNum &&
+        post.member != null) {
+      return Container(
+        width: width - 50,
+        height: 50,
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: OutlinedButton(
+          onPressed: () async {
+            Future<bool> isChanged =
+                changeState(post.groupId, User.tokens.access);
+            if (await isChanged) {
+              widget.updateState();
+              setState(() {
+                post.state = (post.state! + 1);
+              });
+            }
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+          child: Text(
+            '모임 시작',
+            style: GoogleFonts.getFont('Inter',
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+                color: const Color(0xFF000000)),
+          ),
+        ),
+      );
+    } else if (post.state == 2 && post.member != null) {
+      return Container(
+        width: width - 50,
+        height: 50,
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: OutlinedButton(
+          onPressed: () async {
+            Future<bool> isChanged =
+                changeState(post.groupId, User.tokens.access);
+            if (await isChanged) {
+              widget.updateState();
+              setState(() {
+                post.state = (post.state! + 1);
+              });
+              Navigator.pop(context);
+            }
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+          child: Text(
+            '모임 종료',
+            style: GoogleFonts.getFont('Inter',
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+                color: const Color(0xFF000000)),
+          ),
+        ),
+      );
     }
     return Container();
   }
 
   Widget memberList() {
-    if (post.member != null && post.member!.isNotEmpty) {
+    if (post.member != null) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Column(
@@ -219,7 +304,7 @@ class DetailedPost extends StatelessWidget {
                   color: Colors.black),
             ),
             SizedBox(
-              height: 200,
+              height: 150,
               child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: post.member!.length,
@@ -238,36 +323,113 @@ class DetailedPost extends StatelessWidget {
     return Container();
   }
 
+  final List<String> grade = [
+    '수성(1단계)',
+    '금성(2단계)',
+    '지구(3단계)',
+    '화성(4단계)',
+    '목성(5단계)',
+    '토성(6단계)',
+    '천왕성(7단계)',
+    '해왕성(8단계)',
+    '태양(9단계)'
+  ];
+
   Widget memberItem(Member member) {
     return Container(
-      height: 70,
+      height: height / 10,
       margin: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         children: [
-          SizedBox(
-            width: 50,
-            height: 50,
-            child: Image.asset('assets/images/person.png'),
-          ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              member.nickname,
-              style: GoogleFonts.getFont('Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                  color: Colors.black),
+            width: height / 13,
+            height: height / 13,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: Colors.black, style: BorderStyle.solid, width: 0.1)),
+            child: SvgPicture.asset(
+              'assets/vectors/person.svg',
             ),
           ),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFEEEEEE),
+          Expanded(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        member.nickname,
+                        style: GoogleFonts.getFont('Inter',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.black),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        grade[member.grade - 1],
+                        style: GoogleFonts.getFont('Inter',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: Colors.black),
+                      ),
+                    )
+                  ],
+                ),
               ),
-              child: const Text('수락'),
-            ),
-          )
+              GestureDetector(
+                onTap: () async {
+                  Future<bool> isAccept =
+                      acceptMember(post.groupId, member.id, User.tokens.access);
+
+                  if (await isAccept) {
+                    widget.updateState();
+                    setState(() {
+                      member.state = 2;
+                    });
+                  }
+                },
+                child: Container(
+                  width: width / 5,
+                  height: height / 13,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xCCBFFF00),
+                      border: Border.all(
+                          color: Colors.black,
+                          style: BorderStyle.solid,
+                          width: 0.7),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset:
+                              const Offset(2, 2), // changes position of shadow
+                        ),
+                      ]),
+                  child: Text(
+                    '수락',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.getFont(
+                      'Inter',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ))
         ],
       ),
     );

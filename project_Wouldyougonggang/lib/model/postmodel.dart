@@ -71,7 +71,7 @@ abstract class PostItem {
   final List<String> startTime;
   final List<String> endTime;
   final String description;
-  final int? state;
+  int? state;
 
   PostItem({
     required this.groupId,
@@ -93,25 +93,25 @@ abstract class PostItem {
 
 class Member {
   final int id;
-  final int state;
+  int? state;
   final String name;
   final String nickname;
   final int grade;
 
   Member(
       {required this.id,
-      required this.state,
+      this.state,
       required this.name,
       required this.nickname,
       required this.grade});
 
   factory Member.parse(Map json) {
     return Member(
-        id: json['user'],
+        id: json['user_id'],
         state: json['state'],
-        name: json['user_name'],
-        nickname: json['user_nickname'],
-        grade: json['user_grade']);
+        name: json['username'],
+        nickname: json['nickname'],
+        grade: json['grade']);
   }
 }
 
@@ -153,7 +153,7 @@ class MyPostItem extends PostItem {
   MyPostItem({
     required super.groupId,
     super.groupImg,
-    required super.member,
+    super.member,
     required super.groupName,
     required super.minAge,
     required super.maxAge,
@@ -168,7 +168,7 @@ class MyPostItem extends PostItem {
   });
 
   factory MyPostItem.parse(Map json) {
-    List<Member> member = [];
+    List<Member>? member = [];
 
     try {
       List list = json['member'];
@@ -176,7 +176,7 @@ class MyPostItem extends PostItem {
         member.add(Member.parse(element));
       }
     } catch (e) {
-      member = [];
+      member = null;
     }
 
     return MyPostItem(
@@ -194,5 +194,29 @@ class MyPostItem extends PostItem {
         endTime: json['end_time'].toString().split(RegExp(r'[ \-\:T]')),
         description: json['description'],
         state: json['current_state']);
+  }
+}
+
+class MemberList {
+  final Member leader;
+  final List<Member> member;
+
+  MemberList({
+    required this.leader,
+    required this.member,
+  });
+
+  factory MemberList.parse(Map json) {
+    List<Member> member = [];
+
+    List list = json['member'];
+    for (var element in list) {
+      member.add(Member.parse(element));
+    }
+
+    return MemberList(
+      leader: Member.parse(json['leader']),
+      member: member,
+    );
   }
 }
