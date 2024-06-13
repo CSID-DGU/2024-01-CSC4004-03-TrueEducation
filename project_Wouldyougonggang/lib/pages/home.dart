@@ -87,7 +87,7 @@ class _MyWidgetState extends State<Home> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "내 모임",
+                        "추천 모임",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w600,
