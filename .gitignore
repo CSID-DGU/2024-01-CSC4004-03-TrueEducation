@@ -11,3 +11,13 @@ ENV/
 env.bak/
 venv.bak/
 db.sqlite3
+build/
+.dart_tool/
+.idea/
+.vscode/
+ios/
+linux/
+macos/
+web/
+windows/
+
